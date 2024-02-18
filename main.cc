@@ -137,6 +137,7 @@ class CylinderPlasmaQuartz {
     }
   }
 
+  // NOLINTNEXTLINE(readability-function-cognitive-complexity)
   void SolveDir(const Vector3F dir) {
     size_t current_cylinder_idx = kPlasmaIdx;
 
@@ -159,6 +160,12 @@ class CylinderPlasmaQuartz {
       } else {
         ts.push_back(-1);
       }
+      {
+        const auto t = cylinders_[current_cylinder_idx].Intersect(ray);
+        std::cout << '[' << i << "*] " << t << ' ' << ray.Point(t) << '\n';
+        ts.push_back(IsZero(t) ? -1 : t);
+      }
+
       for (auto& mirror : mirrors_) {
         const auto t = mirror.Intersect(ray);
         std::cout << '[' << i << "] " << t << ' ' << ray.Point(t) << '\n';
@@ -166,11 +173,11 @@ class CylinderPlasmaQuartz {
       }
 
       const auto t_min_idx = FindMinimalNonNegativeIndex(ts);
-      if (t_min_idx < 2) {
+      if (t_min_idx < 3) {
         ray.pos = ray.Point(ts[t_min_idx]);
         if (t_min_idx == 0) {
           --current_cylinder_idx;
-        } else {
+        } else if (t_min_idx == 1) {
           ++current_cylinder_idx;
         }
         std::cout << "NEW POS: " << ray.pos << " [ti=" << t_min_idx
@@ -180,19 +187,20 @@ class CylinderPlasmaQuartz {
           ray.dir = cylinders_.back().Reflect(ray.pos, ray.dir);
           std::cout << "REFLECT QUARTZ, new dir " << ray.dir << '\n';
         }
-      } else if (t_min_idx < 4) {
-        if (IsEqual(ts[2], ts[3])) [[unlikely]] {
+      } else if (t_min_idx < 5) {
+        if (IsEqual(ts[3], ts[4])) [[unlikely]] {
           ray.pos.x() = 0;
           ray.pos.y() = 0;
           ray.dir.x() = -ray.dir.x();
+          current_cylinder_idx = 1;
           std::cout << "REFLECT ORIGIN, new dir" << ray.dir << '\n';
         } else {
-          ray.dir = mirrors_[t_min_idx - 2].Reflect(ray.pos, ray.dir);
+          ray.pos = ray.Point(ts[t_min_idx]);
+          ray.dir = mirrors_[t_min_idx - 3].Reflect(ray.pos, ray.dir);
           std::cout << "REFLECT MIRROR, new dir" << ray.dir << '\n';
         }
-        current_cylinder_idx = 1;
       } else {
-        [[maybe_unused]] auto x = 12;
+        std::cout << "ALERT FAILURE ERROR\n";
       }
     }
   }
