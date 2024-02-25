@@ -19,12 +19,21 @@ namespace func {
 /// внутри полости,  расположенной в нагретом веществе, при условии, что стенки
 /// вещества непрозрачны для излучения. Спектр такого равновесного излучения
 /// называют спектром излучения абсолютно чёрного тела.
-/// @param nu Частота излучения.
-/// @param T  Абсолютная температура
+/// @param nu Частота излучения [Гц].
+/// @param T  Абсолютная температура [К].
 /// @returns  Спектральная плотность излучения.
 [[nodiscard]] constexpr Float u_nu(const Float nu, const Float T) noexcept {
   return 8 * consts::pi * consts::h * Cube(nu) /
-         (Cube(consts::c) * (std::exp(consts::h * nu / (consts::k * T)) - 1));
+         (Cube(consts::c_sm) *
+          (std::exp(consts::h * nu / (consts::k * T)) - 1));
+}
+
+/// Интенсивность.
+///
+/// 4πI/c = u_nu
+[[nodiscard]] constexpr Float I(const Float nu, const Float T) noexcept {
+  return 2 * consts::h * Cube(nu) /
+         (Sqr(consts::c_sm) * (std::exp(consts::h * nu / (consts::k * T)) - 1));
 }
 
 }  // namespace func

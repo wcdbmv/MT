@@ -42,4 +42,6 @@ inline constexpr auto rho = static_cast<Float>(0.9);
   return static_cast<Float>(0.001) * std::pow(T / 300, static_cast<Float>(1.5));
 }
 
+inline constexpr auto nu = static_cast<Float>(1e15);  // Гц.
+
 }  // namespace params

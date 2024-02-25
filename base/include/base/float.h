@@ -1,3 +1,3 @@
 #pragma once
 
-using Float = float;
+using Float = double;

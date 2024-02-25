@@ -1,215 +1,322 @@
-#include "base/float_cmp.h"
-#include "math/consts/pi.h"
-namespace {
-
-// using Float = float;
-//
-// // u_nu_e — функция Планка.
-// constexpr Float Calculate_u_nu_e(const Float nu, const Float T) {
-//   return 8 * pi * h * Cube(nu) / (Cube(c) * (std::exp(h * nu / (k * T)) -
-//   1));
-// }
-//
-// constexpr Float CalculateDivVecF_l(
-//     const Float k_nu,
-//     const Float u_nu_e,  // e — equilibrium, равновесная
-//     const Float u) {
-//   return c * k_nu * (u_nu_e - u);
-// }
-//
-// constexpr Float CalculateDeltaOmega(const Float DeltaS, const Float r) {
-//   return DeltaS / (r * r);
-// }
-//
-// constexpr Float CalculateDeltaE(
-//     const Float k_nu,
-//     const Float u_nu_e,  // e — equilibrium, равновесная
-//     const Float DeltaOmega,
-//     const Float DeltaV,
-//     const Float N_f) {
-//   return c * k_nu * u_nu_e * DeltaOmega * DeltaV / (4 * pi * N_f);
-// }
-
-}  // namespace
-
+#include <array>
 #include <cassert>
 #include <cmath>
 #include <cstddef>
 #include <iostream>
+#include <stdexcept>
 #include <vector>
+
+#include "base/erase_remove_if.h"
 #include "base/float.h"
+#include "base/float_cmp.h"
 #include "math/geometry/cylinder_z_infinite.h"
 #include "math/geometry/disk.h"
 #include "math/geometry/fibonacci_sphere.h"
-#include "math/geometry/plane.h"
 #include "math/geometry/ray.h"
 #include "math/geometry/vector.h"
 #include "math/geometry/vector3f.h"
 #include "math/geometry/vector_io.h"
+#include "math/random.h"
 #include "math/utils.h"
 #include "physics/params.h"
+#include "physics/plancks_law.h"
 
 namespace {
 
 constexpr auto kStep = static_cast<Float>(0.05);
+// NOLINTNEXTLINE(cert-err58-cpp)
 const auto kN = static_cast<size_t>(std::round(params::R_1 / kStep));
+// NOLINTNEXTLINE(cert-err58-cpp)
 const auto kPlasmaIdx = static_cast<size_t>(std::round(params::R / kStep) - 1);
 
-class CylinderPlasmaQuartz {
- public:
-  CylinderPlasmaQuartz() {
+struct CylinderPlasmaQuartz {
+  std::vector<CylinderZInfinite> cylinders;
+  std::vector<Float> temperatures;
+  std::vector<Float> intensities;
+  std::array<Disk, 2> borders;
+
+  CylinderPlasmaQuartz() : borders{InitBorders()} {
     InitCylinders();
-    InitMirrors();
-    InitBorders();
-    InitDirs();
 
     assert(kN == 9);
   }
 
-  void Solve() { SolveDir(dirs_[0]); }
-
  private:
   void InitCylinders() {
-    cylinders_.reserve(kN);
-    temperatures_.reserve(kN);
+    cylinders.reserve(kN);
+    temperatures.reserve(kN);
+    intensities.reserve(kN);
 
     for (size_t i = 1; i <= kPlasmaIdx; ++i) {
       const auto radius = kStep * static_cast<Float>(i);
-      cylinders_.emplace_back(kOrigin, radius);
+      cylinders.emplace_back(kOrigin, radius);
       const auto center =
           kStep * (static_cast<Float>(i) - static_cast<Float>(0.5));
-      temperatures_.emplace_back(params::T(center / params::R));
+      temperatures.push_back(params::T(center / params::R));
+      intensities.push_back(func::I(params::nu, temperatures.back()));
     }
 
-    cylinders_.emplace_back(kOrigin, params::R);
-    assert(cylinders_.size() == kPlasmaIdx + 1);
-    temperatures_.emplace_back(params::T((params::R - kStep / 2) / params::R));
-    assert(temperatures_.size() == kPlasmaIdx + 1);
+    cylinders.emplace_back(kOrigin, params::R);
+    assert(cylinders.size() == kPlasmaIdx + 1);
+    temperatures.push_back(params::T((params::R - kStep / 2) / params::R));
+    assert(temperatures.size() == kPlasmaIdx + 1);
+    intensities.push_back(func::I(params::nu, temperatures.back()));
+    assert(intensities.size() == kPlasmaIdx + 1);
 
     for (size_t i = kPlasmaIdx + 2; i < kN; ++i) {
       const auto radius = kStep * static_cast<Float>(i);
-      cylinders_.emplace_back(kOrigin, radius);
+      cylinders.emplace_back(kOrigin, radius);
       const auto center =
           kStep * (static_cast<Float>(i) - static_cast<Float>(0.5));
-      temperatures_.emplace_back(params::T(center / params::R));
+      temperatures.push_back(params::T(center / params::R));
+      intensities.push_back(func::I(params::nu, temperatures.back()));
     }
 
-    cylinders_.emplace_back(kOrigin, params::R_1);
-    temperatures_.emplace_back(
-        params::T((params::R_1 - kStep / 2) / params::R));
+    cylinders.emplace_back(kOrigin, params::R_1);
+    temperatures.emplace_back(params::T((params::R_1 - kStep / 2) / params::R));
+    intensities.push_back(func::I(params::nu, temperatures.back()));
 
     std::cout << "Cylinders:\n";
-    for (auto& cylinder : cylinders_) {
+    for (auto& cylinder : cylinders) {
       std::cout << cylinder.center() << ' ' << std::sqrt(cylinder.radius2())
                 << '\n';
     }
 
     std::cout << "T:\n";
-    for (auto t : temperatures_) {
+    for (const auto t : temperatures) {
       std::cout << t << '\n';
+    }
+
+    std::cout << "I:\n";
+    for (const auto i : intensities) {
+      std::cout << i << '\n';
     }
   }
 
-  void InitMirrors() {
-    constexpr auto kAmountOfSlices = 4;
-    constexpr auto kAngleOfSlice = consts::pi / kAmountOfSlices;
-    const auto kCos = std::cos(kAngleOfSlice);
-    const auto kSin = std::sin(kAngleOfSlice);
-    const auto kNormal1 = Vector3F{-kSin, kCos};
-    const auto kNormal2 = Vector3F{-kSin, -kCos};
+  [[nodiscard]] static std::array<Disk, 2> InitBorders() {
+    return {
+        Disk{kOrigin, -kUnitZ, params::R_1},
+        Disk{kOrigin + Vector3F{0, 0, params::H}, kUnitZ, params::R_1},
+    };
+  }
+};
 
-    mirrors_.reserve(2);
-    mirrors_.emplace_back(kOrigin, kNormal1);
-    mirrors_.emplace_back(kOrigin, kNormal2);
+class Worker {
+ public:
+  explicit constexpr Worker(const CylinderPlasmaQuartz& c) noexcept : c_{c} {}
+
+  std::vector<Float> SolveDir(const Vector3F dir, Float intensity) {
+    std::vector<Float> absorbed(c_.cylinders.size());
+    const auto initial_intensity = intensity;
+
+    current_cylinder_idx_ = kPlasmaIdx;
+
+    constexpr auto kInitialPos = Vector3F{params::R, 0, params::H / 2};
+    ray_ = {kInitialPos, dir};
+
+    auto use_prev = false;
+
+    for (size_t i = 0; intensity > 0.01 * initial_intensity; ++i) {
+      std::cout << '[' << i << ", " << intensity << "]\n";
+
+      IntersectPrevCylinder();
+      IntersectNextCylinder();
+      IntersectCurrCylinder();
+
+      const auto t_min_idx = FindMinimalNonNegativeIndex(ts_);
+      if (t_min_idx <= kIdxLastCylinder) {
+        const auto prev_pos = ray_.pos;
+        ray_.pos = ray_.Point(ts_[t_min_idx]);
+
+        const auto prev_cylinder_idx = current_cylinder_idx_;
+
+        if (t_min_idx == kIdxPrevCylinder) {
+          --current_cylinder_idx_;
+        } else if (t_min_idx == kIdxNextCylinder) {
+          ++current_cylinder_idx_;
+        } else {
+          use_prev = !use_prev;
+        }
+
+        const auto idx = use_prev ? prev_cylinder_idx : current_cylinder_idx_;
+        const auto T = c_.temperatures[idx];
+        const auto dr = Vector3F::Distance(prev_pos, ray_.pos);
+        const auto exp = std::exp(-params::k_plasma(T) * dr);
+        const auto prev_intensity = intensity;
+        intensity *= exp;
+        absorbed[idx] += prev_intensity - intensity;
+
+        std::cout << "NEW POS: " << ray_.pos << " [ti=" << t_min_idx
+                  << "][ci=" << current_cylinder_idx_ << "]\n";
+
+        if (current_cylinder_idx_ + 1 == c_.cylinders.size()) {
+          if (!ImFeelingLucky(params::rho)) {
+            std::cout << "ABSORPTION at the quartz boundary\n";
+            break;
+          }
+          ray_.dir = c_.cylinders.back().Reflect(ray_.pos, ray_.dir);
+          std::cout << "REFLECT QUARTZ, new dir " << ray_.dir << '\n';
+        }
+
+      } else {
+        throw std::out_of_range("ALERT FAILURE ERROR");
+      }
+    }
+
+    return absorbed;
   }
 
-  void InitBorders() {
-    borders_.reserve(2);
-    borders_.emplace_back(kOrigin, -kUnitZ, params::R_1);
-    borders_.emplace_back(kOrigin + Vector3F{0, 0, params::H}, kUnitZ,
-                          params::R_1);
+  Float CalculateIntensity(const Vector3F dir) {
+    const auto ndir = -dir;
+
+    constexpr auto kInitialPos = Vector3F{params::R, 0, params::H / 2};
+    ray_ = {kInitialPos + ndir * (1 / static_cast<Float>(1024)), ndir};
+    const auto t = c_.cylinders[kPlasmaIdx].Intersect(ray_);
+    assert(t > 0);
+
+    ray_.pos = ray_.Point(t);
+    ray_.dir = dir;
+
+    current_cylinder_idx_ = kPlasmaIdx;
+    Float intensity{};
+    auto use_prev = true;
+
+    for (size_t i = 0;; ++i) {
+      std::cout << "[Intensity, " << i << ", " << intensity << "]\n";
+
+      IntersectPrevCylinder();
+      IntersectNextCylinder();
+      IntersectCurrCylinder();
+
+      const auto t_min_idx = FindMinimalNonNegativeIndex(ts_);
+      if (t_min_idx <= kIdxLastCylinder) {
+        const auto prev_pos = ray_.pos;
+        ray_.pos = ray_.Point(ts_[t_min_idx]);
+        if (ts_[t_min_idx] < 3E-16) {
+          [[maybe_unused]] const int klsdf = 0;
+        }
+
+        const auto prev_cylinder_idx = current_cylinder_idx_;
+
+        if (t_min_idx == kIdxPrevCylinder) {
+          --current_cylinder_idx_;
+        } else if (t_min_idx == kIdxNextCylinder) {
+          ++current_cylinder_idx_;
+        } else {
+          use_prev = false;
+        }
+
+        const auto idx = use_prev ? prev_cylinder_idx : current_cylinder_idx_;
+        const auto T = c_.temperatures[idx];
+        const auto dr = Vector3F::Distance(prev_pos, ray_.pos);
+        const auto exp = std::exp(-params::k_plasma(T) * dr);
+        intensity *= exp;
+        intensity += c_.intensities[idx] * (1 - exp);
+
+        std::cout << "NEW POS: " << ray_.pos << " [ti=" << t_min_idx
+                  << "][ci=" << current_cylinder_idx_ << "]\n";
+
+        if (current_cylinder_idx_ == kPlasmaIdx) {
+          break;
+        }
+        if (current_cylinder_idx_ > kPlasmaIdx) {
+          throw std::out_of_range("ALERT RAY OUT OF PLASMA");
+        }
+      } else {
+        throw std::out_of_range("ALERT FAILURE ERROR");
+      }
+    }
+
+    return intensity;
   }
 
+ private:
+  void PrintT(const char* prompt, const Float t) const {
+    std::cout << prompt << t;
+    if (t > kEps) {
+      std::cout << ' ' << ray_.Point(t);
+    }
+    std::cout << '\n';
+  }
+
+  void IntersectPrevCylinder() {
+    if (current_cylinder_idx_ > 0) {
+      const auto t = c_.cylinders[current_cylinder_idx_ - 1].Intersect(ray_);
+      ts_[kIdxPrevCylinder] = t;
+
+      PrintT("PrevCylinder  ", t);
+    } else {
+      ts_[kIdxPrevCylinder] = -1;
+    }
+  }
+
+  void IntersectNextCylinder() {
+    if (current_cylinder_idx_ + 1 < c_.cylinders.size()) {
+      const auto t = c_.cylinders[current_cylinder_idx_ + 1].Intersect(ray_);
+      ts_[kIdxNextCylinder] = t;
+
+      PrintT("NextCylinder  ", t);
+    } else {
+      ts_[kIdxNextCylinder] = -1;
+    }
+  }
+
+  void IntersectCurrCylinder() {
+    const auto t = c_.cylinders[current_cylinder_idx_].Intersect(ray_);
+    ts_[kIdxCurrCylinder] = IsZero(t) ? -1 : t;
+
+    PrintT("CurrCylinder* ", t);
+  }
+
+  // NOLINTNEXTLINE(cppcoreguidelines-avoid-const-or-ref-data-members)
+  const CylinderPlasmaQuartz& c_;
+
+  Ray ray_{};
+  size_t current_cylinder_idx_{};
+
+  static constexpr size_t kIdxPrevCylinder = 0;
+  static constexpr size_t kIdxNextCylinder = 1;
+  static constexpr size_t kIdxCurrCylinder = 2;
+  static constexpr size_t kIdxLastCylinder = kIdxCurrCylinder;
+  std::array<Float, 3> ts_{};
+};
+
+class Solver {
+ public:
+  Solver() { InitDirs(); }
+
+  void Solve() const {
+    Worker worker{cpq_};
+
+    std::vector<Float> total_absorbed(cpq_.cylinders.size());
+
+    for (const auto dir : dirs_) {
+      const auto I = worker.CalculateIntensity(dir);
+      const auto absorbed = worker.SolveDir(dir, I);
+
+      std::cout << "ABSORBED:\n";
+      for (size_t i = 0; i < absorbed.size(); ++i) {
+        total_absorbed[i] += absorbed[i];
+        std::cout << absorbed[i] << '\n';
+      }
+    }
+
+    std::cout << "TOTAL ABSORBED:\n";
+    for (const auto i : total_absorbed) {
+      std::cout << i << '\n';
+    }
+  }
+
+ private:
   void InitDirs() {
-    dirs_ = FibonacciSphere(100);
-    for (auto dir : dirs_) {
+    dirs_ = FibonacciSphere(200);
+    EraseRemoveIf(dirs_, [](const Vector3F dir) { return dir.x() <= 0; });
+    for (const auto dir : dirs_) {
       std::cout << dir << '\n';
     }
   }
 
-  // NOLINTNEXTLINE(readability-function-cognitive-complexity)
-  void SolveDir(const Vector3F dir) {
-    size_t current_cylinder_idx = kPlasmaIdx;
-
-    constexpr auto kInitialPos = Vector3F{params::R, 0, params::H / 2};
-    Ray ray{kInitialPos, dir};
-
-    for (size_t i = 0; i < 20; ++i) {
-      std::vector<Float> ts;
-      if (current_cylinder_idx > 0) {
-        const auto t = cylinders_[current_cylinder_idx - 1].Intersect(ray);
-        std::cout << '[' << i << "] " << t << ' ' << ray.Point(t) << '\n';
-        ts.push_back(t);
-      } else {
-        ts.push_back(-1);
-      }
-      if (current_cylinder_idx + 1 < cylinders_.size()) {
-        const auto t = cylinders_[current_cylinder_idx + 1].Intersect(ray);
-        std::cout << '[' << i << "] " << t << ' ' << ray.Point(t) << '\n';
-        ts.push_back(t);
-      } else {
-        ts.push_back(-1);
-      }
-      {
-        const auto t = cylinders_[current_cylinder_idx].Intersect(ray);
-        std::cout << '[' << i << "*] " << t << ' ' << ray.Point(t) << '\n';
-        ts.push_back(IsZero(t) ? -1 : t);
-      }
-
-      for (auto& mirror : mirrors_) {
-        const auto t = mirror.Intersect(ray);
-        std::cout << '[' << i << "] " << t << ' ' << ray.Point(t) << '\n';
-        ts.push_back(t);
-      }
-
-      const auto t_min_idx = FindMinimalNonNegativeIndex(ts);
-      if (t_min_idx < 3) {
-        ray.pos = ray.Point(ts[t_min_idx]);
-        if (t_min_idx == 0) {
-          --current_cylinder_idx;
-        } else if (t_min_idx == 1) {
-          ++current_cylinder_idx;
-        }
-        std::cout << "NEW POS: " << ray.pos << " [ti=" << t_min_idx
-                  << "][ci=" << current_cylinder_idx << "]\n";
-
-        if (current_cylinder_idx + 1 == cylinders_.size()) {
-          ray.dir = cylinders_.back().Reflect(ray.pos, ray.dir);
-          std::cout << "REFLECT QUARTZ, new dir " << ray.dir << '\n';
-        }
-      } else if (t_min_idx < 5) {
-        if (IsEqual(ts[3], ts[4])) [[unlikely]] {
-          ray.pos.x() = 0;
-          ray.pos.y() = 0;
-          ray.dir.x() = -ray.dir.x();
-          current_cylinder_idx = 1;
-          std::cout << "REFLECT ORIGIN, new dir" << ray.dir << '\n';
-        } else {
-          ray.pos = ray.Point(ts[t_min_idx]);
-          ray.dir = mirrors_[t_min_idx - 3].Reflect(ray.pos, ray.dir);
-          std::cout << "REFLECT MIRROR, new dir" << ray.dir << '\n';
-        }
-      } else {
-        std::cout << "ALERT FAILURE ERROR\n";
-      }
-    }
-  }
-
-  std::vector<CylinderZInfinite> cylinders_;
-  std::vector<Float> temperatures_;
-  std::vector<Plane> mirrors_;
-  std::vector<Disk> borders_;
-
+  CylinderPlasmaQuartz cpq_;
   std::vector<Vector3F> dirs_;
 };
 
@@ -229,6 +336,6 @@ int main() {
   std::cout << c.Intersect({{0, 0.5, 0}, {0, 1, 0}}) << '\n';
   std::cout << c.Intersect({{0, 0.5, -5}, {0, 0, 1}}) << '\n';
 
-  CylinderPlasmaQuartz solver;
+  const Solver solver;
   solver.Solve();
 }

@@ -17,6 +17,7 @@ set(HEADERS
     include/math/geometry/vector.h
     include/math/geometry/vector3f.h
     include/math/geometry/vector_io.h
+    include/math/random.h
     include/math/utils.h
 )
 
@@ -28,6 +29,7 @@ set(SOURCES
     src/geometry/fibonacci_sphere.cc
     src/geometry/plane.cc
     src/geometry/shape.cc
+    src/random.cc
     src/utils.cc
 )
 

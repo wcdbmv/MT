@@ -1,1 +1,7 @@
 BasedOnStyle: Chromium
+
+# TODO(crbug.com/1392808): Remove when InsertBraces has been upstreamed into
+InsertBraces: true
+InsertNewlineAtEOF: true
+
+RequiresClausePosition: WithPreceding

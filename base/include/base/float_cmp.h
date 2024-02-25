@@ -1,17 +1,31 @@
 #pragma once
 
+#include <algorithm>
 #include <cmath>
+#include <concepts>
 #include <limits>
 
 #include "base/float.h"
 
-inline constexpr auto Eps = std::numeric_limits<Float>::epsilon();
-inline constexpr auto Inf = std::numeric_limits<Float>::infinity();
+inline constexpr auto kEps = std::numeric_limits<Float>::epsilon();
+inline constexpr auto kInf = std::numeric_limits<Float>::infinity();
 
-constexpr bool IsZero(const Float value) noexcept {
-  return std::abs(value) < Eps;
+template <std::floating_point T>
+constexpr bool IsZero(
+    const T value,
+    const T eps = std::numeric_limits<T>::epsilon()) noexcept {
+  return std::abs(value) < eps;
 }
 
-constexpr bool IsEqual(const Float x, const Float y) noexcept {
-  return IsZero(x - y);
+template <std::floating_point T>
+constexpr bool IsEqual(
+    const T x,
+    const T y,
+    const T eps = std::numeric_limits<T>::epsilon()) noexcept {
+  const auto diff = std::abs(x - y);
+  if (diff <= eps) {
+    return true;
+  }
+
+  return diff < std::max(std::abs(x), std::abs(y)) * eps;
 }

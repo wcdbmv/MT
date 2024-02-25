@@ -30,10 +30,10 @@ Float CylinderZInfinite::Intersect(const Ray& ray) const noexcept {
   return FindMinimalNonNegative(t);
 }
 
-Vector3F CylinderZInfinite::NormalUnscaled(Vector3F p) const noexcept {
+Vector3F CylinderZInfinite::NormalUnscaled(const Vector3F p) const noexcept {
   return {p.x() - center_.x(), p.y() - center_.y(), 0};
 }
 
-bool CylinderZInfinite::IsOnShape(Vector3F p) const noexcept {
+bool CylinderZInfinite::IsOnShape(const Vector3F p) const noexcept {
   return IsEqual(Sqr(p.x() - center_.x()) + Sqr(p.y() - center_.y()), radius2_);
 }

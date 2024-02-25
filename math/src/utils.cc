@@ -10,11 +10,11 @@
 std::size_t FindMinimalNonNegativeIndex(const std::span<Float> t) noexcept {
   assert(!t.empty());
 
-  auto min = Inf;
+  auto min = kInf;
   auto idx_min = t.size();
 
   for (size_t i = 0; i < t.size(); ++i) {
-    if (0 <= t[i] && t[i] <= min) {
+    if (kEps <= t[i] && t[i] <= min) {
       min = t[i];
       idx_min = i;
     }
