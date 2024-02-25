@@ -2,6 +2,7 @@
 #include <cassert>
 #include <cmath>
 #include <cstddef>
+#include <format>
 #include <iostream>
 #include <stdexcept>
 #include <vector>
@@ -9,21 +10,48 @@
 #include "base/erase_remove_if.h"
 #include "base/float.h"
 #include "base/float_cmp.h"
+#include "geogebra/api.h"
 #include "math/geometry/cylinder_z_infinite.h"
 #include "math/geometry/disk.h"
 #include "math/geometry/fibonacci_sphere.h"
 #include "math/geometry/ray.h"
 #include "math/geometry/vector.h"
 #include "math/geometry/vector3f.h"
-#include "math/geometry/vector_io.h"
 #include "math/random.h"
 #include "math/utils.h"
 #include "physics/params.h"
 #include "physics/plancks_law.h"
 
+// #define ENABLE_DEBUG_OUTPUT
+// #define ENABLE_GEOGEBRA_OUTPUT
+
+#ifdef ENABLE_DEBUG_OUTPUT
+#include "math/geometry/vector_io.h"
+#endif
+
 namespace {
 
-constexpr auto kStep = static_cast<Float>(0.05);
+struct DummyOut {};
+[[maybe_unused]] DummyOut gDummyOut;  // NOLINT
+
+template <typename T>
+DummyOut& operator<<(DummyOut& dummy_out, T&&) noexcept {  // NOLINT
+  return dummy_out;
+}
+
+#ifdef ENABLE_DEBUG_OUTPUT
+#define DEBUG_OUT std::cout
+#else
+#define DEBUG_OUT gDummyOut
+#endif
+
+#ifdef ENABLE_GEOGEBRA_OUTPUT
+#define GEOGEBRA_OUT std::cout
+#else
+#define GEOGEBRA_OUT gDummyOut
+#endif
+
+constexpr auto kStep = static_cast<Float>(0.01);
 // NOLINTNEXTLINE(cert-err58-cpp)
 const auto kN = static_cast<size_t>(std::round(params::R_1 / kStep));
 // NOLINTNEXTLINE(cert-err58-cpp)
@@ -38,7 +66,10 @@ struct CylinderPlasmaQuartz {
   CylinderPlasmaQuartz() : borders{InitBorders()} {
     InitCylinders();
 
-    assert(kN == 9);
+    // assert(kPlasmaIdx == 6);
+    // assert(kN == 9);
+    assert(kPlasmaIdx == 34);
+    assert(kN == 45);
   }
 
  private:
@@ -50,6 +81,8 @@ struct CylinderPlasmaQuartz {
     for (size_t i = 1; i <= kPlasmaIdx; ++i) {
       const auto radius = kStep * static_cast<Float>(i);
       cylinders.emplace_back(kOrigin, radius);
+      GEOGEBRA_OUT << geogebra::CylinderInfiniteZ(std::format("C{}", i - 1),
+                                                  radius);
       const auto center =
           kStep * (static_cast<Float>(i) - static_cast<Float>(0.5));
       temperatures.push_back(params::T(center / params::R));
@@ -57,6 +90,8 @@ struct CylinderPlasmaQuartz {
     }
 
     cylinders.emplace_back(kOrigin, params::R);
+    GEOGEBRA_OUT << geogebra::CylinderInfiniteZ(std::format("C{}", kPlasmaIdx),
+                                                params::R);
     assert(cylinders.size() == kPlasmaIdx + 1);
     temperatures.push_back(params::T((params::R - kStep / 2) / params::R));
     assert(temperatures.size() == kPlasmaIdx + 1);
@@ -66,6 +101,8 @@ struct CylinderPlasmaQuartz {
     for (size_t i = kPlasmaIdx + 2; i < kN; ++i) {
       const auto radius = kStep * static_cast<Float>(i);
       cylinders.emplace_back(kOrigin, radius);
+      GEOGEBRA_OUT << geogebra::CylinderInfiniteZ(std::format("C{}", i - 1),
+                                                  radius);
       const auto center =
           kStep * (static_cast<Float>(i) - static_cast<Float>(0.5));
       temperatures.push_back(params::T(center / params::R));
@@ -73,23 +110,25 @@ struct CylinderPlasmaQuartz {
     }
 
     cylinders.emplace_back(kOrigin, params::R_1);
+    GEOGEBRA_OUT << geogebra::CylinderInfiniteZ(
+        std::format("C{}", cylinders.size() - 1), params::R_1);
     temperatures.emplace_back(params::T((params::R_1 - kStep / 2) / params::R));
     intensities.push_back(func::I(params::nu, temperatures.back()));
 
-    std::cout << "Cylinders:\n";
+    DEBUG_OUT << "Cylinders:\n";
     for (auto& cylinder : cylinders) {
-      std::cout << cylinder.center() << ' ' << std::sqrt(cylinder.radius2())
+      DEBUG_OUT << cylinder.center() << ' ' << std::sqrt(cylinder.radius2())
                 << '\n';
     }
 
-    std::cout << "T:\n";
+    DEBUG_OUT << "T:\n";
     for (const auto t : temperatures) {
-      std::cout << t << '\n';
+      DEBUG_OUT << t << '\n';
     }
 
-    std::cout << "I:\n";
+    DEBUG_OUT << "I:\n";
     for (const auto i : intensities) {
-      std::cout << i << '\n';
+      DEBUG_OUT << i << '\n';
     }
   }
 
@@ -113,11 +152,17 @@ class Worker {
 
     constexpr auto kInitialPos = Vector3F{params::R, 0, params::H / 2};
     ray_ = {kInitialPos, dir};
+    // auto last_stable_ray = ray_;
+
+    auto dir_idx = 0;
+    GEOGEBRA_OUT << geogebra::Point3D("P0", kInitialPos);
+    GEOGEBRA_OUT << geogebra::Point3D("D0", dir);
+    GEOGEBRA_OUT << geogebra::Ray3D("R0", "P0", "D0");
 
     auto use_prev = false;
 
     for (size_t i = 0; intensity > 0.01 * initial_intensity; ++i) {
-      std::cout << '[' << i << ", " << intensity << "]\n";
+      DEBUG_OUT << '[' << i << ", " << intensity << "]\n";
 
       IntersectPrevCylinder();
       IntersectNextCylinder();
@@ -127,6 +172,9 @@ class Worker {
       if (t_min_idx <= kIdxLastCylinder) {
         const auto prev_pos = ray_.pos;
         ray_.pos = ray_.Point(ts_[t_min_idx]);
+
+        const auto Pi = std::format("P{}", i + 1);
+        GEOGEBRA_OUT << geogebra::Point3D(Pi, ray_.pos);
 
         const auto prev_cylinder_idx = current_cylinder_idx_;
 
@@ -146,16 +194,24 @@ class Worker {
         intensity *= exp;
         absorbed[idx] += prev_intensity - intensity;
 
-        std::cout << "NEW POS: " << ray_.pos << " [ti=" << t_min_idx
-                  << "][ci=" << current_cylinder_idx_ << "]\n";
+        DEBUG_OUT << "NEW POS: " << ray_.pos << " [ti=" << t_min_idx
+                  << "][ci=" << current_cylinder_idx_ << "][dir=" << ray_.dir
+                  << "]\n";
 
         if (current_cylinder_idx_ + 1 == c_.cylinders.size()) {
           if (!ImFeelingLucky(params::rho)) {
-            std::cout << "ABSORPTION at the quartz boundary\n";
+            DEBUG_OUT << "ABSORPTION at the quartz boundary\n";
             break;
           }
           ray_.dir = c_.cylinders.back().Reflect(ray_.pos, ray_.dir);
-          std::cout << "REFLECT QUARTZ, new dir " << ray_.dir << '\n';
+
+          ++dir_idx;
+          const auto Di = std::format("D{}", dir_idx);
+          GEOGEBRA_OUT << geogebra::Point3D(Pi, ray_.pos);
+          GEOGEBRA_OUT << geogebra::Point3D(Di, ray_.dir);
+          GEOGEBRA_OUT << geogebra::Ray3D(std::format("R{}", dir_idx), Pi, Di);
+
+          DEBUG_OUT << "REFLECT QUARTZ, new dir " << ray_.dir << '\n';
         }
 
       } else {
@@ -170,19 +226,27 @@ class Worker {
     const auto ndir = -dir;
 
     constexpr auto kInitialPos = Vector3F{params::R, 0, params::H / 2};
-    ray_ = {kInitialPos + ndir * (1 / static_cast<Float>(1024)), ndir};
-    const auto t = c_.cylinders[kPlasmaIdx].Intersect(ray_);
+    // GEOGEBRA_OUT << geogebra::Point3D("P0", kInitialPos);
+    // GEOGEBRA_OUT << geogebra::Point3D("D0", ndir);
+    // GEOGEBRA_OUT << geogebra::Ray3D("R0", "P0", "D0");
+
+    ray_ = {kInitialPos, ndir};
+    const auto t = c_.cylinders[kPlasmaIdx].IntersectCurr(ray_);
     assert(t > 0);
 
     ray_.pos = ray_.Point(t);
     ray_.dir = dir;
+
+    // GEOGEBRA_OUT << geogebra::Point3D("P1", ray_.pos);
+    // GEOGEBRA_OUT << geogebra::Point3D("D1", ray_.dir);
+    // GEOGEBRA_OUT << geogebra::Ray3D("R1", "P1", "D1");
 
     current_cylinder_idx_ = kPlasmaIdx;
     Float intensity{};
     auto use_prev = true;
 
     for (size_t i = 0;; ++i) {
-      std::cout << "[Intensity, " << i << ", " << intensity << "]\n";
+      DEBUG_OUT << "[Intensity, " << i << ", " << intensity << "]\n";
 
       IntersectPrevCylinder();
       IntersectNextCylinder();
@@ -192,6 +256,8 @@ class Worker {
       if (t_min_idx <= kIdxLastCylinder) {
         const auto prev_pos = ray_.pos;
         ray_.pos = ray_.Point(ts_[t_min_idx]);
+        // GEOGEBRA_OUT << geogebra::Point3D(std::format("P{}", i + 2),
+        // ray_.pos);
         if (ts_[t_min_idx] < 3E-16) {
           [[maybe_unused]] const int klsdf = 0;
         }
@@ -213,8 +279,9 @@ class Worker {
         intensity *= exp;
         intensity += c_.intensities[idx] * (1 - exp);
 
-        std::cout << "NEW POS: " << ray_.pos << " [ti=" << t_min_idx
-                  << "][ci=" << current_cylinder_idx_ << "]\n";
+        DEBUG_OUT << "NEW POS: " << ray_.pos << " [ti=" << t_min_idx
+                  << "][ci=" << current_cylinder_idx_ << "][dir=" << ray_.dir
+                  << "]\n";
 
         if (current_cylinder_idx_ == kPlasmaIdx) {
           break;
@@ -232,11 +299,11 @@ class Worker {
 
  private:
   void PrintT(const char* prompt, const Float t) const {
-    std::cout << prompt << t;
+    DEBUG_OUT << prompt << t;
     if (t > kEps) {
-      std::cout << ' ' << ray_.Point(t);
+      DEBUG_OUT << ' ' << ray_.Point(t);
     }
-    std::cout << '\n';
+    DEBUG_OUT << '\n';
   }
 
   void IntersectPrevCylinder() {
@@ -262,8 +329,8 @@ class Worker {
   }
 
   void IntersectCurrCylinder() {
-    const auto t = c_.cylinders[current_cylinder_idx_].Intersect(ray_);
-    ts_[kIdxCurrCylinder] = IsZero(t) ? -1 : t;
+    const auto t = c_.cylinders[current_cylinder_idx_].IntersectCurr(ray_);
+    ts_[kIdxCurrCylinder] = IsZero(t, kEps) ? -1 : t;
 
     PrintT("CurrCylinder* ", t);
   }
@@ -294,10 +361,10 @@ class Solver {
       const auto I = worker.CalculateIntensity(dir);
       const auto absorbed = worker.SolveDir(dir, I);
 
-      std::cout << "ABSORBED:\n";
+      DEBUG_OUT << "ABSORBED:\n";
       for (size_t i = 0; i < absorbed.size(); ++i) {
         total_absorbed[i] += absorbed[i];
-        std::cout << absorbed[i] << '\n';
+        DEBUG_OUT << absorbed[i] << '\n';
       }
     }
 
@@ -309,10 +376,10 @@ class Solver {
 
  private:
   void InitDirs() {
-    dirs_ = FibonacciSphere(200);
+    dirs_ = FibonacciSphere(2000);
     EraseRemoveIf(dirs_, [](const Vector3F dir) { return dir.x() <= 0; });
     for (const auto dir : dirs_) {
-      std::cout << dir << '\n';
+      DEBUG_OUT << dir << '\n';
     }
   }
 
@@ -324,17 +391,17 @@ class Solver {
 
 // NOLINTNEXTLINE(bugprone-exception-escape)
 int main() {
-  std::cout << params::T(0) << '\n';
-  std::cout << params::T(1) << '\n';
-  std::cout << params::T(params::R_1 / params::R) << '\n';
+  DEBUG_OUT << params::T(0) << '\n';
+  DEBUG_OUT << params::T(1) << '\n';
+  DEBUG_OUT << params::T(params::R_1 / params::R) << '\n';
 
-  std::cout << Vector<2, Float>{-1}.x() << '\n';
-  std::cout << Vector<2, Float>{1}.y() << '\n';
+  DEBUG_OUT << Vector<2, Float>{-1}.x() << '\n';
+  DEBUG_OUT << Vector<2, Float>{1}.y() << '\n';
 
   const CylinderZInfinite c{Vector3F{}, 1};
-  std::cout << c.Intersect({{0, 0.5, 0}, {1, 0, 0}}) << '\n';
-  std::cout << c.Intersect({{0, 0.5, 0}, {0, 1, 0}}) << '\n';
-  std::cout << c.Intersect({{0, 0.5, -5}, {0, 0, 1}}) << '\n';
+  DEBUG_OUT << c.Intersect({{0, 0.5, 0}, {1, 0, 0}}) << '\n';
+  DEBUG_OUT << c.Intersect({{0, 0.5, 0}, {0, 1, 0}}) << '\n';
+  DEBUG_OUT << c.Intersect({{0, 0.5, -5}, {0, 0, 1}}) << '\n';
 
   const Solver solver;
   solver.Solve();

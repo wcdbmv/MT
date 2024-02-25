@@ -1,6 +1,8 @@
 #include "math/geometry/cylinder_z_infinite.h"
 
+#include <algorithm>
 #include <array>
+#include <cassert>
 
 #include "base/float.h"
 #include "base/float_cmp.h"
@@ -27,6 +29,31 @@ Float CylinderZInfinite::Intersect(const Ray& ray) const noexcept {
     return 0;
   }
 
+  return FindMinimalNonNegative(t);
+}
+
+Float CylinderZInfinite::IntersectCurr(const Ray& ray) const noexcept {
+  assert(IsOnShape(ray.pos));
+
+  const auto dx = ray.pos.x() - center_.x();
+  const auto dy = ray.pos.y() - center_.y();
+
+  const auto a = Sqr(ray.dir.x()) + Sqr(ray.dir.y());
+  const auto b = 2 * (ray.dir.x() * dx + ray.dir.y() * dy);
+  const auto c = Sqr(dx) + Sqr(dy) - radius2_;
+
+  std::array<Float, 2> t{};
+  const auto res = equation::SolveQuadratic(a, b, c, t[0], t[1]);
+  if (res == equation::Result::kNoRealSolution) {
+    return -1;
+  }
+  if (res == equation::Result::kHasInfiniteSolutions) [[unlikely]] {
+    return 0;
+  }
+
+  if (t[0] > 0 && t[1] > 0) {
+    return std::max(t[0], t[1]);
+  }
   return FindMinimalNonNegative(t);
 }
 

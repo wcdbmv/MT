@@ -10,6 +10,7 @@ class CylinderZInfinite : public Shape {
   constexpr CylinderZInfinite(Vector3F center, Float radius) noexcept;
 
   [[nodiscard]] Float Intersect(const Ray& ray) const noexcept override;
+  [[nodiscard]] Float IntersectCurr(const Ray& ray) const noexcept;
   [[nodiscard]] Vector3F NormalUnscaled(Vector3F p) const noexcept override;
 
   [[nodiscard]] bool IsOnShape(Vector3F p) const noexcept override;

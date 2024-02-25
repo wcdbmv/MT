@@ -18,6 +18,7 @@ set(CMAKE_CXX_CLANG_TIDY clang-tidy -warnings-as-errors=*)
 # add_subdirectory(ray_tracing)
 add_subdirectory(base)
 add_subdirectory(examples)
+add_subdirectory(geogebra)
 add_subdirectory(math)
 add_subdirectory(physics)
 
@@ -25,6 +26,6 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 add_executable(${PROJECT_NAME} main.cc)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE base math physics)
+target_link_libraries(${PROJECT_NAME} PRIVATE base geogebra math physics)
 
 enable_ipo_lto_for_release(${PROJECT_NAME})
