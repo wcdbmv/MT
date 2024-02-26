@@ -18,6 +18,17 @@ class CylinderZInfinite : public Shape {
   [[nodiscard]] constexpr Vector3F center() const noexcept { return center_; }
   [[nodiscard]] constexpr Float radius2() const noexcept { return radius2_; }
 
+  struct FresnelResult {
+    Vector3F reflected;
+    Vector3F refracted;
+    Float R{1};  ///< Коэффициент отражения.
+    Float T{0};  ///< Коэффициент преломления.
+  };
+  [[nodiscard]] FresnelResult Fresnel(Vector3F p,
+                                      Vector3F dir,
+                                      Float n_1,
+                                      Float n_2) const NOEXCEPT_RELEASE;
+
  protected:
   Vector3F center_;
   Float radius2_;

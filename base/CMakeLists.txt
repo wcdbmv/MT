@@ -3,7 +3,6 @@ project(base
         LANGUAGES CXX)
 
 set(HEADERS
-    include/base/arithmetic.h
     include/base/erase_remove_if.h
     include/base/float.h
     include/base/float_cmp.h

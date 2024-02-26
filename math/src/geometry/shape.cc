@@ -11,9 +11,20 @@ Vector3F Shape::Normal(const Vector3F p) const NOEXCEPT_RELEASE {
   return normal;
 }
 
-Vector3F Shape::Reflect(const Vector3F p,
-                        const Vector3F dir) const NOEXCEPT_RELEASE {
+Vector3F Shape::ReflectInside(const Vector3F p,
+                              const Vector3F dir) const NOEXCEPT_RELEASE {
   const auto normal = -Normal(p);
+  return Reflect(normal, dir);
+}
+
+Vector3F Shape::ReflectOutside(const Vector3F p,
+                               const Vector3F dir) const NOEXCEPT_RELEASE {
+  const auto normal = Normal(p);
+  return Reflect(normal, dir);
+}
+
+Vector3F Shape::Reflect(const Vector3F normal,
+                        const Vector3F dir) NOEXCEPT_RELEASE {
   assert(dir.IsNormalized());
   return (dir - 2 * Vector3F::Dot(normal, dir) * normal).Normalized();
 }

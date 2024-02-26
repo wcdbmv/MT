@@ -5,6 +5,7 @@
 #include <format>
 #include <iostream>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 #include "base/erase_remove_if.h"
@@ -24,6 +25,7 @@
 
 // #define ENABLE_DEBUG_OUTPUT
 // #define ENABLE_GEOGEBRA_OUTPUT
+#define ENABLE_GEOGEBRA_OUTPUT_SPHERE
 
 #ifdef ENABLE_DEBUG_OUTPUT
 #include "math/geometry/vector_io.h"
@@ -56,6 +58,15 @@ constexpr auto kStep = static_cast<Float>(0.01);
 const auto kN = static_cast<size_t>(std::round(params::R_1 / kStep));
 // NOLINTNEXTLINE(cert-err58-cpp)
 const auto kPlasmaIdx = static_cast<size_t>(std::round(params::R / kStep) - 1);
+
+constexpr auto kSpherePoints = 2000;
+
+struct StartParams {
+  Ray ray;
+  Float intensity{};
+  Float intensity_end{};
+  bool use_prev{false};
+};
 
 struct CylinderPlasmaQuartz {
   std::vector<CylinderZInfinite> cylinders;
@@ -142,26 +153,27 @@ struct CylinderPlasmaQuartz {
 
 class Worker {
  public:
-  explicit constexpr Worker(const CylinderPlasmaQuartz& c) noexcept : c_{c} {}
+  explicit constexpr Worker(const CylinderPlasmaQuartz& c,
+                            std::vector<StartParams>& wait) noexcept
+      : c_{c}, wait_{wait} {}
 
-  std::vector<Float> SolveDir(const Vector3F dir, Float intensity) {
+  // NOLINTNEXTLINE(readability-function-cognitive-complexity)
+  std::vector<Float> SolveDir(const StartParams& params) {
     std::vector<Float> absorbed(c_.cylinders.size());
-    const auto initial_intensity = intensity;
+    auto intensity = params.intensity;
 
     current_cylinder_idx_ = kPlasmaIdx;
 
-    constexpr auto kInitialPos = Vector3F{params::R, 0, params::H / 2};
-    ray_ = {kInitialPos, dir};
-    // auto last_stable_ray = ray_;
+    ray_ = params.ray;
 
     auto dir_idx = 0;
-    GEOGEBRA_OUT << geogebra::Point3D("P0", kInitialPos);
-    GEOGEBRA_OUT << geogebra::Point3D("D0", dir);
+    GEOGEBRA_OUT << geogebra::Point3D("P0", ray_.pos);
+    GEOGEBRA_OUT << geogebra::Point3D("D0", ray_.dir);
     GEOGEBRA_OUT << geogebra::Ray3D("R0", "P0", "D0");
 
-    auto use_prev = false;
+    auto use_prev = params.use_prev;
 
-    for (size_t i = 0; intensity > 0.01 * initial_intensity; ++i) {
+    for (size_t i = 0; intensity > params.intensity_end; ++i) {
       DEBUG_OUT << '[' << i << ", " << intensity << "]\n";
 
       IntersectPrevCylinder();
@@ -198,12 +210,39 @@ class Worker {
                   << "][ci=" << current_cylinder_idx_ << "][dir=" << ray_.dir
                   << "]\n";
 
+        if (current_cylinder_idx_ == kPlasmaIdx) {
+          auto n_1 = params::n_plasma;
+          auto n_2 = params::n_quartz;
+          if (use_prev) {
+            std::swap(n_1, n_2);
+          }
+          const auto res =
+              c_.cylinders[kPlasmaIdx].Fresnel(ray_.pos, ray_.dir, n_1, n_2);
+
+          // TODO(a.kerimov): Mutex.
+          if (res.T > 0) {
+            if (const auto IT = intensity * res.T; IT > params.intensity_end) {
+              wait_.push_back({{ray_.pos, res.refracted},
+                               intensity * res.T,
+                               params.intensity_end,
+                               use_prev});
+            }
+          }
+
+          assert(res.R > 0);
+          ray_.dir = res.reflected;
+          intensity *= res.R;
+          use_prev = !use_prev;
+          DEBUG_OUT << "REFLECT PLASMA, new dir " << ray_.dir << '\n';
+        }
+
         if (current_cylinder_idx_ + 1 == c_.cylinders.size()) {
           if (!ImFeelingLucky(params::rho)) {
             DEBUG_OUT << "ABSORPTION at the quartz boundary\n";
             break;
           }
-          ray_.dir = c_.cylinders.back().Reflect(ray_.pos, ray_.dir);
+          ray_.dir = c_.cylinders.back().ReflectInside(ray_.pos, ray_.dir);
+          use_prev = true;
 
           ++dir_idx;
           const auto Di = std::format("D{}", dir_idx);
@@ -335,8 +374,10 @@ class Worker {
     PrintT("CurrCylinder* ", t);
   }
 
-  // NOLINTNEXTLINE(cppcoreguidelines-avoid-const-or-ref-data-members)
+  // NOLINTBEGIN(cppcoreguidelines-avoid-const-or-ref-data-members)
   const CylinderPlasmaQuartz& c_;
+  std::vector<StartParams>& wait_;
+  // NOLINTEND(cppcoreguidelines-avoid-const-or-ref-data-members)
 
   Ray ray_{};
   size_t current_cylinder_idx_{};
@@ -352,19 +393,32 @@ class Solver {
  public:
   Solver() { InitDirs(); }
 
-  void Solve() const {
-    Worker worker{cpq_};
-
+  void Solve() {
     std::vector<Float> total_absorbed(cpq_.cylinders.size());
 
     for (const auto dir : dirs_) {
+      Worker worker{cpq_, wait_};
       const auto I = worker.CalculateIntensity(dir);
-      const auto absorbed = worker.SolveDir(dir, I);
+      constexpr auto kInitialPos = Vector3F{params::R, 0, params::H / 2};
+      const auto absorbed = worker.SolveDir({{kInitialPos, dir}, I, 0.01 * I});
 
       DEBUG_OUT << "ABSORBED:\n";
       for (size_t i = 0; i < absorbed.size(); ++i) {
         total_absorbed[i] += absorbed[i];
         DEBUG_OUT << absorbed[i] << '\n';
+      }
+    }
+
+    DEBUG_OUT << "[[wait]]\n";
+    // NOLINTNEXTLINE(modernize-loop-convert)
+    for (size_t i = 0; i < wait_.size(); ++i) {
+      Worker worker{cpq_, wait_};
+      const auto absorbed = worker.SolveDir(wait_[i]);
+
+      DEBUG_OUT << "ABSORBED:\n";
+      for (size_t j = 0; j < absorbed.size(); ++j) {
+        total_absorbed[j] += absorbed[j];
+        DEBUG_OUT << absorbed[j] << '\n';
       }
     }
 
@@ -376,14 +430,20 @@ class Solver {
 
  private:
   void InitDirs() {
-    dirs_ = FibonacciSphere(2000);
+    dirs_ = FibonacciSphere(kSpherePoints);
     EraseRemoveIf(dirs_, [](const Vector3F dir) { return dir.x() <= 0; });
     for (const auto dir : dirs_) {
       DEBUG_OUT << dir << '\n';
+#ifdef ENABLE_GEOGEBRA_OUTPUT_SPHERE
+      static int i = 0;
+      std::cout << geogebra::Point3D(std::format("P{}", i), dir);
+      ++i;
+#endif
     }
   }
 
   CylinderPlasmaQuartz cpq_;
+  std::vector<StartParams> wait_;
   std::vector<Vector3F> dirs_;
 };
 
@@ -403,6 +463,6 @@ int main() {
   DEBUG_OUT << c.Intersect({{0, 0.5, 0}, {0, 1, 0}}) << '\n';
   DEBUG_OUT << c.Intersect({{0, 0.5, -5}, {0, 0, 1}}) << '\n';
 
-  const Solver solver;
+  Solver solver;
   solver.Solve();
 }

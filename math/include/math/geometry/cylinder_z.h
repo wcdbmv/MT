@@ -6,7 +6,7 @@
 #include "math/geometry/ray.h"
 #include "math/geometry/vector3f.h"
 
-class CylinderZ final : public CylinderZInfinite {
+class [[deprecated]] CylinderZ final : public CylinderZInfinite {
  public:
   constexpr CylinderZ(Vector3F center, Float radius, Float height) noexcept;
 

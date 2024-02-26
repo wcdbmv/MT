@@ -3,9 +3,11 @@
 #include <algorithm>
 #include <array>
 #include <cassert>
+#include <cmath>
 
 #include "base/float.h"
 #include "base/float_cmp.h"
+#include "base/noexcept_release.h"
 #include "math/equation.h"
 #include "math/fast_pow.h"
 #include "math/geometry/ray.h"
@@ -63,4 +65,50 @@ Vector3F CylinderZInfinite::NormalUnscaled(const Vector3F p) const noexcept {
 
 bool CylinderZInfinite::IsOnShape(const Vector3F p) const noexcept {
   return IsEqual(Sqr(p.x() - center_.x()) + Sqr(p.y() - center_.y()), radius2_);
+}
+
+auto CylinderZInfinite::Fresnel(const Vector3F p,
+                                const Vector3F dir,
+                                const Float n_1,
+                                const Float n_2) const
+    NOEXCEPT_RELEASE->FresnelResult {
+  assert(dir.IsNormalized());
+
+  // TODO(a.kerimov): Fix solution.
+  auto n = Normal(p);
+  if (n_2 < n_1) {
+    n = -n;
+  }
+
+  // TODO(a.kerimov): Avoid calc duplication.
+  FresnelResult result{.reflected = Reflect(-n, dir)};
+
+  const auto i = dir;
+  if (n_1 >= n_2 && Vector3F::Sin(n, i) >= n_2 / n_1) {
+    // Полное внутренне отражение.
+    return result;
+  }
+
+  // https://physics.stackexchange.com/questions/435512/snells-law-in-vector-form
+  assert(Vector3F::Cos(n, i) > kEps);
+  assert(Vector3F::Sin(n, i) > kEps);
+  const auto mu = n_1 / n_2;
+  result.refracted =
+      std::sqrt(1 - Sqr(mu) * (1 - Sqr(Vector3F::Dot(n, i)))) * n +
+      mu * (i - Vector3F::Dot(n, i) * n);
+  result.refracted.Normalize();
+
+  // https://steps3d.narod.ru/tutorials/fresnel-tutorial.html
+  const auto c = Vector3F::Cos(n, i) * mu;
+  assert(c / mu > kEps);
+  const auto g = std::sqrt(1 + Sqr(c) - Sqr(mu));
+
+  // Отражённая доля энергии.
+  result.R = Sqr((g - c) / (g + c)) *
+             (1 + Sqr((c * (g + c) - Sqr(mu)) / (c * (g - c) + Sqr(mu)))) / 2;
+  result.T = 1 - result.R;
+  assert(0 <= result.R && result.R <= 1);
+  assert(0 <= result.T && result.T <= 1);
+
+  return result;
 }

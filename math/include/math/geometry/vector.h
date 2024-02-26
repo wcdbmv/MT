@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <array>
 #include <cmath>
 #include <concepts>
@@ -23,6 +24,9 @@ class Vector : public std::array<T, Size> {
  public:
   constexpr Vector(std::initializer_list<T> list) noexcept;
 
+  template <std::size_t OtherSize>
+  constexpr Vector(Vector<OtherSize, T> other) noexcept;
+
   [[nodiscard]] constexpr T& x() noexcept;
   [[nodiscard]] constexpr T x() const noexcept;
   [[nodiscard]] constexpr T& y() noexcept requires(Size >= 2);
@@ -42,6 +46,8 @@ class Vector : public std::array<T, Size> {
   [[nodiscard]] static constexpr T Dot(Vector lhs, Vector rhs) noexcept;
   [[nodiscard]] static constexpr Vector Cross(Vector lhs, Vector rhs) noexcept
       requires(Size == 3);
+  [[nodiscard]] static constexpr T Skew(Vector lhs, Vector rhs) noexcept
+      requires(Size == 2);
 
   [[nodiscard]] static constexpr T SquaredDistance(Vector lhs,
                                                    Vector rhs) noexcept;
@@ -52,12 +58,23 @@ class Vector : public std::array<T, Size> {
   constexpr void Normalize() NOEXCEPT_RELEASE;
   [[nodiscard]] constexpr Vector Normalized() const NOEXCEPT_RELEASE;
   [[nodiscard]] constexpr bool IsNormalized() const noexcept;
+
+  [[nodiscard]] static constexpr T Sin(Vector lhs, Vector rhs) noexcept
+      requires(Size == 2 || Size == 3);
+  [[nodiscard]] static constexpr T Cos(Vector lhs, Vector rhs) noexcept;
 };
 
 template <std::size_t Size, std::floating_point T>
 constexpr Vector<Size, T>::Vector(const std::initializer_list<T> list) noexcept
     : Base{} {
   std::copy_n(list.begin(), std::min(Size, list.size()), Base::begin());
+}
+
+template <std::size_t Size, std::floating_point T>
+template <std::size_t OtherSize>
+constexpr Vector<Size, T>::Vector(const Vector<OtherSize, T> other) noexcept
+    : Base{} {
+  std::copy_n(other.begin(), std::min(Size, OtherSize), Base::begin());
 }
 
 template <std::size_t Size, std::floating_point T>
@@ -251,6 +268,13 @@ constexpr auto Vector<Size, T>::Cross(const Vector lhs,
 }
 
 template <std::size_t Size, std::floating_point T>
+constexpr T Vector<Size, T>::Skew(const Vector lhs, const Vector rhs) noexcept
+    requires(Size == 2)
+{
+  return lhs[0] * rhs[1] - lhs[1] * rhs[0];
+}
+
+template <std::size_t Size, std::floating_point T>
 constexpr T Vector<Size, T>::SquaredDistance(const Vector lhs,
                                              const Vector rhs) noexcept {
   return (lhs - rhs).SquaredLength();
@@ -294,4 +318,20 @@ constexpr Vector<Size, T> Vector<Size, T>::Normalized() const NOEXCEPT_RELEASE {
 template <std::size_t Size, std::floating_point T>
 constexpr bool Vector<Size, T>::IsNormalized() const noexcept {
   return IsEqual(Length(), T{1}, std::numeric_limits<T>::epsilon());
+}
+
+template <std::size_t Size, std::floating_point T>
+constexpr T Vector<Size, T>::Sin(const Vector lhs, const Vector rhs) noexcept
+    requires(Size == 2 || Size == 3)
+{
+  if constexpr (Size == 2) {
+    return Skew(lhs, rhs) / (lhs.Length() * rhs.Length());
+  } else {
+    return Cross(lhs, rhs).Length() / (lhs.Length() * rhs.Length());
+  }
+}
+
+template <std::size_t Size, std::floating_point T>
+constexpr T Vector<Size, T>::Cos(const Vector lhs, const Vector rhs) noexcept {
+  return Dot(lhs, rhs) / (lhs.Length() * rhs.Length());
 }

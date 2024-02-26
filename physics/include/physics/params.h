@@ -42,6 +42,13 @@ inline constexpr auto rho = static_cast<Float>(0.9);
   return static_cast<Float>(0.001) * std::pow(T / 300, static_cast<Float>(1.5));
 }
 
+/// Показатель преломления плазмы.
+inline constexpr auto n_plasma = static_cast<Float>(1);
+
+/// Показатель преломления кварца.
+inline constexpr auto n_quartz = static_cast<Float>(1.4585);
+// TODO(a.kerimov): Make function.
+
 inline constexpr auto nu = static_cast<Float>(1e15);  // Гц.
 
 }  // namespace params
