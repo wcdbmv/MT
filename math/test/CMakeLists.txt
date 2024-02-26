@@ -16,11 +16,18 @@ enable_testing()
 
 set(CMAKE_CXX_CLANG_TIDY ${CXX_CLANG_TIDY_VALUE})
 
-set(SOURCES
-    cylinder_z_infinite.cc
+set(HEADERS
+    expect_vector_near.h
 )
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+set(SOURCES
+    cylinder_z_infinite.cc
+    expect_vector_near.cc
+    refract.cc
+    reflect.cc
+)
+
+add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME}
                       PRIVATE GTest::gtest_main math)
