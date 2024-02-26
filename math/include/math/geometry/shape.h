@@ -2,8 +2,9 @@
 
 #include "base/float.h"
 #include "base/noexcept_release.h"
-#include "math/geometry/ray.h"
 #include "math/geometry/vector3f.h"
+
+struct Ray;
 
 class Shape {
  public:
@@ -11,15 +12,11 @@ class Shape {
 
   [[nodiscard]] virtual Float Intersect(const Ray& ray) const noexcept = 0;
 
-  [[nodiscard]] virtual Vector3F NormalUnscaled(Vector3F p) const noexcept = 0;
+  [[nodiscard]] virtual Vector3F Perpendicular(Vector3F p) const noexcept = 0;
   [[nodiscard]] virtual Vector3F Normal(Vector3F p) const NOEXCEPT_RELEASE;
 
-  [[nodiscard]] Vector3F ReflectInside(Vector3F p,
-                                       Vector3F dir) const NOEXCEPT_RELEASE;
-  [[nodiscard]] Vector3F ReflectOutside(Vector3F p,
-                                        Vector3F dir) const NOEXCEPT_RELEASE;
-  [[nodiscard]] static Vector3F Reflect(Vector3F normal,
-                                        Vector3F dir) NOEXCEPT_RELEASE;
+  [[nodiscard]] Vector3F ReflectInside(const Ray& ray) const NOEXCEPT_RELEASE;
+  [[nodiscard]] Vector3F ReflectOutside(const Ray& ray) const NOEXCEPT_RELEASE;
 
   [[nodiscard]] virtual bool IsOnShape(Vector3F p) const noexcept = 0;
 };

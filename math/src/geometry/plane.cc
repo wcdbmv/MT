@@ -15,7 +15,7 @@ Float Plane::Intersect(const Ray& ray) const noexcept {
   return Vector3F::Dot(origin_ - ray.pos, normal_) / denominator;
 }
 
-Vector3F Plane::NormalUnscaled(const Vector3F /* p */) const noexcept {
+Vector3F Plane::Perpendicular(const Vector3F /* p */) const noexcept {
   return normal_;
 }
 

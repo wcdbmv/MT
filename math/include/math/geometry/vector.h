@@ -20,6 +20,7 @@ class Vector : public std::array<T, Size> {
   using Base = std::array<T, Size>;
 
  public:
+  constexpr Vector() noexcept;
   constexpr Vector(std::initializer_list<T> list) noexcept;
 
   template <std::size_t OtherSize>
@@ -57,10 +58,11 @@ class Vector : public std::array<T, Size> {
   [[nodiscard]] constexpr Vector Normalized() const NOEXCEPT_RELEASE;
   [[nodiscard]] constexpr bool IsNormalized() const noexcept;
 
-  [[nodiscard]] static constexpr T Sin(Vector lhs, Vector rhs) noexcept
-      requires(Size == 2 || Size == 3);
-  [[nodiscard]] static constexpr T Cos(Vector lhs, Vector rhs) noexcept;
+  constexpr void Negate() noexcept;
 };
+
+template <std::size_t Size, std::floating_point T>
+constexpr Vector<Size, T>::Vector() noexcept : Base{} {}
 
 template <std::size_t Size, std::floating_point T>
 constexpr Vector<Size, T>::Vector(const std::initializer_list<T> list) noexcept
@@ -193,12 +195,9 @@ constexpr Vector<Size, T>& Vector<Size, T>::operator/=(const T rhs)
 }
 
 template <std::size_t Size, std::floating_point T>
-constexpr Vector<Size, T> operator-(Vector<Size, T> lhs) noexcept {
-  for (auto& item : lhs) {
-    item = -item;
-  }
-
-  return lhs;
+constexpr Vector<Size, T> operator-(Vector<Size, T> v) noexcept {
+  v.Negate();
+  return v;
 }
 
 template <std::size_t Size, std::floating_point T>
@@ -319,17 +318,8 @@ constexpr bool Vector<Size, T>::IsNormalized() const noexcept {
 }
 
 template <std::size_t Size, std::floating_point T>
-constexpr T Vector<Size, T>::Sin(const Vector lhs, const Vector rhs) noexcept
-    requires(Size == 2 || Size == 3)
-{
-  if constexpr (Size == 2) {
-    return Skew(lhs, rhs) / (lhs.Length() * rhs.Length());
-  } else {
-    return Cross(lhs, rhs).Length() / (lhs.Length() * rhs.Length());
+constexpr void Vector<Size, T>::Negate() noexcept {
+  for (auto& coord : *this) {
+    coord = -coord;
   }
-}
-
-template <std::size_t Size, std::floating_point T>
-constexpr T Vector<Size, T>::Cos(const Vector lhs, const Vector rhs) noexcept {
-  return Dot(lhs, rhs) / (lhs.Length() * rhs.Length());
 }

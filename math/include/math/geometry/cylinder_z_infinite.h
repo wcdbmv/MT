@@ -12,7 +12,7 @@ class CylinderZInfinite : public Shape {
 
   [[nodiscard]] Float Intersect(const Ray& ray) const noexcept override;
   [[nodiscard]] Float IntersectCurr(const Ray& ray) const noexcept;
-  [[nodiscard]] Vector3F NormalUnscaled(Vector3F p) const noexcept override;
+  [[nodiscard]] Vector3F Perpendicular(Vector3F p) const noexcept override;
 
   [[nodiscard]] bool IsOnShape(Vector3F p) const noexcept override;
 
@@ -25,10 +25,10 @@ class CylinderZInfinite : public Shape {
     Float R{1};  ///< Коэффициент отражения.
     Float T{0};  ///< Коэффициент преломления.
   };
-  [[nodiscard]] FresnelResult Fresnel(Vector3F p,
-                                      Vector3F dir,
-                                      Float n_1,
-                                      Float n_2) const NOEXCEPT_RELEASE;
+  [[nodiscard]] FresnelResult Refract(const Ray& ray,
+                                      Float eta_i,
+                                      Float eta_t,
+                                      bool outward) const NOEXCEPT_RELEASE;
 
  protected:
   Vector3F center_;

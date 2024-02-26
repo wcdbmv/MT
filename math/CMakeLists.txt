@@ -13,6 +13,8 @@ set(HEADERS
     include/math/geometry/fibonacci_sphere.h
     include/math/geometry/plane.h
     include/math/geometry/ray.h
+    include/math/geometry/reflect.h
+    include/math/geometry/refract.h
     include/math/geometry/shape.h
     include/math/geometry/vector.h
     include/math/geometry/vector3f.h
@@ -29,6 +31,8 @@ set(SOURCES
     src/geometry/disk.cc
     src/geometry/fibonacci_sphere.cc
     src/geometry/plane.cc
+    src/geometry/reflect.cc
+    src/geometry/refract.cc
     src/geometry/shape.cc
     src/random.cc
     src/utils.cc

@@ -11,7 +11,7 @@ class Plane : public Shape {
   constexpr Plane(Vector3F origin, Vector3F normal) noexcept;
 
   [[nodiscard]] Float Intersect(const Ray& ray) const noexcept override;
-  [[nodiscard]] Vector3F NormalUnscaled(Vector3F p) const noexcept override;
+  [[nodiscard]] Vector3F Perpendicular(Vector3F p) const noexcept override;
   [[nodiscard]] Vector3F Normal(Vector3F p) const NOEXCEPT_RELEASE override;
   [[nodiscard]] bool IsOnShape(Vector3F p) const noexcept override;
 

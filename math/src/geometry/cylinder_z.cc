@@ -26,7 +26,7 @@ Float CylinderZ::Intersect(const Ray& ray) const noexcept {
   return FindMinimalNonNegative(t);
 }
 
-Vector3F CylinderZ::NormalUnscaled(const Vector3F p) const noexcept {
+Vector3F CylinderZ::Perpendicular(const Vector3F p) const noexcept {
   if (base1_.IsOnShape(p)) {
     return kUnitZ;
   }
@@ -36,7 +36,7 @@ Vector3F CylinderZ::NormalUnscaled(const Vector3F p) const noexcept {
   }
 
   assert(IsOnSideShape(p));
-  return CylinderZInfinite::NormalUnscaled(p);
+  return CylinderZInfinite::Perpendicular(p);
 }
 
 bool CylinderZ::IsOnShape(const Vector3F p) const noexcept {

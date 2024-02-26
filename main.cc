@@ -24,9 +24,9 @@
 #include "physics/params.h"
 #include "physics/plancks_law.h"
 
-// #define ENABLE_DEBUG_OUTPUT
+#define ENABLE_DEBUG_OUTPUT
 // #define ENABLE_GEOGEBRA_OUTPUT
-#define ENABLE_GEOGEBRA_OUTPUT_SPHERE
+// #define ENABLE_GEOGEBRA_OUTPUT_SPHERE
 
 #ifdef ENABLE_DEBUG_OUTPUT
 #include "math/geometry/vector_io.h"
@@ -54,13 +54,13 @@ DummyOut& operator<<(DummyOut& dummy_out, T&&) noexcept {  // NOLINT
 #define GEOGEBRA_OUT gDummyOut
 #endif
 
-constexpr auto kStep = static_cast<Float>(0.01);
+constexpr auto kStep = static_cast<Float>(0.05);
 // NOLINTNEXTLINE(cert-err58-cpp)
 const auto kN = static_cast<size_t>(std::round(params::R_1 / kStep));
 // NOLINTNEXTLINE(cert-err58-cpp)
 const auto kPlasmaIdx = static_cast<size_t>(std::round(params::R / kStep) - 1);
 
-constexpr auto kSpherePoints = 2000;
+constexpr auto kSpherePoints = 200;
 
 struct StartParams {
   Ray ray;
@@ -78,10 +78,10 @@ struct CylinderPlasmaQuartz {
   CylinderPlasmaQuartz() : borders{InitBorders()} {
     InitCylinders();
 
-    // assert(kPlasmaIdx == 6);
-    // assert(kN == 9);
-    assert(kPlasmaIdx == 34);
-    assert(kN == 45);
+    assert(kPlasmaIdx == 6);
+    assert(kN == 9);
+    // assert(kPlasmaIdx == 34);
+    // assert(kN == 45);
   }
 
  private:
@@ -213,11 +213,13 @@ class Worker {
         if (current_cylinder_idx_ == kPlasmaIdx) {
           auto n_1 = params::n_plasma;
           auto n_2 = params::n_quartz;
-          if (use_prev) {
+          const auto outward = prev_cylinder_idx <= current_cylinder_idx_;
+          if (!outward) {
             std::swap(n_1, n_2);
           }
+
           const auto res =
-              c_.cylinders[kPlasmaIdx].Fresnel(ray_.pos, ray_.dir, n_1, n_2);
+              c_.cylinders[kPlasmaIdx].Refract(ray_, n_1, n_2, outward);
 
           // TODO(a.kerimov): Mutex.
           if (res.T > 0) {
@@ -241,7 +243,7 @@ class Worker {
             DEBUG_OUT << "ABSORPTION at the quartz boundary\n";
             break;
           }
-          ray_.dir = c_.cylinders.back().ReflectInside(ray_.pos, ray_.dir);
+          ray_.dir = c_.cylinders.back().ReflectInside(ray_);
           use_prev = true;
 
           ++dir_idx;

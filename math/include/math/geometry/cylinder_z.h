@@ -11,7 +11,7 @@ class [[deprecated]] CylinderZ final : public CylinderZInfinite {
   constexpr CylinderZ(Vector3F center, Float radius, Float height) noexcept;
 
   [[nodiscard]] Float Intersect(const Ray& ray) const noexcept override;
-  [[nodiscard]] Vector3F NormalUnscaled(Vector3F p) const noexcept override;
+  [[nodiscard]] Vector3F Perpendicular(Vector3F p) const noexcept override;
 
   [[nodiscard]] bool IsOnShape(Vector3F p) const noexcept override;
 
