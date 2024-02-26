@@ -1,8 +1,6 @@
 #pragma once
 
-#include <algorithm>
 #include <array>
-#include <cmath>
 #include <concepts>
 #include <cstddef>
 #include <initializer_list>
@@ -13,7 +11,7 @@
 
 #include "base/float_cmp.h"
 #include "base/noexcept_release.h"
-#include "math/fast_pow.h"
+#include "math/sqrt.h"
 
 template <std::size_t Size, std::floating_point T>
 class Vector : public std::array<T, Size> {
@@ -25,7 +23,7 @@ class Vector : public std::array<T, Size> {
   constexpr Vector(std::initializer_list<T> list) noexcept;
 
   template <std::size_t OtherSize>
-  constexpr Vector(Vector<OtherSize, T> other) noexcept;
+  explicit constexpr Vector(Vector<OtherSize, T> other) noexcept;
 
   [[nodiscard]] constexpr T& x() noexcept;
   [[nodiscard]] constexpr T x() const noexcept;
@@ -283,7 +281,7 @@ constexpr T Vector<Size, T>::SquaredDistance(const Vector lhs,
 template <std::size_t Size, std::floating_point T>
 constexpr T Vector<Size, T>::Distance(const Vector lhs,
                                       const Vector rhs) noexcept {
-  return std::sqrt(SquaredDistance(lhs, rhs));
+  return Sqrt(SquaredDistance(lhs, rhs));
 }
 
 template <std::size_t Size, std::floating_point T>
@@ -293,7 +291,7 @@ constexpr T Vector<Size, T>::SquaredLength() const noexcept {
 
 template <std::size_t Size, std::floating_point T>
 constexpr T Vector<Size, T>::Length() const noexcept {
-  return std::sqrt(SquaredLength());
+  return Sqrt(SquaredLength());
 }
 
 template <std::size_t Size, std::floating_point T>
@@ -305,7 +303,7 @@ constexpr void Vector<Size, T>::Normalize() NOEXCEPT_RELEASE {
   }
 #endif
 
-  *this *= T{1} / std::sqrt(squared_length);
+  *this *= T{1} / Sqrt(squared_length);
 }
 
 template <std::size_t Size, std::floating_point T>

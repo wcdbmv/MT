@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <array>
 #include <cassert>
-#include <cmath>
 
 #include "base/float.h"
 #include "base/float_cmp.h"
@@ -12,6 +11,7 @@
 #include "math/fast_pow.h"
 #include "math/geometry/ray.h"
 #include "math/geometry/vector3f.h"
+#include "math/sqrt.h"
 #include "math/utils.h"
 
 Float CylinderZInfinite::Intersect(const Ray& ray) const noexcept {
@@ -93,15 +93,14 @@ auto CylinderZInfinite::Fresnel(const Vector3F p,
   assert(Vector3F::Cos(n, i) > kEps);
   assert(Vector3F::Sin(n, i) > kEps);
   const auto mu = n_1 / n_2;
-  result.refracted =
-      std::sqrt(1 - Sqr(mu) * (1 - Sqr(Vector3F::Dot(n, i)))) * n +
-      mu * (i - Vector3F::Dot(n, i) * n);
+  result.refracted = Sqrt(1 - Sqr(mu) * (1 - Sqr(Vector3F::Dot(n, i)))) * n +
+                     mu * (i - Vector3F::Dot(n, i) * n);
   result.refracted.Normalize();
 
   // https://steps3d.narod.ru/tutorials/fresnel-tutorial.html
   const auto c = Vector3F::Cos(n, i) * mu;
   assert(c / mu > kEps);
-  const auto g = std::sqrt(1 + Sqr(c) - Sqr(mu));
+  const auto g = Sqrt(1 + Sqr(c) - Sqr(mu));
 
   // Отражённая доля энергии.
   result.R = Sqr((g - c) / (g + c)) *

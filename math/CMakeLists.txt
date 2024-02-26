@@ -18,6 +18,7 @@ set(HEADERS
     include/math/geometry/vector3f.h
     include/math/geometry/vector_io.h
     include/math/random.h
+    include/math/sqrt.h
     include/math/utils.h
 )
 

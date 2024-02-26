@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cassert>
-
 #include "base/float.h"
 
 [[nodiscard]] constexpr Float Sqr(const Float x) noexcept {
@@ -58,6 +56,5 @@ template <int power>
     return EightPower(x);
   }
 
-  assert(false);
   return {};
 }

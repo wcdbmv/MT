@@ -19,6 +19,7 @@
 #include "math/geometry/vector.h"
 #include "math/geometry/vector3f.h"
 #include "math/random.h"
+#include "math/sqrt.h"
 #include "math/utils.h"
 #include "physics/params.h"
 #include "physics/plancks_law.h"
@@ -128,8 +129,7 @@ struct CylinderPlasmaQuartz {
 
     DEBUG_OUT << "Cylinders:\n";
     for (auto& cylinder : cylinders) {
-      DEBUG_OUT << cylinder.center() << ' ' << std::sqrt(cylinder.radius2())
-                << '\n';
+      DEBUG_OUT << cylinder.center() << ' ' << Sqrt(cylinder.radius2()) << '\n';
     }
 
     DEBUG_OUT << "T:\n";

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include <utility>
 
 #include "base/float.h"
 

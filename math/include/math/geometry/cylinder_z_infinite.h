@@ -1,6 +1,7 @@
 #pragma once
 
 #include "base/float.h"
+#include "base/noexcept_release.h"
 #include "math/geometry/ray.h"
 #include "math/geometry/shape.h"
 #include "math/geometry/vector3f.h"
