@@ -16,14 +16,14 @@ Vector3F Refract(const Vector3F I,
   const auto mu = eta_i / eta_t;
   const auto g2 = 1 - Sqr(mu) * (1 - Sqr(cos_i));
   assert(g2 > 0);
-  return RefractBase(I, N, mu, cos_i, Sqrt(g2));
+  return RefractEx(I, N, mu, cos_i, Sqrt(g2));
 }
 
-Vector3F RefractBase(const Vector3F I,
-                     const Vector3F N,
-                     const Float mu,
-                     const Float cos_i,
-                     const Float g) NOEXCEPT_RELEASE {
+Vector3F RefractEx(const Vector3F I,
+                   const Vector3F N,
+                   const Float mu,
+                   const Float cos_i,
+                   const Float g) NOEXCEPT_RELEASE {
   assert(I.IsNormalized());
   assert(N.IsNormalized());
   assert(-1 <= cos_i && cos_i <= 1);

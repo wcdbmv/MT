@@ -8,12 +8,12 @@
 
 Vector3F Reflect(const Vector3F I, const Vector3F N) NOEXCEPT_RELEASE {
   const auto cos_i = Vector3F::Dot(I, N);
-  return ReflectBase(I, N, cos_i);
+  return ReflectEx(I, N, cos_i);
 }
 
-Vector3F ReflectBase(const Vector3F I,
-                     const Vector3F N,
-                     const Float cos_i) NOEXCEPT_RELEASE {
+Vector3F ReflectEx(const Vector3F I,
+                   const Vector3F N,
+                   const Float cos_i) NOEXCEPT_RELEASE {
   assert(I.IsNormalized());
   assert(N.IsNormalized());
   assert(-1 <= cos_i && cos_i <= 1);
