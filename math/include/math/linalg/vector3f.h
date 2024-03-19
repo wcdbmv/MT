@@ -1,7 +1,7 @@
 #pragma once
 
 #include "base/float.h"
-#include "math/linalg/vector.h"
+#include "math/linalg/vector.h"  // IWYU pragma: export
 
 using Vector3F = Vector<3, Float>;
 

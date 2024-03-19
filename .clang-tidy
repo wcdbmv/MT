@@ -18,6 +18,7 @@ hicpp-*,\
 -hicpp-special-member-functions,\
 -hicpp-uppercase-literal-suffix,\
 misc-*,\
+-misc-include-cleaner,\
 -misc-no-recursion,\
 -misc-non-private-member-variables-in-classes,\
 modernize-*,\

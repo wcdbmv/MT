@@ -1,10 +1,7 @@
 #include "math/utils.h"
 
-#include <cstddef>
 #include <cassert>
-#include <span>
 
-#include "base/float.h"
 #include "base/float_cmp.h"
 
 std::size_t FindMinimalNonNegativeIndex(const std::span<Float> t) noexcept {

@@ -3,14 +3,12 @@
 #include <algorithm>
 #include <array>
 #include <cassert>
+#include <span>
 
-#include "base/float.h"
 #include "base/float_cmp.h"
-#include "base/noexcept_release.h"
 #include "math/equation.h"
 #include "math/fast_pow.h"
 #include "math/linalg/ray.h"
-#include "math/linalg/vector3f.h"
 #include "math/sqrt.h"
 #include "math/utils.h"
 #include "physics/reflect.h"

@@ -2,13 +2,10 @@
 
 #include <cassert>
 #include <cmath>
-#include <cstddef>
-#include <vector>
 
 #include "base/float.h"
 #include "math/consts/golden_ratio.h"
 #include "math/consts/pi.h"
-#include "math/linalg/vector3f.h"
 
 namespace {
 

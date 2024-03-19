@@ -1,9 +1,10 @@
 #pragma once
 
 #include "base/float.h"
-#include "math/linalg/ray.h"
 #include "math/linalg/vector3f.h"
 #include "ray_tracing/plane.h"
+
+struct Ray;
 
 class Disk final : public Plane {
  public:

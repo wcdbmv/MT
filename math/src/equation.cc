@@ -1,6 +1,5 @@
 #include "math/equation.h"
 
-#include "base/float.h"
 #include "base/float_cmp.h"
 #include "math/fast_pow.h"
 #include "math/sqrt.h"

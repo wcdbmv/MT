@@ -1,0 +1,7 @@
+[
+  # Taken from https://github.com/include-what-you-use/include-what-you-use
+  { ref: "standard_mappings/default_mappings.imp" },
+  { ref: "standard_mappings/libcxx.imp" },
+  { ref: "standard_mappings/stl.c.headers.imp" },
+  { ref: "standard_mappings/stl.public.imp" },
+]

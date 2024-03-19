@@ -1,11 +1,6 @@
 #include "geogebra/api.h"
 
 #include <format>
-#include <string>
-#include <string_view>
-
-#include "base/float.h"
-#include "math/linalg/vector3f.h"
 
 namespace geogebra {
 

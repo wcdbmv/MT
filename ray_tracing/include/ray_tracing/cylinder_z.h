@@ -1,10 +1,11 @@
 #pragma once
 
 #include "base/float.h"
-#include "math/linalg/ray.h"
 #include "math/linalg/vector3f.h"
 #include "ray_tracing/cylinder_z_infinite.h"
 #include "ray_tracing/disk.h"
+
+struct Ray;
 
 class [[deprecated]] CylinderZ final : public CylinderZInfinite {
  public:

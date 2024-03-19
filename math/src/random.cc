@@ -3,8 +3,6 @@
 #include <cassert>
 #include <random>
 
-#include "base/float.h"
-
 [[nodiscard]] bool ImFeelingLucky(const Float probability) noexcept {
   assert(0 <= probability && probability <= 1);
 

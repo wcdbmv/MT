@@ -29,7 +29,7 @@ set(SOURCES
 add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME}
-                      PRIVATE GTest::gtest_main physics)
+                      PRIVATE GTest::gtest_main base math physics)
 
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME})

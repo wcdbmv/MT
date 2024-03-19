@@ -12,6 +12,7 @@ add_compile_options("$<$<CONFIG:RELEASE>:-O3;-ffast-math>")
 
 include(cmake/CompileOptions.cmake)
 include(cmake/IPO.LTO.cmake)
+include(cmake/IWYU.cmake)
 
 #set(CMAKE_CXX_CLANG_TIDY clang-tidy -warnings-as-errors=*)
 add_compile_definitions(CONSTANT_TEMPERATURE)

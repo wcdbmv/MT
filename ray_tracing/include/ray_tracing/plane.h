@@ -2,9 +2,10 @@
 
 #include "base/float.h"
 #include "base/noexcept_release.h"
-#include "math/linalg/ray.h"
 #include "math/linalg/vector3f.h"
 #include "ray_tracing/shape.h"
+
+struct Ray;
 
 class Plane : public Shape {
  public:

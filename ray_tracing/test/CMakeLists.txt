@@ -23,7 +23,7 @@ set(SOURCES
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME}
-                      PRIVATE GTest::gtest_main ray_tracing)
+                      PRIVATE GTest::gtest_main base math ray_tracing)
 
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME})
