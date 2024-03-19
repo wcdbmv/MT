@@ -1,4 +1,4 @@
-#include "math/geometry/fibonacci_sphere.h"
+#include "math/linalg/fibonacci_sphere.h"
 
 #include <cassert>
 #include <cmath>
@@ -8,7 +8,7 @@
 #include "base/float.h"
 #include "math/consts/golden_ratio.h"
 #include "math/consts/pi.h"
-#include "math/geometry/vector3f.h"
+#include "math/linalg/vector3f.h"
 
 namespace {
 

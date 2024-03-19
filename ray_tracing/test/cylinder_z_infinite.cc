@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "math/geometry/cylinder_z_infinite.h"
-#include "math/geometry/ray.h"
+#include "math/linalg/ray.h"
+#include "ray_tracing/cylinder_z_infinite.h"
 
 TEST(CylinderZInfinite, IntersectX) {
   const CylinderZInfinite cylinder{{}, 2};

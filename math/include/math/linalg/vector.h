@@ -24,7 +24,10 @@ class Vector : public std::array<T, Size> {
   constexpr Vector(std::initializer_list<T> list) noexcept;
 
   template <std::size_t OtherSize>
-  explicit constexpr Vector(Vector<OtherSize, T> other) noexcept;
+  explicit constexpr Vector(Vector<OtherSize, T> other) noexcept
+      requires(Size != OtherSize);
+
+  constexpr Vector(Vector tail, Vector tip) noexcept;
 
   [[nodiscard]] constexpr T& x() noexcept;
   [[nodiscard]] constexpr T x() const noexcept;
@@ -73,9 +76,14 @@ constexpr Vector<Size, T>::Vector(const std::initializer_list<T> list) noexcept
 template <std::size_t Size, std::floating_point T>
 template <std::size_t OtherSize>
 constexpr Vector<Size, T>::Vector(const Vector<OtherSize, T> other) noexcept
+    requires(Size != OtherSize)
     : Base{} {
   std::copy_n(other.begin(), std::min(Size, OtherSize), Base::begin());
 }
+
+template <std::size_t Size, std::floating_point T>
+constexpr Vector<Size, T>::Vector(const Vector tail, const Vector tip) noexcept
+    : Vector{tip - tail} {}
 
 template <std::size_t Size, std::floating_point T>
 constexpr T& Vector<Size, T>::x() noexcept {

@@ -7,18 +7,13 @@ set(HEADERS
     include/math/consts/pi.h
     include/math/equation.h
     include/math/fast_pow.h
-    include/math/geometry/cylinder_z.h
-    include/math/geometry/cylinder_z_infinite.h
-    include/math/geometry/disk.h
-    include/math/geometry/fibonacci_sphere.h
-    include/math/geometry/plane.h
-    include/math/geometry/ray.h
-    include/math/geometry/reflect.h
-    include/math/geometry/refract.h
-    include/math/geometry/shape.h
-    include/math/geometry/vector.h
-    include/math/geometry/vector3f.h
-    include/math/geometry/vector_io.h
+    include/math/linalg/fibonacci_sphere.h
+    include/math/linalg/ray.h
+    include/math/linalg/reflect.h
+    include/math/linalg/refract.h
+    include/math/linalg/vector.h
+    include/math/linalg/vector3f.h
+    include/math/linalg/vector_io.h
     include/math/random.h
     include/math/sqrt.h
     include/math/utils.h
@@ -26,14 +21,9 @@ set(HEADERS
 
 set(SOURCES
     src/equation.cc
-    src/geometry/cylinder_z.cc
-    src/geometry/cylinder_z_infinite.cc
-    src/geometry/disk.cc
-    src/geometry/fibonacci_sphere.cc
-    src/geometry/plane.cc
-    src/geometry/reflect.cc
-    src/geometry/refract.cc
-    src/geometry/shape.cc
+    src/linalg/fibonacci_sphere.cc
+    src/linalg/reflect.cc
+    src/linalg/refract.cc
     src/random.cc
     src/utils.cc
 )

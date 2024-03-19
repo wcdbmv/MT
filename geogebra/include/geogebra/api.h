@@ -4,7 +4,7 @@
 #include <string_view>
 
 #include "base/float.h"
-#include "math/geometry/vector3f.h"
+#include "math/linalg/vector3f.h"
 
 namespace geogebra {
 

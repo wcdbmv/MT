@@ -2,7 +2,7 @@
 
 #include "base/float.h"
 #include "base/noexcept_release.h"
-#include "math/geometry/vector3f.h"
+#include "math/linalg/vector3f.h"
 
 struct Ray;
 

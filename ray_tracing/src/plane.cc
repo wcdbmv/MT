@@ -1,10 +1,10 @@
-#include "math/geometry/plane.h"
+#include "ray_tracing/plane.h"
 
 #include "base/float.h"
 #include "base/float_cmp.h"
 #include "base/noexcept_release.h"
-#include "math/geometry/ray.h"
-#include "math/geometry/vector3f.h"
+#include "math/linalg/ray.h"
+#include "math/linalg/vector3f.h"
 
 Float Plane::Intersect(const Ray& ray) const noexcept {
   const auto denominator = Vector3F::Dot(normal_, ray.dir);

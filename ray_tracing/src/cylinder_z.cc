@@ -1,14 +1,14 @@
-#include "math/geometry/cylinder_z.h"
+#include "ray_tracing/cylinder_z.h"
 
 #include <array>
 #include <cassert>
 
 #include "base/float.h"
-#include "math/geometry/cylinder_z_infinite.h"
-#include "math/geometry/disk.h"
-#include "math/geometry/ray.h"
-#include "math/geometry/vector3f.h"
+#include "math/linalg/ray.h"
+#include "math/linalg/vector3f.h"
 #include "math/utils.h"
+#include "ray_tracing/cylinder_z_infinite.h"
+#include "ray_tracing/disk.h"
 
 Float CylinderZ::Intersect(const Ray& ray) const noexcept {
   std::array<Float, 3> t{-1, -1, -1};

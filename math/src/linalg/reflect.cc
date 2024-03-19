@@ -1,10 +1,10 @@
-#include "math/geometry/reflect.h"
+#include "math/linalg/reflect.h"
 
 #include <cassert>
 
 #include "base/float.h"
 #include "base/noexcept_release.h"
-#include "math/geometry/vector3f.h"
+#include "math/linalg/vector3f.h"
 
 Vector3F Reflect(const Vector3F I, const Vector3F N) NOEXCEPT_RELEASE {
   const auto cos_i = Vector3F::Dot(I, N);

@@ -5,7 +5,7 @@
 #include <experimental/iterator>
 #include <ostream>
 
-#include "math/geometry/vector.h"
+#include "math/linalg/vector.h"
 
 template <std::size_t Size, typename T>
 std::ostream& operator<<(std::ostream& os, const Vector<Size, T> v) {

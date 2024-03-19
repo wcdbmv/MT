@@ -1,11 +1,11 @@
-#include "math/geometry/refract.h"
+#include "math/linalg/refract.h"
 
 #include <cassert>
 
 #include "base/float.h"
 #include "base/noexcept_release.h"
 #include "math/fast_pow.h"
-#include "math/geometry/vector3f.h"
+#include "math/linalg/vector3f.h"
 #include "math/sqrt.h"
 
 Vector3F Refract(const Vector3F I,

@@ -2,9 +2,9 @@
 
 #include "base/float.h"
 #include "base/noexcept_release.h"
-#include "math/geometry/ray.h"
-#include "math/geometry/shape.h"
-#include "math/geometry/vector3f.h"
+#include "math/linalg/ray.h"
+#include "math/linalg/vector3f.h"
+#include "ray_tracing/shape.h"
 
 class Plane : public Shape {
  public:

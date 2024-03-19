@@ -1,9 +1,9 @@
-#include "math/geometry/shape.h"
+#include "ray_tracing/shape.h"
 
 #include "base/noexcept_release.h"
-#include "math/geometry/ray.h"
-#include "math/geometry/reflect.h"
-#include "math/geometry/vector3f.h"
+#include "math/linalg/ray.h"
+#include "math/linalg/reflect.h"
+#include "math/linalg/vector3f.h"
 
 Vector3F Shape::Normal(const Vector3F p) const NOEXCEPT_RELEASE {
   return Perpendicular(p).Normalized();

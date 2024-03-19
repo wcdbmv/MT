@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "base/float_cmp.h"
-#include "math/geometry/vector3f.h"
+#include "math/linalg/vector3f.h"
 
 void ExpectVectorNear(Vector3F actual, Vector3F expected) {
   EXPECT_NEAR(actual.x(), expected.x(), kEps);

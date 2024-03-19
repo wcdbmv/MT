@@ -1,7 +1,7 @@
 #pragma once
 
 #include "base/float.h"
-#include "math/geometry/vector3f.h"
+#include "math/linalg/vector3f.h"
 
 struct Ray {
   Vector3F pos;

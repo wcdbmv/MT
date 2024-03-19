@@ -1,4 +1,4 @@
-#include "math/geometry/cylinder_z_infinite.h"
+#include "ray_tracing/cylinder_z_infinite.h"
 
 #include <algorithm>
 #include <array>
@@ -9,10 +9,10 @@
 #include "base/noexcept_release.h"
 #include "math/equation.h"
 #include "math/fast_pow.h"
-#include "math/geometry/ray.h"
-#include "math/geometry/reflect.h"
-#include "math/geometry/refract.h"
-#include "math/geometry/vector3f.h"
+#include "math/linalg/ray.h"
+#include "math/linalg/reflect.h"
+#include "math/linalg/refract.h"
+#include "math/linalg/vector3f.h"
 #include "math/sqrt.h"
 #include "math/utils.h"
 

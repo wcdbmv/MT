@@ -4,8 +4,8 @@
 
 #include "base/float.h"
 #include "expect_vector_near.h"
-#include "math/geometry/refract.h"
-#include "math/geometry/vector3f.h"
+#include "math/linalg/refract.h"
+#include "math/linalg/vector3f.h"
 
 TEST(RefractTest, AirToGlass) {
   const auto I = Vector3F{1, 1, -1}.Normalized();

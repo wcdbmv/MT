@@ -1,10 +1,10 @@
 #pragma once
 
 #include "base/float.h"
-#include "math/geometry/cylinder_z_infinite.h"
-#include "math/geometry/disk.h"
-#include "math/geometry/ray.h"
-#include "math/geometry/vector3f.h"
+#include "math/linalg/ray.h"
+#include "math/linalg/vector3f.h"
+#include "ray_tracing/cylinder_z_infinite.h"
+#include "ray_tracing/disk.h"
 
 class [[deprecated]] CylinderZ final : public CylinderZInfinite {
  public:

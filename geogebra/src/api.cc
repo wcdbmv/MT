@@ -5,7 +5,7 @@
 #include <string_view>
 
 #include "base/float.h"
-#include "math/geometry/vector3f.h"
+#include "math/linalg/vector3f.h"
 
 namespace geogebra {
 
@@ -43,7 +43,8 @@ std::string Point3D(const std::string_view name, const Vector3F point) {
 std::string Ray3D(const std::string_view name,
                   const std::string_view pos,
                   const std::string_view dir) {
-  constexpr std::string_view fmt = R"F(<expression label="{1}{2}" exp="{1} + {2}" type="point" />
+  constexpr std::string_view fmt =
+      R"F(<expression label="{1}{2}" exp="{1} + {2}" type="point" />
 <element type="point3d" label="{1}{2}">
 	<show object="true" label="true" ev="4"/>
 	<objColor r="68" g="68" b="68" alpha="0"/>

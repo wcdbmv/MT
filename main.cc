@@ -14,24 +14,24 @@
 #include "geogebra/api.h"
 #include "math/consts/pi.h"
 #include "math/fast_pow.h"
-#include "math/geometry/cylinder_z_infinite.h"
-#include "math/geometry/disk.h"
-#include "math/geometry/fibonacci_sphere.h"
-#include "math/geometry/ray.h"
-#include "math/geometry/vector.h"
-#include "math/geometry/vector3f.h"
+#include "math/linalg/fibonacci_sphere.h"
+#include "math/linalg/ray.h"
+#include "math/linalg/vector.h"
+#include "math/linalg/vector3f.h"
 #include "math/random.h"
 #include "math/sqrt.h"
 #include "math/utils.h"
 #include "physics/params.h"
 #include "physics/plancks_law.h"
+#include "ray_tracing/cylinder_z_infinite.h"
+#include "ray_tracing/disk.h"
 
 // #define ENABLE_DEBUG_OUTPUT
 // #define ENABLE_GEOGEBRA_OUTPUT
 // #define ENABLE_GEOGEBRA_OUTPUT_SPHERE
 
 #ifdef ENABLE_DEBUG_OUTPUT
-#include "math/geometry/vector_io.h"
+#include "math/linalg/vector_io.h"
 #endif
 
 namespace {
@@ -80,9 +80,8 @@ struct CylinderPlasmaQuartz {
   std::vector<CylinderZInfinite> cylinders;
   std::vector<Float> temperatures;
   std::vector<Float> intensities;
-  std::array<Disk, 2> borders;
 
-  CylinderPlasmaQuartz() : borders{InitBorders()} {
+  CylinderPlasmaQuartz() {
     InitCylinders();
 
     assert(kPlasmaIdx == 6);
@@ -154,13 +153,6 @@ struct CylinderPlasmaQuartz {
     for (const auto i : intensities) {
       DEBUG_OUT << i << '\n';
     }
-  }
-
-  [[nodiscard]] static std::array<Disk, 2> InitBorders() {
-    return {
-        Disk{kOrigin, -kUnitZ, params::R_1},
-        Disk{kOrigin + Vector3F{0, 0, params::H}, kUnitZ, params::R_1},
-    };
   }
 };
 
@@ -372,12 +364,12 @@ class Worker {
         const auto T = c_.temperatures[idx];
         const auto dr = Vector3F::Distance(prev_pos, ray_.pos);
         const auto exp = std::exp(-params::k_plasma(T) * dr);
-// #ifndef CONSTANT_TEMPERATURE
+        // #ifndef CONSTANT_TEMPERATURE
         const auto expp = exp;
-// #else
-//        (void)exp;
-//        const auto expp = 0.0;
-// #endif
+        // #else
+        //        (void)exp;
+        //        const auto expp = 0.0;
+        // #endif
         intensity *= expp;
         intensity += c_.intensities[idx] * (1 - expp);
 

@@ -1,9 +1,9 @@
-#include "math/geometry/disk.h"
+#include "ray_tracing/disk.h"
 
 #include "base/float.h"
-#include "math/geometry/plane.h"
-#include "math/geometry/ray.h"
-#include "math/geometry/vector3f.h"
+#include "math/linalg/ray.h"
+#include "math/linalg/vector3f.h"
+#include "ray_tracing/plane.h"
 
 Float Disk::Intersect(const Ray& ray) const noexcept {
   const auto t = Plane::Intersect(ray);
