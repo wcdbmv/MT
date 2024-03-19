@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
 #include "expect_vector_near.h"
-#include "math/linalg/reflect.h"
 #include "math/linalg/vector3f.h"
+#include "physics/reflect.h"
 
 TEST(ReflectTest, ReflectRay45Degree) {
   const auto I = Vector3F{1, -1, 0}.Normalized();

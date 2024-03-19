@@ -8,13 +8,22 @@ set(HEADERS
     include/physics/consts/speed_of_light.h
     include/physics/params.h
     include/physics/plancks_law.h
+    include/physics/reflect.h
+    include/physics/refract.h
 )
 
-add_library(${PROJECT_NAME} INTERFACE
-            ${HEADERS})
+set(SOURCES
+    src/reflect.cc
+    src/refract.cc
+)
+
+add_library(${PROJECT_NAME} STATIC
+            ${HEADERS} ${SOURCES})
 
 target_include_directories(${PROJECT_NAME}
-  INTERFACE include)
+  PUBLIC include)
 
 target_link_libraries(${PROJECT_NAME}
-                      INTERFACE base math)
+                      PUBLIC base math)
+
+add_subdirectory(test)

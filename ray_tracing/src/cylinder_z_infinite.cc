@@ -10,11 +10,11 @@
 #include "math/equation.h"
 #include "math/fast_pow.h"
 #include "math/linalg/ray.h"
-#include "math/linalg/reflect.h"
-#include "math/linalg/refract.h"
 #include "math/linalg/vector3f.h"
 #include "math/sqrt.h"
 #include "math/utils.h"
+#include "physics/reflect.h"
+#include "physics/refract.h"
 
 Float CylinderZInfinite::Intersect(const Ray& ray) const noexcept {
   const auto dx = ray.pos.x() - center_.x();

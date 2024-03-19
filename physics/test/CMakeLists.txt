@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.25)
-project(math_test
+project(physics_test
         LANGUAGES CXX)
 
 set(CXX_CLANG_TIDY_VALUE ${CMAKE_CXX_CLANG_TIDY})
@@ -29,7 +29,7 @@ set(SOURCES
 add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME}
-                      PRIVATE GTest::gtest_main math)
+                      PRIVATE GTest::gtest_main physics)
 
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME})

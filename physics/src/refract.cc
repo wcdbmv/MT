@@ -1,4 +1,4 @@
-#include "math/linalg/refract.h"
+#include "physics/refract.h"
 
 #include <cassert>
 

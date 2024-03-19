@@ -9,8 +9,6 @@ set(HEADERS
     include/math/fast_pow.h
     include/math/linalg/fibonacci_sphere.h
     include/math/linalg/ray.h
-    include/math/linalg/reflect.h
-    include/math/linalg/refract.h
     include/math/linalg/vector.h
     include/math/linalg/vector3f.h
     include/math/linalg/vector_io.h
@@ -22,8 +20,6 @@ set(HEADERS
 set(SOURCES
     src/equation.cc
     src/linalg/fibonacci_sphere.cc
-    src/linalg/reflect.cc
-    src/linalg/refract.cc
     src/random.cc
     src/utils.cc
 )
@@ -36,5 +32,3 @@ target_include_directories(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
                       PUBLIC base)
-
-add_subdirectory(test)
