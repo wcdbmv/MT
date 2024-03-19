@@ -7,7 +7,6 @@ set(HEADERS
     include/math/consts/pi.h
     include/math/equation.h
     include/math/fast_pow.h
-    include/math/linalg/fibonacci_sphere.h
     include/math/linalg/ray.h
     include/math/linalg/vector.h
     include/math/linalg/vector3f.h
@@ -19,7 +18,6 @@ set(HEADERS
 
 set(SOURCES
     src/equation.cc
-    src/linalg/fibonacci_sphere.cc
     src/random.cc
     src/utils.cc
 )
@@ -31,4 +29,4 @@ target_include_directories(${PROJECT_NAME}
   PUBLIC include)
 
 target_link_libraries(${PROJECT_NAME}
-                      PUBLIC base)
+                      PRIVATE base)

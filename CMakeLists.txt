@@ -19,6 +19,7 @@ add_compile_definitions(CONSTANT_TEMPERATURE)
 add_subdirectory(base)
 add_subdirectory(geogebra)
 add_subdirectory(math)
+add_subdirectory(modeling)
 add_subdirectory(physics)
 add_subdirectory(ray_tracing)
 
@@ -26,6 +27,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 add_executable(${PROJECT_NAME} main.cc)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE base geogebra math physics ray_tracing)
+target_link_libraries(${PROJECT_NAME}
+                      PRIVATE base geogebra math modeling physics ray_tracing)
 
 enable_ipo_lto_for_release(${PROJECT_NAME})

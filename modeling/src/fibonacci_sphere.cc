@@ -1,4 +1,4 @@
-#include "math/linalg/fibonacci_sphere.h"
+#include "modeling/fibonacci_sphere.h"
 
 #include <cassert>
 #include <cmath>
