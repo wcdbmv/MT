@@ -32,7 +32,7 @@ namespace func {
 ///
 /// 4πI/c = u_nu
 [[nodiscard]] constexpr Float I(const Float nu, const Float T) noexcept {
-  return 2 * consts::h * Cube(nu) /
+  return 2 * consts::h * Cube(nu) * 1e15 /
          (Sqr(consts::c_sm) * (std::exp(consts::h * nu / (consts::k * T)) - 1));
 }
 

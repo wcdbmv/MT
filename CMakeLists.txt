@@ -13,11 +13,11 @@ add_compile_options("$<$<CONFIG:RELEASE>:-O3;-ffast-math>")
 include(cmake/CompileOptions.cmake)
 include(cmake/IPO.LTO.cmake)
 
-set(CMAKE_CXX_CLANG_TIDY clang-tidy -warnings-as-errors=*)
+#set(CMAKE_CXX_CLANG_TIDY clang-tidy -warnings-as-errors=*)
+add_compile_definitions(CONSTANT_TEMPERATURE)
 
 # add_subdirectory(ray_tracing)
 add_subdirectory(base)
-add_subdirectory(examples)
 add_subdirectory(geogebra)
 add_subdirectory(math)
 add_subdirectory(physics)

@@ -12,6 +12,8 @@
 #include "base/float.h"
 #include "base/float_cmp.h"
 #include "geogebra/api.h"
+#include "math/consts/pi.h"
+#include "math/fast_pow.h"
 #include "math/geometry/cylinder_z_infinite.h"
 #include "math/geometry/disk.h"
 #include "math/geometry/fibonacci_sphere.h"
@@ -24,7 +26,7 @@
 #include "physics/params.h"
 #include "physics/plancks_law.h"
 
-#define ENABLE_DEBUG_OUTPUT
+// #define ENABLE_DEBUG_OUTPUT
 // #define ENABLE_GEOGEBRA_OUTPUT
 // #define ENABLE_GEOGEBRA_OUTPUT_SPHERE
 
@@ -60,7 +62,12 @@ const auto kN = static_cast<size_t>(std::round(params::R_1 / kStep));
 // NOLINTNEXTLINE(cert-err58-cpp)
 const auto kPlasmaIdx = static_cast<size_t>(std::round(params::R / kStep) - 1);
 
-constexpr auto kSpherePoints = 200;
+// TODO(a.kerimov): Выяснить, что происходит при 400000+ и CONSTANT_TEMPERATURE
+constexpr auto kSpherePoints = 100;
+
+// TODO(a.kerimov): Написать тесты.
+
+// TODO(a.kerimov): остаток интенсивности сохранить
 
 struct StartParams {
   Ray ray;
@@ -109,6 +116,9 @@ struct CylinderPlasmaQuartz {
     assert(temperatures.size() == kPlasmaIdx + 1);
     intensities.push_back(func::I(params::nu, temperatures.back()));
     assert(intensities.size() == kPlasmaIdx + 1);
+#ifdef CONSTANT_TEMPERATURE
+    std::cout << "INTENSITY: " << intensities.back() << "\n";
+#endif
 
     for (size_t i = kPlasmaIdx + 2; i < kN; ++i) {
       const auto radius = kStep * static_cast<Float>(i);
@@ -126,6 +136,9 @@ struct CylinderPlasmaQuartz {
         std::format("C{}", cylinders.size() - 1), params::R_1);
     temperatures.emplace_back(params::T((params::R_1 - kStep / 2) / params::R));
     intensities.push_back(func::I(params::nu, temperatures.back()));
+#ifdef CONSTANT_TEMPERATURE
+    std::cout << "INTENSITY: " << intensities.back() << "\n";
+#endif
 
     DEBUG_OUT << "Cylinders:\n";
     for (auto& cylinder : cylinders) {
@@ -150,6 +163,9 @@ struct CylinderPlasmaQuartz {
     };
   }
 };
+
+Float kIntensityAll = 0;     // NOLINT
+Float kIntensityQuartz = 0;  // NOLINT
 
 class Worker {
  public:
@@ -201,7 +217,9 @@ class Worker {
         const auto idx = use_prev ? prev_cylinder_idx : current_cylinder_idx_;
         const auto T = c_.temperatures[idx];
         const auto dr = Vector3F::Distance(prev_pos, ray_.pos);
-        const auto exp = std::exp(-params::k_plasma(T) * dr);
+        const auto k =
+            idx > kPlasmaIdx ? params::k_quartz(T) : params::k_plasma(T);
+        const auto exp = std::exp(-k * dr);
         const auto prev_intensity = intensity;
         intensity *= exp;
         absorbed[idx] += prev_intensity - intensity;
@@ -228,6 +246,8 @@ class Worker {
                                intensity * res.T,
                                params.intensity_end,
                                use_prev});
+            } else {
+              absorbed[kPlasmaIdx + 1] += IT;  // +1 or no ?????
             }
           }
 
@@ -239,10 +259,15 @@ class Worker {
         }
 
         if (current_cylinder_idx_ + 1 == c_.cylinders.size()) {
-          if (!ImFeelingLucky(params::rho)) {
-            DEBUG_OUT << "ABSORPTION at the quartz boundary\n";
-            break;
-          }
+          // if (!ImFeelingLucky(params::rho)) {
+          //   DEBUG_OUT << "ABSORPTION at the quartz boundary\n";
+          //   break;
+          // }
+          // TODO(a.kerimov): rename.
+          const auto prevv_intensity = intensity;
+          intensity *= params::rho;
+          kIntensityQuartz += prevv_intensity - intensity;
+
           ray_.dir = c_.cylinders.back().ReflectInside(ray_);
           use_prev = true;
 
@@ -257,6 +282,36 @@ class Worker {
 
       } else {
         throw std::out_of_range("ALERT FAILURE ERROR");
+      }
+    }
+
+    // TODO(a.kerimov): Refactor.
+    {
+      DEBUG_OUT << "[LAST, " << intensity << "]\n";
+
+      IntersectPrevCylinder();
+      IntersectNextCylinder();
+      IntersectCurrCylinder();
+
+      const auto t_min_idx = FindMinimalNonNegativeIndex(ts_);
+      if (t_min_idx <= kIdxLastCylinder) {
+        ray_.pos = ray_.Point(ts_[t_min_idx]);
+
+        // const auto Pi = std::format("P{}", i + 1);
+        // GEOGEBRA_OUT << geogebra::Point3D(Pi, ray_.pos);
+
+        const auto prev_cylinder_idx = current_cylinder_idx_;
+
+        if (t_min_idx == kIdxPrevCylinder) {
+          --current_cylinder_idx_;
+        } else if (t_min_idx == kIdxNextCylinder) {
+          ++current_cylinder_idx_;
+        } else {
+          use_prev = !use_prev;
+        }
+
+        const auto idx = use_prev ? prev_cylinder_idx : current_cylinder_idx_;
+        absorbed[idx] += intensity;
       }
     }
 
@@ -317,8 +372,14 @@ class Worker {
         const auto T = c_.temperatures[idx];
         const auto dr = Vector3F::Distance(prev_pos, ray_.pos);
         const auto exp = std::exp(-params::k_plasma(T) * dr);
-        intensity *= exp;
-        intensity += c_.intensities[idx] * (1 - exp);
+// #ifndef CONSTANT_TEMPERATURE
+        const auto expp = exp;
+// #else
+//        (void)exp;
+//        const auto expp = 0.0;
+// #endif
+        intensity *= expp;
+        intensity += c_.intensities[idx] * (1 - expp);
 
         DEBUG_OUT << "NEW POS: " << ray_.pos << " [ti=" << t_min_idx
                   << "][ci=" << current_cylinder_idx_ << "][dir=" << ray_.dir
@@ -334,6 +395,15 @@ class Worker {
         throw std::out_of_range("ALERT FAILURE ERROR");
       }
     }
+
+    // const auto cos_theta = dir.z();
+    // const auto sin_phi = Sqrt(Sqr(dir.x()) + Sqr(dir.y()));
+
+    std::cout << "INTENSITY BEFORE COSINE: " << intensity << "\n";
+
+    intensity *= 2 * 2 * consts::pi / kSpherePoints * dir.x();
+
+    kIntensityAll += intensity;
 
     return intensity;
   }
@@ -424,10 +494,14 @@ class Solver {
       }
     }
 
+    Float total = 0;
     std::cout << "TOTAL ABSORBED:\n";
     for (const auto i : total_absorbed) {
       std::cout << i << '\n';
+      total += i;
     }
+    std::cout << "ABSORBED QUARTZ: " << kIntensityQuartz << '\n';
+    std::cout << "SUM: " << total + kIntensityQuartz << '\n';
   }
 
  private:
@@ -467,4 +541,6 @@ int main() {
 
   Solver solver;
   solver.Solve();
+
+  std::cout << "INTENSITY: " << kIntensityAll << '\n';
 }
