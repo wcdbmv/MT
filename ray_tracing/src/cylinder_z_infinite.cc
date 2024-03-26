@@ -71,6 +71,7 @@ CylinderZInfinite::FresnelResult CylinderZInfinite::Refract(
     const Ray& ray,
     const Float eta_i,
     const Float eta_t,
+    const Float mirror,
     const bool outward) const NOEXCEPT_RELEASE {
   const auto I = ray.dir;
   assert(I.IsNormalized());
@@ -98,12 +99,17 @@ CylinderZInfinite::FresnelResult CylinderZInfinite::Refract(
   result.refracted = ::RefractEx(I, N, mu, cos_i, g);
   result.refracted.Normalize();
 
-  // https://steps3d.narod.ru/tutorials/fresnel-tutorial.html
-  const auto c = cos_i * mu;
+  if (mirror > 0) {
+    result.R = mirror;
+  } else {
+    // https://steps3d.narod.ru/tutorials/fresnel-tutorial.html
+    const auto c = cos_i * mu;
 
-  // Отражённая доля энергии.
-  result.R = Sqr((g - c) / (g + c)) *
-             (1 + Sqr((c * (g + c) - mu2) / (c * (g - c) + mu2))) / 2;
+    // Отражённая доля энергии.
+    result.R = Sqr((g - c) / (g + c)) *
+               (1 + Sqr((c * (g + c) - mu2) / (c * (g - c) + mu2))) / 2;
+  }
+
   result.T = 1 - result.R;
   assert(0 <= result.R && result.R <= 1);
   assert(0 <= result.T && result.T <= 1);

@@ -29,6 +29,7 @@ class CylinderZInfinite : public Shape {
   [[nodiscard]] FresnelResult Refract(const Ray& ray,
                                       Float eta_i,
                                       Float eta_t,
+                                      Float mirror,
                                       bool outward) const NOEXCEPT_RELEASE;
 
  protected:

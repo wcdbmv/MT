@@ -67,6 +67,9 @@ inline constexpr auto n_plasma = static_cast<Float>(1);
 inline constexpr auto n_quartz = static_cast<Float>(1.4585);
 // TODO(a.kerimov): Make function.
 
+/// Показатель преломления воздуха.
+inline constexpr auto n_air = static_cast<Float>(1);
+
 inline constexpr auto nu = static_cast<Float>(1e15);  // Гц.
 
 }  // namespace params

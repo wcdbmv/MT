@@ -9,7 +9,7 @@ string(CONCAT IWYU
   "-Xiwyu;--mapping_file=${CMAKE_CURRENT_SOURCE_DIR}/scripts/iwyu/mappings.imp;"
   "-Xiwyu;--max_line_length=180;"
   "-Xiwyu;--comment_style=long;"
-  "-Xiwyu;--quoted_includes_first;"
+# "-Xiwyu;--quoted_includes_first;"
   "-Xiwyu;--cxx17ns"
 )
 

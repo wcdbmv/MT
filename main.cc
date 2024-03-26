@@ -1,3 +1,11 @@
+#if 1
+#include "modeling/cylinder_plasma_quartz.h"
+
+int main() {
+  CylinderPlasmaQuartz{}.Solve();
+}
+#else
+
 #include <array>
 #include <cassert>
 #include <cmath>
@@ -26,7 +34,7 @@
 #include "ray_tracing/cylinder_z_infinite.h"
 #include "ray_tracing/disk.h"
 
-// #define ENABLE_DEBUG_OUTPUT
+#define ENABLE_DEBUG_OUTPUT
 // #define ENABLE_GEOGEBRA_OUTPUT
 // #define ENABLE_GEOGEBRA_OUTPUT_SPHERE
 
@@ -229,7 +237,7 @@ class Worker {
           }
 
           const auto res =
-              c_.cylinders[kPlasmaIdx].Refract(ray_, n_1, n_2, outward);
+              c_.cylinders[kPlasmaIdx].Refract(ray_, n_1, n_2, 0, outward);
 
           // TODO(a.kerimov): Mutex.
           if (res.T > 0) {
@@ -536,3 +544,4 @@ int main() {
 
   std::cout << "INTENSITY: " << kIntensityAll << '\n';
 }
+#endif

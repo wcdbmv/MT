@@ -4,8 +4,10 @@ project(base
 
 set(HEADERS
     include/base/erase_remove_if.h
+    include/base/fast_pimpl.h
     include/base/float.h
     include/base/float_cmp.h
+    include/base/ignore_unused.h
     include/base/noexcept_release.h
 )
 
