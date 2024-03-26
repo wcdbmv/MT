@@ -1,4 +1,4 @@
-#include "ray_tracing/cylinder_z_infinite.h"
+#include "ray_tracing/elliptic_cylinder_z_infinite.h"
 
 #include <algorithm>
 #include <array>
@@ -14,13 +14,13 @@
 #include "physics/reflect.h"
 #include "physics/refract.h"
 
-Float CylinderZInfinite::Intersect(const Ray& ray) const noexcept {
+Float EllipticCylinderZInfinite::Intersect(const Ray& ray) const noexcept {
   const auto dx = ray.pos.x() - center_.x();
   const auto dy = ray.pos.y() - center_.y();
 
-  const auto a = Sqr(ray.dir.x()) + Sqr(ray.dir.y());
-  const auto b = 2 * (ray.dir.x() * dx + ray.dir.y() * dy);
-  const auto c = Sqr(dx) + Sqr(dy) - radius2_;
+  const auto a = Sqr(ray.dir.x()) * b2_ + Sqr(ray.dir.y()) * a2_;
+  const auto b = 2 * (ray.dir.x() * dx * b2_ + ray.dir.y() * dy * a2_);
+  const auto c = Sqr(dx) * b2_ + Sqr(dy) * a2_ - a2_ * b2_;
 
   std::array<Float, 2> t{};
   const auto res = equation::SolveQuadratic(a, b, c, t[0], t[1]);
@@ -35,15 +35,15 @@ Float CylinderZInfinite::Intersect(const Ray& ray) const noexcept {
 }
 
 // TODO(a.kerimov): Refactor.
-Float CylinderZInfinite::IntersectCurr(const Ray& ray) const noexcept {
+Float EllipticCylinderZInfinite::IntersectCurr(const Ray& ray) const noexcept {
   assert(IsOnShape(ray.pos));
 
   const auto dx = ray.pos.x() - center_.x();
   const auto dy = ray.pos.y() - center_.y();
 
-  const auto a = Sqr(ray.dir.x()) + Sqr(ray.dir.y());
-  const auto b = 2 * (ray.dir.x() * dx + ray.dir.y() * dy);
-  const auto c = Sqr(dx) + Sqr(dy) - radius2_;
+  const auto a = Sqr(ray.dir.x()) * b2_ + Sqr(ray.dir.y()) * a2_;
+  const auto b = 2 * (ray.dir.x() * dx * b2_ + ray.dir.y() * dy * a2_);
+  const auto c = Sqr(dx) * b2_ + Sqr(dy) * a2_ - a2_ * b2_;
 
   std::array<Float, 2> t{};
   const auto res = equation::SolveQuadratic(a, b, c, t[0], t[1]);
@@ -60,16 +60,19 @@ Float CylinderZInfinite::IntersectCurr(const Ray& ray) const noexcept {
   return FindMinimalNonNegative(t);
 }
 
-Vector3F CylinderZInfinite::Perpendicular(const Vector3F p) const noexcept {
-  return {p.x() - center_.x(), p.y() - center_.y(), 0};
+Vector3F EllipticCylinderZInfinite::Perpendicular(
+    const Vector3F p) const noexcept {
+  return {(p.x() - center_.x()) / a2_, (p.y() - center_.y()) / b2_, 0};
 }
 
-bool CylinderZInfinite::IsOnShape(const Vector3F p) const noexcept {
-  return IsEqual(Sqr(p.x() - center_.x()) + Sqr(p.y() - center_.y()), radius2_);
+bool EllipticCylinderZInfinite::IsOnShape(const Vector3F p) const noexcept {
+  return IsEqual(
+      Sqr(p.x() - center_.x()) / a2_ + Sqr(p.y() - center_.y()) / b2_,
+      static_cast<Float>(1));
 }
 
 // TODO(a.kerimov): Refactor.
-CylinderZInfinite::FresnelResult CylinderZInfinite::Refract(
+EllipticCylinderZInfinite::FresnelResult EllipticCylinderZInfinite::Refract(
     const Ray& ray,
     const Float eta_i,
     const Float eta_t,
