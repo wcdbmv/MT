@@ -10,6 +10,7 @@
 
 #include "base/float.h"
 #include "base/float_cmp.h"
+#include "base/ignore_unused.h"
 #include "math/linalg/ray.h"
 #include "math/linalg/vector3f.h"
 #include "math/sqrt.h"
@@ -85,7 +86,7 @@ class HollowCylinderWorker {
         const auto eta_t =
             outward ? p.refractive_index_external : p.refractive_index_internal;
         const auto mirror = outward ? p.mirror_external : p.mirror_internal;
-        const auto res = c_.cylinders[border_idx].Refract(
+        const auto res = c_.cylinders[current_cylinder_idx_].Refract(
             ray_, p.refractive_index, eta_t, mirror, outward);
 
         if (res.T > 0) {
@@ -175,7 +176,9 @@ class HollowCylinderWorker {
 
     t_min_idx_ = FindMinimalNonNegativeIndex(ts_);
     assert(t_min_idx_ <= kIdxLastCylinder);
+    IgnoreUnused(kIdxLastCylinder);
     prev_pos_ = ray_.pos;
+    // TODO(a.kerimov): Fix all Point-s.
     ray_.pos = ray_.Point(ts_[t_min_idx_]);
 
     prev_cylinder_idx_ = current_cylinder_idx_;

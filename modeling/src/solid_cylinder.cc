@@ -10,6 +10,7 @@
 
 #include "base/float.h"
 #include "base/float_cmp.h"
+#include "base/ignore_unused.h"
 #include "math/consts/pi.h"
 #include "math/linalg/ray.h"
 #include "math/linalg/vector3f.h"
@@ -223,6 +224,7 @@ class SolidCylinderWorker {
 
     t_min_idx_ = FindMinimalNonNegativeIndex(ts_);
     assert(t_min_idx_ <= kIdxLastCylinder);
+    IgnoreUnused(kIdxLastCylinder);
     prev_pos_ = ray_.pos;
     ray_.pos = ray_.Point(ts_[t_min_idx_]);
 
