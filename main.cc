@@ -1,8 +1,31 @@
-#if 1
+#if defined(XENON_TABLE_COEFFICIENT)
+#include <iostream>
+
+#include "modeling/cylinder_plasma_quartz.h"
+#include "physics/xenon_absorption_coefficient.h"
+
+int main() {
+  for (size_t i = 0; i + 1 < kXenonFrequency.size(); ++i) {
+    const auto nu_min = kXenonFrequency[i];
+    const auto nu_max = kXenonFrequency[i + 1];
+    const auto d_nu = nu_max - nu_min;
+    const auto nu_avg = nu_min + d_nu / 2;
+    std::cout << "[[-----------------------------------------------------------"
+                 "-------------------]]\n"
+                 "[[i="
+              << i << ", nu_min=" << nu_min << ", nu_max=" << nu_max
+              << ", d_nu=" << d_nu << ", nu_avg=" << nu_avg
+              << "]]\n"
+                 "[[-----------------------------------------------------------"
+                 "-------------------]]\n";
+    CylinderPlasmaQuartz{nu_avg, d_nu}.Solve();
+  }
+}
+#elif 1
 #include "modeling/cylinder_plasma_quartz.h"
 
 int main() {
-  CylinderPlasmaQuartz{}.Solve();
+  CylinderPlasmaQuartz{params::nu, 1E+15}.Solve();
 }
 #else
 

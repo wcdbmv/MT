@@ -31,8 +31,10 @@ namespace func {
 /// Интенсивность.
 ///
 /// 4πI/c = u_nu
-[[nodiscard]] constexpr Float I(const Float nu, const Float T) noexcept {
-  return 2 * consts::h * Cube(nu) * 1e15 /
+[[nodiscard]] constexpr Float I(const Float nu,
+                                const Float d_nu,
+                                const Float T) noexcept {
+  return 2 * consts::h * Cube(nu) * d_nu /
          (Sqr(consts::c_sm) * (std::exp(consts::h * nu / (consts::k * T)) - 1));
 }
 

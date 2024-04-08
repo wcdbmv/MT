@@ -20,7 +20,7 @@
 
 // TODO(a.kerimov): Try constexpr.
 // NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
-#define SOLID_CYLINDER_DEBUG_LEVEL 2
+#define SOLID_CYLINDER_DEBUG_LEVEL 0
 
 #if SOLID_CYLINDER_DEBUG_LEVEL >= 1
 #include <iostream>

@@ -16,6 +16,7 @@ include(cmake/IWYU.cmake)
 
 #set(CMAKE_CXX_CLANG_TIDY clang-tidy -warnings-as-errors=*)
 #add_compile_definitions(CONSTANT_TEMPERATURE)
+add_compile_definitions(XENON_TABLE_COEFFICIENT)
 
 add_subdirectory(base)
 add_subdirectory(geogebra)

@@ -19,7 +19,7 @@
 
 // TODO(a.kerimov): Try constexpr.
 // NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
-#define HOLLOW_CYLINDER_DEBUG_LEVEL 2
+#define HOLLOW_CYLINDER_DEBUG_LEVEL 0
 
 #if HOLLOW_CYLINDER_DEBUG_LEVEL >= 1
 #include <iostream>

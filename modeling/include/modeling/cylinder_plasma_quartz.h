@@ -3,9 +3,10 @@
 #include <cstddef>
 
 #include "base/fast_pimpl.h"
+#include "base/float.h"
 
 struct CylinderPlasmaQuartz {
-  CylinderPlasmaQuartz();
+  CylinderPlasmaQuartz(Float nu, Float d_nu);
   ~CylinderPlasmaQuartz();
 
   void Solve();

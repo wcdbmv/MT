@@ -3,6 +3,7 @@ project(math
         LANGUAGES CXX)
 
 set(HEADERS
+    include/math/bilinear_interpolation.h
     include/math/consts/golden_ratio.h
     include/math/consts/pi.h
     include/math/equation.h

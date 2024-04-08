@@ -10,6 +10,7 @@ set(HEADERS
     include/physics/plancks_law.h
     include/physics/reflect.h
     include/physics/refract.h
+    include/physics/xenon_absorption_coefficient.h
 )
 
 set(SOURCES

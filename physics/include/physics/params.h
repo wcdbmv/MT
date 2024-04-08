@@ -6,6 +6,12 @@
 #include "base/float.h"
 #include "math/fast_pow.h"
 
+#ifdef XENON_TABLE_COEFFICIENT
+#include "base/float_cmp.h"
+#include "math/bilinear_interpolation.h"
+#include "physics/xenon_absorption_coefficient.h"
+#endif
+
 namespace params {
 
 inline constexpr auto T_0 = static_cast<Float>(10'000);  // К.
@@ -35,22 +41,74 @@ inline constexpr auto H = static_cast<Float>(1);        // см.
 }
 
 /// Коэффициент отражения покрытия.
-inline constexpr auto rho = static_cast<Float>(0.9);
+inline constexpr auto rho = static_cast<Float>(0.95);
 
 /// Коэффициент поглощения плазмы.
-[[nodiscard]] constexpr Float k_plasma(const Float T) noexcept {
-#ifndef CONSTANT_TEMPERATURE
-  return static_cast<Float>(0.04) * Sqr(T / 2000);
-#else
+[[nodiscard]] constexpr Float k_plasma(const Float nu, const Float T) noexcept {
+#if defined(CONSTANT_TEMPERATURE)
+  (void)nu;
   (void)T;
   return static_cast<Float>(10000);
+#elif defined(XENON_TABLE_COEFFICIENT)
+  static_assert(kXenonTemperature.size() == 13);
+  assert(IsEqual(kXenonTemperature[0], static_cast<Float>(2000)));
+  assert(IsEqual(kXenonTemperature[1], static_cast<Float>(3000)));
+  assert(IsEqual(kXenonTemperature[2], static_cast<Float>(4000)));
+  assert(IsEqual(kXenonTemperature[3], static_cast<Float>(5000)));
+  assert(IsEqual(kXenonTemperature[4], static_cast<Float>(6000)));
+  assert(IsEqual(kXenonTemperature[5], static_cast<Float>(7000)));
+  assert(IsEqual(kXenonTemperature[6], static_cast<Float>(8000)));
+  assert(IsEqual(kXenonTemperature[7], static_cast<Float>(9000)));
+  assert(IsEqual(kXenonTemperature[8], static_cast<Float>(10000)));
+  assert(IsEqual(kXenonTemperature[9], static_cast<Float>(11000)));
+  assert(IsEqual(kXenonTemperature[10], static_cast<Float>(12000)));
+  assert(IsEqual(kXenonTemperature[11], static_cast<Float>(13000)));
+  assert(IsEqual(kXenonTemperature[12], static_cast<Float>(14000)));
+
+  assert(kXenonTemperature.front() <= T && T <= kXenonTemperature.back());
+  const auto t_idx = static_cast<size_t>(T) / 1000 - 2;
+  assert(t_idx <= 8);
+
+  const auto* lower = std::ranges::lower_bound(kXenonFrequency, nu);
+  assert(lower != kXenonFrequency.end());
+  const auto nu_idx_p = std::distance(kXenonFrequency.begin(), lower);
+  assert(0 <= nu_idx_p);
+  const auto nu_idx = static_cast<size_t>(nu_idx_p);
+  assert(1 <= nu_idx && nu_idx < kXenonFrequency.size());
+
+  const auto t_t = (T - kXenonTemperature[t_idx]) /
+                   (kXenonTemperature[t_idx + 1] - kXenonTemperature[t_idx]);
+  const auto nu_t = (nu - kXenonFrequency[nu_idx - 1]) /
+                    (kXenonFrequency[nu_idx] - kXenonFrequency[nu_idx - 1]);
+
+  // f(a) + t * (f(b) - f(a))
+  // t = (x - a) / (b - a)
+  // t(a) == 0
+  // t(b) == 1
+  //
+  // f(a) + t * (f(b) - f(a)) ==
+  // f(a) + (x - a) / (b - a) * (f(b) - f(a))
+  //
+  // x == T
+  // y == NU
+
+  const auto f00 = kXenonAbsorptionCoefficient[t_idx][nu_idx - 1];
+  const auto f01 = kXenonAbsorptionCoefficient[t_idx][nu_idx];
+  const auto f10 = kXenonAbsorptionCoefficient[t_idx + 1][nu_idx - 1];
+  const auto f11 = kXenonAbsorptionCoefficient[t_idx + 1][nu_idx];
+  return BilinearInterpolation(f00, f01, f10, f11, t_t, nu_t);
+
+#else
+  (void)nu;
+  return static_cast<Float>(0.04) * Sqr(T / 2000);
 #endif
 }
 
 /// Коэффициент поглощения кварца.
 // [[nodiscard]] constexpr Float k_quartz(const Float T) noexcept {
 // #ifndef CONSTANT_TEMPERATURE
-//   return static_cast<Float>(0.001) * std::pow(T / 300, static_cast<Float>(1.5));
+//   return static_cast<Float>(0.001) * std::pow(T / 300,
+//   static_cast<Float>(1.5));
 // #else
 //   (void)T;
 //   return static_cast<Float>(100);

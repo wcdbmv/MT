@@ -67,7 +67,7 @@ constexpr auto kSpherePoints = 100;
 
 class CylinderPlasmaQuartz::Impl {
  public:
-  Impl()
+  Impl(const Float nu, const Float d_nu)
       : plasma_{{.center = kOrigin,
                  .radius = params::R,
                  .steps = kPlasmaN,
@@ -75,8 +75,8 @@ class CylinderPlasmaQuartz::Impl {
                  .refractive_index_external = params::n_quartz,
                  .mirror = kMirrorR},
                 params::T,
-                [](const Float T) { return func::I(params::nu, T); },
-                params::k_plasma},
+                [nu, d_nu](const Float T) { return func::I(nu, d_nu, T); },
+                [nu](const Float T) { return params::k_plasma(nu, T); }},
         quartz_{{.center = kOrigin,
                  .radius_min = params::R,
                  .radius_max = params::R_1,
@@ -87,7 +87,7 @@ class CylinderPlasmaQuartz::Impl {
                  .mirror_internal = kMirrorR,
                  .mirror_external = kMirrorR1},
                 params::T,
-                [](const Float T) { return func::I(params::nu, T); },
+                [nu, d_nu](const Float T) { return func::I(nu, d_nu, T); },
                 params::k_quartz} {
     InitDirs();
   }
@@ -106,7 +106,7 @@ class CylinderPlasmaQuartz::Impl {
           plasma_.CalculateIntensity(kInitialPos, dir, kSpherePoints);
       intensity_all += I;
 
-      auto res = quartz_.SolveDir({{kInitialPos, dir}, I, 0.01 * I});
+      auto res = quartz_.SolveDir({{kInitialPos, dir}, I, 0.000001 * I});
       absorbed_mirror += res.absorbed_at_the_border;
       static_assert(std::is_trivially_copyable_v<WorkerParams>);
       for (auto released : res.released_rays) {
@@ -209,7 +209,9 @@ class CylinderPlasmaQuartz::Impl {
   std::vector<Vector3F> dirs_;
 };
 
-CylinderPlasmaQuartz::CylinderPlasmaQuartz() = default;
+CylinderPlasmaQuartz::CylinderPlasmaQuartz(const Float nu, const Float d_nu)
+    : pimpl_{nu, d_nu} {}
+
 CylinderPlasmaQuartz::~CylinderPlasmaQuartz() = default;
 
 void CylinderPlasmaQuartz::Solve(){
