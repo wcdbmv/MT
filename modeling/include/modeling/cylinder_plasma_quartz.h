@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <vector>
 
 #include "base/fast_pimpl.h"
 #include "base/float.h"
@@ -9,7 +10,14 @@ struct CylinderPlasmaQuartz {
   CylinderPlasmaQuartz(Float nu, Float d_nu);
   ~CylinderPlasmaQuartz();
 
-  void Solve();
+  struct Result {
+    std::vector<Float> absorbed_plasma;
+    std::vector<Float> absorbed_quartz;
+    Float absorbed_mirror{};
+    Float intensity_all{};
+  };
+
+  Result Solve();
 
  private:
   class Impl;

@@ -92,35 +92,34 @@ class CylinderPlasmaQuartz::Impl {
     InitDirs();
   }
 
-  void Solve() {
-    std::vector<Float> absorbed_plasma(kPlasmaN);
-    std::vector<Float> absorbed_quartz(kQuartzN + 1);
+  Result Solve() {
+    Result r;
+    r.absorbed_plasma = std::vector<Float>(kPlasmaN);
+    r.absorbed_quartz = std::vector<Float>(kQuartzN + 1);
     std::vector<WorkerParams> wait_plasma;
     std::vector<WorkerParams> wait_quartz;
-    Float absorbed_mirror{};
-    Float intensity_all{};
 
     for (const auto dir : dirs_) {
       constexpr auto kInitialPos = Vector3F{params::R, 0, params::H / 2};
       const auto I =
           plasma_.CalculateIntensity(kInitialPos, dir, kSpherePoints);
-      intensity_all += I;
+      r.intensity_all += I;
 
       auto res = quartz_.SolveDir({{kInitialPos, dir}, I, 0.000001 * I});
-      absorbed_mirror += res.absorbed_at_the_border;
+      r.absorbed_mirror += res.absorbed_at_the_border;
       static_assert(std::is_trivially_copyable_v<WorkerParams>);
       for (auto released : res.released_rays) {
         if (!released.use_prev) {
-          absorbed_mirror += released.intensity;
+          r.absorbed_mirror += released.intensity;
         } else {
           wait_plasma.push_back(released);
         }
       }
 
-      assert(absorbed_quartz.size() == res.absorbed.size());
+      assert(r.absorbed_quartz.size() == res.absorbed.size());
       DEBUG_OUT << "ABSORBED:\n";
       for (size_t i = 0; i < res.absorbed.size(); ++i) {
-        absorbed_quartz[i] += res.absorbed[i];
+        r.absorbed_quartz[i] += res.absorbed[i];
         DEBUG_OUT << res.absorbed[i] << '\n';
       }
     }
@@ -133,16 +132,16 @@ class CylinderPlasmaQuartz::Impl {
         wait_plasma.pop_back();
 
         auto res = plasma_.SolveDir(last);
-        absorbed_quartz[1] += res.absorbed_at_the_border;
+        r.absorbed_quartz[1] += res.absorbed_at_the_border;
         for (auto released : res.released_rays) {
           assert(!released.use_prev);
           wait_quartz.push_back(released);
         }
 
-        assert(absorbed_plasma.size() == res.absorbed.size());
+        assert(r.absorbed_plasma.size() == res.absorbed.size());
         DEBUG_OUT << "ABSORBED:\n";
         for (size_t j = 0; j < res.absorbed.size(); ++j) {
-          absorbed_plasma[j] += res.absorbed[j];
+          r.absorbed_plasma[j] += res.absorbed[j];
           DEBUG_OUT << res.absorbed[j] << '\n';
         }
       }
@@ -152,42 +151,46 @@ class CylinderPlasmaQuartz::Impl {
         wait_quartz.pop_back();
 
         auto res = quartz_.SolveDir(last);
-        absorbed_mirror += res.absorbed_at_the_border;
+        r.absorbed_mirror += res.absorbed_at_the_border;
         for (auto released : res.released_rays) {
           if (!released.use_prev) {
-            absorbed_mirror += released.intensity;
+            r.absorbed_mirror += released.intensity;
           } else {
             wait_plasma.push_back(released);
           }
         }
 
-        assert(absorbed_quartz.size() == res.absorbed.size());
+        assert(r.absorbed_quartz.size() == res.absorbed.size());
         DEBUG_OUT << "ABSORBED:\n";
         for (size_t i = 0; i < res.absorbed.size(); ++i) {
-          absorbed_quartz[i] += res.absorbed[i];
+          r.absorbed_quartz[i] += res.absorbed[i];
           DEBUG_OUT << res.absorbed[i] << '\n';
         }
       }
     }
 
+#ifndef XENON_TABLE_COEFFICIENT
     Float total_plasma = 0;
     std::cout << "TOTAL ABSORBED PLASMA:\n";
-    for (const auto i : absorbed_plasma) {
+    for (const auto i : r.absorbed_plasma) {
       std::cout << i << '\n';
       total_plasma += i;
     }
     // TODO(a.kerimov): First quartz is the last plasma.
     Float total_quartz = 0;
     std::cout << "TOTAL ABSORBED QUARTZ:\n";
-    for (const auto i : absorbed_quartz) {
+    for (const auto i : r.absorbed_quartz) {
       std::cout << i << '\n';
       total_quartz += i;
     }
 
-    std::cout << "ABSORBED QUARTZ: " << absorbed_mirror << '\n';
-    std::cout << "SUM: " << total_plasma + total_quartz + absorbed_mirror
+    std::cout << "ABSORBED QUARTZ: " << r.absorbed_mirror << '\n';
+    std::cout << "SUM: " << total_plasma + total_quartz + r.absorbed_mirror
               << '\n';
-    std::cout << "INTENSITY ALL: " << intensity_all << '\n';
+    std::cout << "INTENSITY ALL: " << r.intensity_all << '\n';
+#endif
+
+    return r;
   }
 
  private:
@@ -214,6 +217,6 @@ CylinderPlasmaQuartz::CylinderPlasmaQuartz(const Float nu, const Float d_nu)
 
 CylinderPlasmaQuartz::~CylinderPlasmaQuartz() = default;
 
-void CylinderPlasmaQuartz::Solve(){
-  pimpl_->Solve();
+auto CylinderPlasmaQuartz::Solve() -> Result {
+  return pimpl_->Solve();
 }
