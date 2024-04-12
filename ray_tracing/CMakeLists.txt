@@ -3,20 +3,14 @@ project(ray_tracing
         LANGUAGES CXX)
 
 set(HEADERS
-    include/ray_tracing/cylinder_z.h
     include/ray_tracing/cylinder_z_infinite.h
-    include/ray_tracing/disk.h
     include/ray_tracing/elliptic_cylinder_z_infinite.h
-    include/ray_tracing/plane.h
     include/ray_tracing/shape.h
 )
 
 set(SOURCES
-    src/cylinder_z.cc
     src/cylinder_z_infinite.cc
-    src/disk.cc
     src/elliptic_cylinder_z_infinite.cc
-    src/plane.cc
     src/shape.cc
 )
 
