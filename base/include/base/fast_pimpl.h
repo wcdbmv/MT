@@ -64,10 +64,10 @@ class FastPimpl final {
   alignas(Alignment) std::array<std::byte, Size> storage_;
 
   // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-  T* AsHeld() noexcept { return reinterpret_cast<T*>(&storage_); }
+  T* AsHeld() noexcept { return reinterpret_cast<T*>(storage_.data()); }
 
   const T* AsHeld() const noexcept {
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-    return reinterpret_cast<const T*>(&storage_);
+    return reinterpret_cast<const T*>(storage_.data());
   }
 };
