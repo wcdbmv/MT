@@ -3,15 +3,18 @@ project(MT
         HOMEPAGE_URL https://github.com/wcdbmv/MT
         LANGUAGES CXX)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_compile_definitions("$<$<CONFIG:DEBUG>:DEBUG>")
-add_compile_options("$<$<CONFIG:RELEASE>:-O3;-ffast-math>")
+add_compile_options("$<$<CONFIG:Release,RelWithDebInfo>:-Ofast>")
 
 include(cmake/CompileOptions.cmake)
 include(cmake/IPO.LTO.cmake)
+# TODO(a.kerimov): Figure out why not working.
 include(cmake/IWYU.cmake)
 
 #set(CMAKE_CXX_CLANG_TIDY clang-tidy -warnings-as-errors=*)
