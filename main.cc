@@ -278,7 +278,7 @@ class Worker {
       IntersectNextCylinder();
       IntersectCurrCylinder();
 
-      const auto t_min_idx = FindMinimalNonNegativeIndex(ts_);
+      const auto t_min_idx = FindIndexOfMinimalNonNegative(ts_);
       if (t_min_idx <= kIdxLastCylinder) {
         const auto prev_pos = ray_.pos;
         ray_.pos = ray_.Point(ts_[t_min_idx]);
@@ -375,7 +375,7 @@ class Worker {
       IntersectNextCylinder();
       IntersectCurrCylinder();
 
-      const auto t_min_idx = FindMinimalNonNegativeIndex(ts_);
+      const auto t_min_idx = FindIndexOfMinimalNonNegative(ts_);
       if (t_min_idx <= kIdxLastCylinder) {
         ray_.pos = ray_.Point(ts_[t_min_idx]);
 
@@ -430,7 +430,7 @@ class Worker {
       IntersectNextCylinder();
       IntersectCurrCylinder();
 
-      const auto t_min_idx = FindMinimalNonNegativeIndex(ts_);
+      const auto t_min_idx = FindIndexOfMinimalNonNegative(ts_);
       if (t_min_idx <= kIdxLastCylinder) {
         const auto prev_pos = ray_.pos;
         ray_.pos = ray_.Point(ts_[t_min_idx]);

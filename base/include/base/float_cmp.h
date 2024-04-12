@@ -8,7 +8,6 @@
 #include "base/float.h"
 
 inline constexpr auto kEps = std::numeric_limits<Float>::epsilon();
-inline constexpr auto kInf = std::numeric_limits<Float>::infinity();
 
 template <std::floating_point T>
 constexpr bool IsZero(

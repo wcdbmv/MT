@@ -1,11 +1,13 @@
 #pragma once
 
+#include <array>
 #include <cstddef>
-#include <span>
 
 #include "base/float.h"
 
-// TODO(a.kerimov): Move to base?
-[[nodiscard]] std::size_t FindMinimalNonNegativeIndex(
-    std::span<Float> t) noexcept;
-[[nodiscard]] Float FindMinimalNonNegative(std::span<Float> t) noexcept;
+template <std::size_t Size>
+[[nodiscard]] std::size_t FindIndexOfMinimalNonNegative(
+    std::array<Float, Size> t) noexcept;
+
+template <std::size_t Size>
+[[nodiscard]] Float FindMinimalNonNegative(std::array<Float, Size> t) noexcept;

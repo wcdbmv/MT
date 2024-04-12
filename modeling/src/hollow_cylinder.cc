@@ -174,7 +174,7 @@ class HollowCylinderWorker {
     IntersectNextCylinder();
     IntersectCurrCylinder();
 
-    t_min_idx_ = FindMinimalNonNegativeIndex(ts_);
+    t_min_idx_ = FindIndexOfMinimalNonNegative(ts_);
     assert(t_min_idx_ <= kIdxLastCylinder);
     IgnoreUnused(kIdxLastCylinder);
     prev_pos_ = ray_.pos;
