@@ -15,7 +15,7 @@ option(MT_ENABLE_CLANG_TIDY "" ON)
 option(MT_ENABLE_COMPILER_WARNINGS "" ON)
 option(MT_ENABLE_IPO_LTO "" ON)
 option(MT_ENABLE_IWYU "" ON)
-option(MT_ENABLE_UNSAFE_MATH_OPTIMIZATIONS "" ON)
+option(MT_ENABLE_UNSAFE_MATH_OPTIMIZATIONS "" OFF)
 
 if(MT_ENABLE_CLANG_TIDY)
   include(cmake/ClangTidy.cmake)
@@ -34,7 +34,12 @@ if(MT_ENABLE_UNSAFE_MATH_OPTIMIZATIONS)
   add_compile_options("$<$<CONFIG:Release,RelWithDebInfo>:-Ofast>")
 endif()
 
+add_subdirectory(base)
+
 add_executable(${PROJECT_NAME} main.cc)
+
+target_link_libraries(${PROJECT_NAME}
+  PRIVATE base)
 
 if(MT_ENABLE_IPO_LTO)
   include(cmake/IPO.LTO.cmake)
