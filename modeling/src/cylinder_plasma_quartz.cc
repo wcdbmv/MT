@@ -20,6 +20,7 @@
 
 // #define ENABLE_DEBUG_OUTPUT
 // #define ENABLE_GEOGEBRA_OUTPUT
+// #define ENABLE_GEOGEBRA_OUTPUT_2D
 // #define ENABLE_GEOGEBRA_OUTPUT_SPHERE
 
 #ifdef ENABLE_DEBUG_OUTPUT
@@ -48,7 +49,13 @@ DummyOut& operator<<(DummyOut& dummy_out, T&&) noexcept {  // NOLINT
 #define GEOGEBRA_OUT gDummyOut
 #endif
 
-constexpr auto kStep = static_cast<Float>(0.05);
+#ifdef ENABLE_GEOGEBRA_OUTPUT_2D
+#define GEOGEBRA_OUT_2D std::cout
+#else
+#define GEOGEBRA_OUT_2D gDummyOut
+#endif
+
+constexpr auto kStep = static_cast<Float>(0.025);
 // NOLINTNEXTLINE(cert-err58-cpp)
 const auto kPlasmaN = static_cast<size_t>(std::round(params::R / kStep));
 // NOLINTNEXTLINE(cert-err58-cpp)
@@ -59,7 +66,7 @@ constexpr auto kMirrorR = static_cast<Float>(0);
 constexpr auto kMirrorR1 = params::rho;
 
 // TODO(a.kerimov): Выяснить, что происходит при 400000+ и CONSTANT_TEMPERATURE
-constexpr auto kSpherePoints = 100;
+constexpr auto kSpherePoints = 1000;
 
 // TODO(a.kerimov): Написать тесты.
 
@@ -99,13 +106,23 @@ class CylinderPlasmaQuartz::Impl {
     std::vector<WorkerParams> wait_plasma;
     std::vector<WorkerParams> wait_quartz;
 
+    constexpr auto kInitialPos = Vector3F{params::R, 0, params::H / 2};
+
+    std::vector<Float> Is;
+    Is.reserve(dirs_.size());
+    Float max_intensity{};
     for (const auto dir : dirs_) {
-      constexpr auto kInitialPos = Vector3F{params::R, 0, params::H / 2};
       const auto I =
           plasma_.CalculateIntensity(kInitialPos, dir, kSpherePoints);
+      Is.push_back(I);
       r.intensity_all += I;
+      max_intensity = std::max(I, max_intensity);
+    }
 
-      auto res = quartz_.SolveDir({{kInitialPos, dir}, I, 0.000001 * I});
+    std::size_t jj = 0;
+    for (const auto dir : dirs_) {
+      auto res = quartz_.SolveDir(
+          {{kInitialPos, dir}, Is[jj], 0.000001 * max_intensity});
       r.absorbed_mirror += res.absorbed_at_the_border;
       static_assert(std::is_trivially_copyable_v<WorkerParams>);
       for (auto released : res.released_rays) {
@@ -122,6 +139,8 @@ class CylinderPlasmaQuartz::Impl {
         r.absorbed_quartz[i] += res.absorbed[i];
         DEBUG_OUT << res.absorbed[i] << '\n';
       }
+
+      ++jj;
     }
 
     DEBUG_OUT << "[[wait]]\n";
