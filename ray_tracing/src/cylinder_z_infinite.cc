@@ -86,24 +86,24 @@ CylinderZInfinite::FresnelResult CylinderZInfinite::Refract(
   const auto cos_i = Vector3F::Dot(I, N);
   assert(cos_i > 0);
 
-  FresnelResult result{.reflected = ReflectEx(I, -N, -cos_i)};
-
-  const auto mu = eta_i / eta_t;
-  const auto mu2 = Sqr(mu);
-
-  const auto g2 = 1 - mu2 * (1 - Sqr(cos_i));
-  if (g2 <= 0) {
-    // Полное внутреннее отражение.
-    return result;
-  }
-  const auto g = Sqrt(g2);
-
-  result.refracted = ::RefractEx(I, N, mu, cos_i, g);
-  result.refracted.Normalize();
+  FresnelResult result{.reflected = ReflectEx(I, -N, -cos_i), .refracted = I};
 
   if (mirror > 0) {
     result.R = mirror;
   } else {
+    const auto mu = eta_i / eta_t;
+    const auto mu2 = Sqr(mu);
+
+    const auto g2 = 1 - mu2 * (1 - Sqr(cos_i));
+    if (g2 <= 0) {
+      // Полное внутреннее отражение.
+      return result;
+    }
+    const auto g = Sqrt(g2);
+
+    result.refracted = ::RefractEx(I, N, mu, cos_i, g);
+    result.refracted.Normalize();
+
     // https://steps3d.narod.ru/tutorials/fresnel-tutorial.html
     const auto c = cos_i * mu;
 
