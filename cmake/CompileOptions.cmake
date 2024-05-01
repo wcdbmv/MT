@@ -25,7 +25,7 @@ string(CONCAT GCC_COMPILE_OPTIONS
   ">"
 )
 
-# TODO: Try on MSVC (may not work)
+# TODO(a.kerimov): Try on MSVC (may not work)
 string(CONCAT MSVC_COMPILE_OPTIONS
   "$<"
     "$<COMPILE_LANG_AND_ID:CXX,MSVC>:"
