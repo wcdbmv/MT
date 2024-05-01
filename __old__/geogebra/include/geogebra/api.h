@@ -14,4 +14,10 @@ std::string Ray3D(std::string_view name,
                   std::string_view pos,
                   std::string_view dir);
 
+std::string Circle(std::string_view name, Float radius);
+std::string Point(std::string_view name, Vector3F point);
+std::string Ray(std::string_view name,
+                std::string_view pos,
+                std::string_view dir);
+
 }  // namespace geogebra
