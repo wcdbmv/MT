@@ -11,6 +11,7 @@
 #include "base/float.h"
 #include "base/float_cmp.h"
 #include "base/ignore_unused.h"
+#include "math/exp.h"
 #include "math/linalg/ray.h"
 #include "math/linalg/vector3f.h"
 #include "math/sqrt.h"
@@ -67,7 +68,7 @@ class HollowCylinderWorker {
       const auto idx = use_prev_ ? prev_cylinder_idx_ : current_cylinder_idx_;
       const auto dr = Vector3F::Distance(prev_pos_, ray_.pos);
       const auto k = c_.attenuations[idx];
-      const auto exp = std::exp(-k * dr);
+      const auto exp = Exp(-k * dr);
       const auto prev_intensity = intensity;
       intensity *= exp;
       result.absorbed[idx] += prev_intensity - intensity;

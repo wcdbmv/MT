@@ -1,10 +1,13 @@
 #pragma once
 
 #include <array>
+#include <cstddef>
 
 #include "base/float.h"
 
-inline constexpr std::array<Float, /* 194 */ 193> kXenonFrequency = {
+inline constexpr std::size_t kXenonTableRanges = 193;
+
+inline constexpr std::array<Float, kXenonTableRanges + 1> kXenonFrequency = {
     0.02000E+15, 0.10000E+15, 0.19000E+15, 0.19400E+15, 0.19453E+15,
     0.19463E+15, 0.19500E+15, 0.20300E+15, 0.20358E+15, 0.20368E+15,
     0.20400E+15, 0.21900E+15, 0.21963E+15, 0.21973E+15, 0.22020E+15,
@@ -43,7 +46,7 @@ inline constexpr std::array<Float, /* 194 */ 193> kXenonFrequency = {
     2.39970E+15, 2.40000E+15, 2.40060E+15, 2.40260E+15, 2.40960E+15,
     2.41460E+15, 2.50670E+15, 2.51000E+15, 2.51578E+15, 2.51648E+15,
     2.51668E+15, 2.51673E+15, 2.51683E+15, 2.51688E+15, 2.51708E+15,
-    2.51778E+15, 2.52000E+15, 2.52670E+15, /* 3.00000E+15, */
+    2.51778E+15, 2.52000E+15, 2.52670E+15, 3.00000E+15,
 };
 
 inline constexpr std::array<Float, 13> kXenonTemperature = {
@@ -51,7 +54,7 @@ inline constexpr std::array<Float, 13> kXenonTemperature = {
     9000, 10000, 11000, 12000, 13000, 14000,
 };
 
-inline constexpr std::array<decltype(kXenonFrequency), kXenonTemperature.size()>
+inline constexpr std::array<std::array<Float, kXenonTableRanges>, kXenonTemperature.size()>
     kXenonAbsorptionCoefficient = {{
         {
             .125E-1, .136E-1, .143E-1, .143E-1, .144E-1, .144E-1, .144E-1,

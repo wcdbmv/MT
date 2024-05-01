@@ -103,6 +103,7 @@ int main() {
 #include "base/float_cmp.h"
 #include "geogebra/api.h"
 #include "math/consts/pi.h"
+#include "math/exp.h"
 #include "math/fast_pow.h"
 #include "math/linalg/ray.h"
 #include "math/linalg/vector.h"
@@ -301,7 +302,7 @@ class Worker {
         const auto dr = Vector3F::Distance(prev_pos, ray_.pos);
         const auto k =
             idx > kPlasmaIdx ? params::k_quartz(T) : params::k_plasma(T);
-        const auto exp = std::exp(-k * dr);
+        const auto exp = Exp(-k * dr);
         const auto prev_intensity = intensity;
         intensity *= exp;
         absorbed[idx] += prev_intensity - intensity;
@@ -453,7 +454,7 @@ class Worker {
         const auto idx = use_prev ? prev_cylinder_idx : current_cylinder_idx_;
         const auto T = c_.temperatures[idx];
         const auto dr = Vector3F::Distance(prev_pos, ray_.pos);
-        const auto exp = std::exp(-params::k_plasma(T) * dr);
+        const auto exp = Exp(-params::k_plasma(T) * dr);
         // #ifndef CONSTANT_TEMPERATURE
         const auto expp = exp;
         // #else

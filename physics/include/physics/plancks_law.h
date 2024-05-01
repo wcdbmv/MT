@@ -1,9 +1,8 @@
 #pragma once
 
-#include <cmath>
-
 #include "base/float.h"
 #include "math/consts/pi.h"
+#include "math/exp.h"
 #include "math/fast_pow.h"
 #include "physics/consts/boltzmann_constant.h"
 #include "physics/consts/planck_constant.h"
@@ -25,7 +24,7 @@ namespace func {
 [[nodiscard]] constexpr Float u_nu(const Float nu, const Float T) noexcept {
   return 8 * consts::pi * consts::h * Cube(nu) /
          (Cube(consts::c_sm) *
-          (std::exp(consts::h * nu / (consts::k * T)) - 1));
+          (Exp(consts::h * nu / (consts::k * T)) - 1));
 }
 
 /// Интенсивность.
@@ -35,7 +34,7 @@ namespace func {
                                 const Float d_nu,
                                 const Float T) noexcept {
   return 2 * consts::h * Cube(nu) * d_nu /
-         (Sqr(consts::c_sm) * (std::exp(consts::h * nu / (consts::k * T)) - 1));
+         (Sqr(consts::c_sm) * (Exp(consts::h * nu / (consts::k * T)) - 1));
 }
 
 }  // namespace func

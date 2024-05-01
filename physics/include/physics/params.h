@@ -4,11 +4,12 @@
 #include <cmath>
 
 #include "base/float.h"
+#include "math/exp.h"
 #include "math/fast_pow.h"
 
 #ifdef XENON_TABLE_COEFFICIENT
 #include "base/float_cmp.h"
-#include "math/bilinear_interpolation.h"
+#include "math/log.h"
 #include "physics/xenon_absorption_coefficient.h"
 #endif
 
@@ -33,7 +34,7 @@ inline constexpr auto H = static_cast<Float>(1);        // см.
   assert(z <= params::R_1 / params::R);
   constexpr auto a = static_cast<Float>(78848.21035368084688136380896708527);
   constexpr auto b = static_cast<Float>(3.674377435745371909154547914447763);
-  return a * std::exp(-b * z);
+  return a * Exp(-b * z);
 #else
   (void)z;
   return T_0;
@@ -72,31 +73,22 @@ inline constexpr auto rho = static_cast<Float>(0.95);
   const auto* lower = std::ranges::lower_bound(kXenonFrequency, nu);
   assert(lower != kXenonFrequency.end());
   const auto nu_idx_p = std::distance(kXenonFrequency.begin(), lower);
-  assert(0 <= nu_idx_p);
-  const auto nu_idx = static_cast<size_t>(nu_idx_p);
-  assert(1 <= nu_idx && nu_idx < kXenonFrequency.size());
+  assert(1 <= nu_idx_p);
+  const auto nu_idx = static_cast<size_t>(nu_idx_p - 1);
+  assert(nu_idx + 1 < kXenonFrequency.size());
 
-  const auto t_t = (T - kXenonTemperature[t_idx]) /
-                   (kXenonTemperature[t_idx + 1] - kXenonTemperature[t_idx]);
-  const auto nu_t = (nu - kXenonFrequency[nu_idx - 1]) /
-                    (kXenonFrequency[nu_idx] - kXenonFrequency[nu_idx - 1]);
+  const auto Tln = Log(T);
+  const auto T0ln = Log(kXenonTemperature[t_idx]);
+  const auto T1ln = Log(kXenonTemperature[t_idx + 1]);
 
-  // f(a) + t * (f(b) - f(a))
-  // t = (x - a) / (b - a)
-  // t(a) == 0
-  // t(b) == 1
-  //
-  // f(a) + t * (f(b) - f(a)) ==
-  // f(a) + (x - a) / (b - a) * (f(b) - f(a))
-  //
-  // x == T
-  // y == NU
+  const auto f0 = kXenonAbsorptionCoefficient[t_idx][nu_idx];
+  const auto f1 = kXenonAbsorptionCoefficient[t_idx + 1][nu_idx];
+  const auto f0ln = Log(f0);
+  const auto f1ln = Log(f1);
 
-  const auto f00 = kXenonAbsorptionCoefficient[t_idx][nu_idx - 1];
-  const auto f01 = kXenonAbsorptionCoefficient[t_idx][nu_idx];
-  const auto f10 = kXenonAbsorptionCoefficient[t_idx + 1][nu_idx - 1];
-  const auto f11 = kXenonAbsorptionCoefficient[t_idx + 1][nu_idx];
-  return BilinearInterpolation(f00, f01, f10, f11, t_t, nu_t);
+  const auto fln = f0ln + (Tln - T0ln) * (f1ln - f0ln) / (T1ln - T0ln);
+  const auto f = Exp(fln);
+  return f;
 
 #else
   (void)nu;

@@ -3,17 +3,19 @@ project(math
         LANGUAGES CXX)
 
 set(HEADERS
-    include/math/bilinear_interpolation.h
     include/math/consts/golden_ratio.h
     include/math/consts/pi.h
     include/math/equation.h
+    include/math/exp.h
     include/math/fast_pow.h
     include/math/linalg/ray.h
     include/math/linalg/vector.h
     include/math/linalg/vector3f.h
     include/math/linalg/vector_io.h
+    include/math/log.h
     include/math/random.h
     include/math/sqrt.h
+    include/math/traits_base.h
     include/math/utils.h
 )
 
