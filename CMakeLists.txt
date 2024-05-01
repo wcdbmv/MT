@@ -35,11 +35,12 @@ if(MT_ENABLE_UNSAFE_MATH_OPTIMIZATIONS)
 endif()
 
 add_subdirectory(base)
+add_subdirectory(math)
 
 add_executable(${PROJECT_NAME} main.cc)
 
 target_link_libraries(${PROJECT_NAME}
-  PRIVATE base)
+  PRIVATE base math)
 
 if(MT_ENABLE_IPO_LTO)
   include(cmake/IPO.LTO.cmake)
