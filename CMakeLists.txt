@@ -39,6 +39,9 @@ if(MT_USE_DOUBLE)
   add_compile_definitions(MT_USE_DOUBLE)
 endif()
 
+#add_compile_definitions(CONSTANT_TEMPERATURE)
+add_compile_definitions(XENON_TABLE_COEFFICIENT)
+
 add_subdirectory(base)
 add_subdirectory(math)
 add_subdirectory(modeling)

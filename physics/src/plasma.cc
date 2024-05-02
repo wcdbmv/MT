@@ -8,7 +8,6 @@
 
 #include "base/ignore_unused.h"
 #include "math/fast_pow.h"
-#include "math/float/compare.h"
 #include "math/float/exp.h"
 #include "math/float/log.h"
 #include "physics/params/xenon_absorption_coefficient.h"
@@ -52,6 +51,7 @@ MT_IGNORE_UNUSED_BEGIN
   const auto nu_idx = static_cast<size_t>(nu_idx_p - 1);
   assert(nu_idx + 1 < kXenonFrequency.size());
 
+  // TODO(a.kerimov): Cache?
   const auto t_ln = Log(t);
   const auto t0_ln = Log(kXenonTemperature[t_idx]);
   const auto t1_ln = Log(kXenonTemperature[t_idx + 1]);

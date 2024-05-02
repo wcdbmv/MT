@@ -4,8 +4,6 @@
 #include <cassert>
 #include <cmath>
 #include <cstddef>
-#include <iostream>
-#include <string>
 #include <type_traits>
 #include <vector>
 
@@ -43,18 +41,21 @@ DummyOut& operator<<(DummyOut& dummy_out, T&&) noexcept {  // NOLINT
 }
 
 #ifdef ENABLE_DEBUG_OUTPUT
+#include <iostream>
 #define DEBUG_OUT std::cout
 #else
 #define DEBUG_OUT gDummyOut
 #endif
 
 #ifdef ENABLE_GEOGEBRA_OUTPUT
+#include <iostream>
 #define GEOGEBRA_OUT std::cout
 #else
 #define GEOGEBRA_OUT gDummyOut
 #endif
 
 #ifdef ENABLE_GEOGEBRA_OUTPUT_2D
+#include <iostream>
 #define GEOGEBRA_OUT_2D std::cout
 #else
 #define GEOGEBRA_OUT_2D gDummyOut
@@ -87,8 +88,6 @@ inline constexpr auto kH = 1.0_F;         // см.
   return kT0;
 #endif
 }
-
-// constexpr auto kDefaultNu = 1E15_F;  // Гц.
 
 }  // namespace
 
