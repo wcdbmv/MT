@@ -1,4 +1,3 @@
-cmake_minimum_required(VERSION 3.25)
 project(math
         LANGUAGES CXX)
 
@@ -6,30 +5,29 @@ set(HEADERS
     include/math/consts/golden_ratio.h
     include/math/consts/pi.h
     include/math/equation.h
-    include/math/exp.h
     include/math/fast_pow.h
-    include/math/linalg/ray.h
+    include/math/float/compare.h
+    include/math/float/eps.h
+    include/math/float/exp.h
+    include/math/float/log.h
+    include/math/float/pow.h
+    include/math/float/sqrt.h
     include/math/linalg/vector.h
-    include/math/linalg/vector3f.h
     include/math/linalg/vector_io.h
-    include/math/log.h
     include/math/random.h
-    include/math/sqrt.h
-    include/math/traits_base.h
-    include/math/utils.h
 )
 
 set(SOURCES
     src/equation.cc
     src/random.cc
-    src/utils.cc
 )
 
-add_library(${PROJECT_NAME} STATIC
-            ${HEADERS} ${SOURCES})
+add_subdirectory(test)
+
+add_library(${PROJECT_NAME} STATIC ${HEADERS} ${SOURCES})
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC include)
 
 target_link_libraries(${PROJECT_NAME}
-                      PRIVATE base)
+  PRIVATE base)

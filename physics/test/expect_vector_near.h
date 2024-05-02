@@ -1,5 +1,5 @@
 #pragma once
 
-#include "math/linalg/vector3f.h"
+#include "math/linalg/vector.h"
 
-void ExpectVectorNear(Vector3F actual, Vector3F expected);
+void ExpectVectorNear(Vec3 actual, Vec3 expected);

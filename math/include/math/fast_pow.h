@@ -1,37 +1,37 @@
 #pragma once
 
-#include "base/float.h"
+#include "base/config/float.h"
 
-[[nodiscard]] constexpr Float Sqr(const Float x) noexcept {
+[[nodiscard]] constexpr Float Sqr(Float x) noexcept {
   return x * x;
 }
 
-[[nodiscard]] constexpr Float Cube(const Float x) noexcept {
+[[nodiscard]] constexpr Float Cube(Float x) noexcept {
   return x * x * x;
 }
 
-[[nodiscard]] constexpr Float FourthPower(const Float x) noexcept {
+[[nodiscard]] constexpr Float FourthPower(Float x) noexcept {
   return Sqr(Sqr(x));
 }
 
-[[nodiscard]] constexpr Float FifthPower(const Float x) noexcept {
+[[nodiscard]] constexpr Float FifthPower(Float x) noexcept {
   return FourthPower(x) * x;
 }
 
-[[nodiscard]] constexpr Float SixthPower(const Float x) noexcept {
+[[nodiscard]] constexpr Float SixthPower(Float x) noexcept {
   return Sqr(Cube(x));
 }
 
-[[nodiscard]] constexpr Float SeventhPower(const Float x) noexcept {
+[[nodiscard]] constexpr Float SeventhPower(Float x) noexcept {
   return SixthPower(x) * x;
 }
 
-[[nodiscard]] constexpr Float EightPower(const Float x) noexcept {
+[[nodiscard]] constexpr Float EightPower(Float x) noexcept {
   return Sqr(FourthPower(x));
 }
 
 template <int power>
-[[nodiscard]] constexpr Float FastPow(const Float x) noexcept {
+[[nodiscard]] constexpr Float FastPow(Float x) noexcept {
   static_assert(2 <= power && power <= 8);
 
   if constexpr (power == 2) {

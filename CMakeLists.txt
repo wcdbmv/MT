@@ -1,38 +1,59 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.29.2)
 project(MT
+        VERSION 0.1
+        DESCRIPTION "Master thesis"
         HOMEPAGE_URL https://github.com/wcdbmv/MT
         LANGUAGES CXX)
-
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_compile_definitions("$<$<CONFIG:DEBUG>:DEBUG>")
-add_compile_options("$<$<CONFIG:Release,RelWithDebInfo>:-Ofast>")
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-include(cmake/CompileOptions.cmake)
-include(cmake/IPO.LTO.cmake)
-# TODO(a.kerimov): Figure out why not working.
-include(cmake/IWYU.cmake)
+option(MT_ENABLE_CLANG_TIDY "" ON)
+option(MT_ENABLE_COMPILER_WARNINGS "" ON)
+option(MT_ENABLE_IPO_LTO "" ON)
+option(MT_ENABLE_IWYU "" ON)
+option(MT_ENABLE_UNSAFE_MATH_OPTIMIZATIONS "" OFF)
+option(MT_USE_DOUBLE "" ON)
 
-#set(CMAKE_CXX_CLANG_TIDY clang-tidy -warnings-as-errors=*)
+if(MT_ENABLE_CLANG_TIDY)
+  include(cmake/ClangTidy.cmake)
+endif()
+
+if(MT_ENABLE_COMPILER_WARNINGS)
+  include(cmake/CompileOptions.cmake)
+endif()
+
+if(MT_ENABLE_IWYU)
+  # TODO(a.kerimov): Update imp database.
+  include(cmake/IWYU.cmake)
+endif()
+
+if(MT_ENABLE_UNSAFE_MATH_OPTIMIZATIONS)
+  add_compile_options("$<$<CONFIG:Release,RelWithDebInfo>:-Ofast>")
+endif()
+
+if(MT_USE_DOUBLE)
+  add_compile_definitions(MT_USE_DOUBLE)
+endif()
+
 #add_compile_definitions(CONSTANT_TEMPERATURE)
 add_compile_definitions(XENON_TABLE_COEFFICIENT)
 
 add_subdirectory(base)
-add_subdirectory(geogebra)
 add_subdirectory(math)
 add_subdirectory(modeling)
 add_subdirectory(physics)
 add_subdirectory(ray_tracing)
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
 add_executable(${PROJECT_NAME} main.cc)
 
 target_link_libraries(${PROJECT_NAME}
-                      PRIVATE base geogebra math modeling physics ray_tracing)
+  PRIVATE base math modeling physics ray_tracing)
 
-enable_ipo_lto_for_release(${PROJECT_NAME})
+if(MT_ENABLE_IPO_LTO)
+  include(cmake/IPO.LTO.cmake)
+  enable_ipo_lto_for_release(${PROJECT_NAME})
+endif()

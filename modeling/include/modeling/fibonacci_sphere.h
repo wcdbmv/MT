@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <vector>
 
-#include "math/linalg/vector3f.h"
+#include "math/linalg/vector.h"
 
 // TODO(a.kerimov): Generate points differently.
-[[nodiscard]] std::vector<Vector3F> FibonacciSphere(std::size_t n);
+[[nodiscard]] std::vector<Vec3> FibonacciSphere(std::size_t n);

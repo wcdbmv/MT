@@ -2,11 +2,12 @@
 
 #include <vector>
 
-#include "base/float.h"
-#include "math/linalg/ray.h"
+#include "base/config/float.h"
+#include "math/linalg/vector.h"
 
 struct WorkerParams {
-  Ray ray;
+  Vec3 pos;
+  Vec3 dir;
   Float intensity{};
   Float intensity_end{};
   bool use_prev{false};

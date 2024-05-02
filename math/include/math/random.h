@@ -1,5 +1,5 @@
 #pragma once
 
-#include "base/float.h"
+#include "base/config/float.h"
 
 [[nodiscard]] bool ImFeelingLucky(Float probability) noexcept;

@@ -7,8 +7,8 @@
 
 #include "math/linalg/vector.h"
 
-template <std::size_t Size, typename T>
-std::ostream& operator<<(std::ostream& os, const Vector<Size, T> v) {
+template <std::size_t Size>
+std::ostream& operator<<(std::ostream& os, Vec<Size> v) {
   os << '(';
   std::copy(v.begin(), v.end(),
             std::experimental::make_ostream_joiner(os, ", "));

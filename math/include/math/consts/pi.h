@@ -2,10 +2,10 @@
 
 #include <numbers>
 
-#include "base/float.h"
+#include "base/config/float.h"
 
 namespace consts {
 
-inline constexpr auto pi = std::numbers::pi_v<Float>;
+inline constexpr auto kPi = std::numbers::pi_v<Float>;
 
 }  // namespace consts

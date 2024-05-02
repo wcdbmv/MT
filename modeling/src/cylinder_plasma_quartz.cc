@@ -1,21 +1,24 @@
 #include "modeling/cylinder_plasma_quartz.h"
 
+#include <algorithm>
 #include <cassert>
 #include <cmath>
 #include <cstddef>
-#include <iostream>
-#include <string>
 #include <type_traits>
 #include <vector>
 
 #include "base/erase_remove_if.h"
-#include "base/float.h"
-#include "math/linalg/vector3f.h"
+#include "math/fast_pow.h"
+#include "math/float/exp.h"
+#include "math/linalg/vector.h"
 #include "modeling/fibonacci_sphere.h"
 #include "modeling/hollow_cylinder.h"
 #include "modeling/solid_cylinder.h"
 #include "modeling/worker.h"
-#include "physics/params.h"
+#include "physics/params/air.h"
+#include "physics/params/mirror.h"
+#include "physics/params/plasma.h"
+#include "physics/params/quartz.h"
 #include "physics/plancks_law.h"
 
 // #define ENABLE_DEBUG_OUTPUT
@@ -38,91 +41,133 @@ DummyOut& operator<<(DummyOut& dummy_out, T&&) noexcept {  // NOLINT
 }
 
 #ifdef ENABLE_DEBUG_OUTPUT
+#include <iostream>
 #define DEBUG_OUT std::cout
 #else
 #define DEBUG_OUT gDummyOut
 #endif
 
 #ifdef ENABLE_GEOGEBRA_OUTPUT
+#include <iostream>
 #define GEOGEBRA_OUT std::cout
 #else
 #define GEOGEBRA_OUT gDummyOut
 #endif
 
 #ifdef ENABLE_GEOGEBRA_OUTPUT_2D
+#include <iostream>
 #define GEOGEBRA_OUT_2D std::cout
 #else
 #define GEOGEBRA_OUT_2D gDummyOut
 #endif
 
-constexpr auto kStep = static_cast<Float>(0.025);
-// NOLINTNEXTLINE(cert-err58-cpp)
-const auto kPlasmaN = static_cast<size_t>(std::round(params::R / kStep));
-// NOLINTNEXTLINE(cert-err58-cpp)
-const auto kQuartzN =
-    static_cast<size_t>(std::round((params::R_1 - params::R) / kStep));
-// NOLINTNEXTLINE(cert-err58-cpp)
-constexpr auto kMirrorR = static_cast<Float>(0);
-constexpr auto kMirrorR1 = params::rho;
+inline namespace {
+
+inline constexpr auto kT0 = 10'000.0_F;  // К.
+inline constexpr auto kTW = 2'000.0_F;   // К.
+inline constexpr auto kM = 4;            // 4-8
+
+inline constexpr auto kR = 0.35_F;        // см.
+inline constexpr auto kDelta = 0.1_F;     // см.
+inline constexpr auto kR1 = kR + kDelta;  // см.
+inline constexpr auto kH = 1.0_F;         // см.
+
+/// Температура.
+[[nodiscard]] constexpr Float T(Float z) noexcept {
+  assert(0 <= z);
+#ifndef CONSTANT_TEMPERATURE
+  if (z <= 1) {
+    return kT0 + (kTW - kT0) * FastPow<kM>(z);
+  }
+  assert(z <= kR1 / kR);
+  constexpr auto kA = 78848.21035368084688136380896708527_F;
+  constexpr auto kB = 3.674377435745371909154547914447763_F;
+  return kA * Exp(-kB * z);
+#else
+  IgnoreUnused(z);
+  return kT0;
+#endif
+}
+
+}  // namespace
+
+constexpr auto kStep = 0.025_F;
+
+[[nodiscard]] std::size_t NPlasma() noexcept {
+  return static_cast<size_t>(std::round(kR / kStep));
+}
+
+[[nodiscard]] std::size_t NQuartz() noexcept {
+  return static_cast<size_t>(std::round((kR1 - kR) / kStep));
+}
+
+constexpr auto kMirrorR = kZero;
+constexpr auto kMirrorR1 = params::mirror::kRho;
 
 // TODO(a.kerimov): Выяснить, что происходит при 400000+ и CONSTANT_TEMPERATURE
 constexpr auto kSpherePoints = 1000;
 
 // TODO(a.kerimov): Написать тесты.
 
+constexpr auto kOrigin = Vec3{};
+
 }  // namespace
 
 class CylinderPlasmaQuartz::Impl {
  public:
-  Impl(const Float nu, const Float d_nu)
+  Impl(Float nu, Float d_nu)
       : plasma_{{.center = kOrigin,
-                 .radius = params::R,
-                 .steps = kPlasmaN,
-                 .refractive_index = params::n_plasma,
-                 .refractive_index_external = params::n_quartz,
+                 .radius = kR,
+                 .steps = NPlasma(),
+                 .refractive_index = params::plasma::kEta,
+                 .refractive_index_external = params::quartz::kEta,
                  .mirror = kMirrorR},
-                params::T,
-                [nu, d_nu](const Float T) { return func::I(nu, d_nu, T); },
-                [nu](const Float T) { return params::k_plasma(nu, T); }},
+                T,
+                [nu, d_nu](Float t) { return func::I(nu, d_nu, t); },
+                [nu](Float t) {
+                  return params::plasma::AbsortionCoefficient(nu, t);
+                }},
         quartz_{{.center = kOrigin,
-                 .radius_min = params::R,
-                 .radius_max = params::R_1,
-                 .steps = kQuartzN,
-                 .refractive_index = params::n_quartz,
-                 .refractive_index_internal = params::n_plasma,
-                 .refractive_index_external = params::n_quartz,
+                 .radius_min = kR,
+                 .radius_max = kR1,
+                 .steps = NQuartz(),
+                 .refractive_index = params::quartz::kEta,
+                 .refractive_index_internal = params::plasma::kEta,
+                 .refractive_index_external = params::air::kEta,
                  .mirror_internal = kMirrorR,
                  .mirror_external = kMirrorR1},
-                params::T,
-                [nu, d_nu](const Float T) { return func::I(nu, d_nu, T); },
-                params::k_quartz} {
+                T,
+                [nu, d_nu](Float t) { return func::I(nu, d_nu, t); },
+                [nu](Float t) {
+                  return params::quartz::AbsortionCoefficient(nu, t);
+                }} {
     InitDirs();
   }
 
   Result Solve() {
     Result r;
-    r.absorbed_plasma = std::vector<Float>(kPlasmaN);
-    r.absorbed_quartz = std::vector<Float>(kQuartzN + 1);
+    r.absorbed_plasma = std::vector<Float>(NPlasma());
+    r.absorbed_quartz = std::vector<Float>(NQuartz() + 1);
     std::vector<WorkerParams> wait_plasma;
     std::vector<WorkerParams> wait_quartz;
 
-    constexpr auto kInitialPos = Vector3F{params::R, 0, params::H / 2};
+    constexpr auto kInitialPos = Vec3{kR, 0, kH / 2};
 
-    std::vector<Float> Is;
-    Is.reserve(dirs_.size());
+    std::vector<Float> is;
+    is.reserve(dirs_.size());
     Float max_intensity{};
     for (const auto dir : dirs_) {
-      const auto I =
+      const auto i =
           plasma_.CalculateIntensity(kInitialPos, dir, kSpherePoints);
-      Is.push_back(I);
-      r.intensity_all += I;
-      max_intensity = std::max(I, max_intensity);
+      is.push_back(i);
+      r.intensity_all += i;
+      max_intensity = std::max(i, max_intensity);
     }
 
     std::size_t jj = 0;
     for (const auto dir : dirs_) {
       auto res = quartz_.SolveDir(
-          {{kInitialPos, dir}, Is[jj], 0.000001 * max_intensity});
+          {kInitialPos, dir, is[jj], 0.000001 * max_intensity});
       r.absorbed_mirror += res.absorbed_at_the_border;
       static_assert(std::is_trivially_copyable_v<WorkerParams>);
       for (auto released : res.released_rays) {
@@ -215,7 +260,7 @@ class CylinderPlasmaQuartz::Impl {
  private:
   void InitDirs() {
     dirs_ = FibonacciSphere(kSpherePoints);
-    EraseRemoveIf(dirs_, [](const Vector3F dir) { return dir.x() <= 0; });
+    EraseRemoveIf(dirs_, [](Vec3 dir) { return dir.x() <= 0; });
     for (const auto dir : dirs_) {
       DEBUG_OUT << dir << '\n';
 #ifdef ENABLE_GEOGEBRA_OUTPUT_SPHERE
@@ -228,10 +273,10 @@ class CylinderPlasmaQuartz::Impl {
 
   SolidCylinder plasma_;
   HollowCylinder quartz_;
-  std::vector<Vector3F> dirs_;
+  std::vector<Vec3> dirs_;
 };
 
-CylinderPlasmaQuartz::CylinderPlasmaQuartz(const Float nu, const Float d_nu)
+CylinderPlasmaQuartz::CylinderPlasmaQuartz(Float nu, Float d_nu)
     : pimpl_{nu, d_nu} {}
 
 CylinderPlasmaQuartz::~CylinderPlasmaQuartz() = default;

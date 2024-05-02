@@ -2,20 +2,18 @@
 
 #include <cassert>
 
-Vector3F Reflect(const Vector3F I, const Vector3F N) NOEXCEPT_RELEASE {
-  const auto cos_i = Vector3F::Dot(I, N);
-  return ReflectEx(I, N, cos_i);
+Vec3 Reflect(Vec3 incident, Vec3 normal) MT_NOEXCEPT_RELEASE {
+  const auto cos_i = incident * normal;
+  return ReflectEx(incident, normal, cos_i);
 }
 
-Vector3F ReflectEx(const Vector3F I,
-                   const Vector3F N,
-                   const Float cos_i) NOEXCEPT_RELEASE {
-  assert(I.IsNormalized());
-  assert(N.IsNormalized());
+Vec3 ReflectEx(Vec3 incident, Vec3 normal, Float cos_i) MT_NOEXCEPT_RELEASE {
+  assert(incident.IsNormalized());
+  assert(normal.IsNormalized());
   assert(-1 <= cos_i && cos_i <= 1);
 
-  auto R = I - 2 * cos_i * N;
-  R.Normalize();
+  auto reflected = incident - 2 * cos_i * normal;
+  reflected.Normalize();
 
-  return R;
+  return reflected;
 }

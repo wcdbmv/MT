@@ -3,15 +3,15 @@
 #include <cstddef>
 #include <vector>
 
-#include "base/float.h"
-#include "math/linalg/vector3f.h"
+#include "base/config/float.h"
+#include "math/linalg/vector.h"
 #include "modeling/cylinder_common.h"
 #include "modeling/worker.h"
 #include "ray_tracing/cylinder_z_infinite.h"
 
 struct HollowCylinder {
   struct Params {
-    Vector3F center;
+    Vec3 center;
     Float radius_min;
     Float radius_max;
     std::size_t steps;

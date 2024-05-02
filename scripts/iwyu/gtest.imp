@@ -1,0 +1,4 @@
+[
+  { "include": [ "\"gtest/gtest.h\"", "private", "<gtest/gtest.h>", "public" ] },
+  { "include": [ "<string>", "public", "<gtest/gtest.h>", "public" ] },
+]

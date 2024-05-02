@@ -2,36 +2,27 @@
 
 #include <array>
 #include <cassert>
-#include <cmath>
 #include <cstddef>
-#include <span>
+#include <iostream>
 #include <string>
 #include <vector>
 
-#include "base/float.h"
-#include "base/float_cmp.h"
+#include "base/config/float.h"
 #include "base/ignore_unused.h"
-#include "math/exp.h"
-#include "math/linalg/ray.h"
-#include "math/linalg/vector3f.h"
-#include "math/sqrt.h"
-#include "math/utils.h"
-#include "ray_tracing/cylinder_z_infinite.h"
-
-// TODO(a.kerimov): Try constexpr.
-// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
-#define HOLLOW_CYLINDER_DEBUG_LEVEL 0
-
-#if HOLLOW_CYLINDER_DEBUG_LEVEL >= 1
-#include <iostream>
+#include "math/float/eps.h"
+#include "math/float/compare.h"
+#include "math/float/exp.h"
+#include "math/float/sqrt.h"
+#include "math/linalg/vector.h"
 #include "math/linalg/vector_io.h"
-#else
-#include "base/ignore_unused.h"
-#endif
+#include "ray_tracing/cylinder_z_infinite.h"
+#include "ray_tracing/utils.h"
 
 namespace {
 
 // TODO(a.kerimov): Написать тесты.
+
+constexpr auto kDebugLevel = 0;  // 0-2.
 
 class HollowCylinderWorker {
  public:
@@ -50,23 +41,24 @@ class HollowCylinderWorker {
     const auto border_idx = c_.cylinders.size() - 1;
     current_cylinder_idx_ = 0;
 
-    ray_ = params.ray;
+    pos_ = params.pos;
+    dir_ = params.dir;
     // TODO(a.kerimov): Revive geogebra output (see git history).
 
     use_prev_ = params.use_prev;
     assert(!use_prev_);
 
     for ([[maybe_unused]] size_t i = 0; intensity > params.intensity_end; ++i) {
-#if HOLLOW_CYLINDER_DEBUG_LEVEL >= 2
-      std::cout << "[HollowCylinder iteration=" << i
-                << ", intensity=" << intensity << ", use_prev=" << use_prev_
-                << "]\n";
-#endif
+      if constexpr (kDebugLevel >= 2) {
+        std::cout << "[HollowCylinder iteration=" << i
+                  << ", intensity=" << intensity << ", use_prev=" << use_prev_
+                  << "]\n";
+      }
 
       Intersect();
 
       const auto idx = use_prev_ ? prev_cylinder_idx_ : current_cylinder_idx_;
-      const auto dr = Vector3F::Distance(prev_pos_, ray_.pos);
+      const auto dr = Vec3::Distance(prev_pos_, pos_);
       const auto k = c_.attenuations[idx];
       const auto exp = Exp(-k * dr);
       const auto prev_intensity = intensity;
@@ -74,11 +66,11 @@ class HollowCylinderWorker {
       result.absorbed[idx] += prev_intensity - intensity;
       assert(idx != 0);
 
-#if HOLLOW_CYLINDER_DEBUG_LEVEL >= 2
-      std::cout << "NEW POS: " << ray_.pos << " [ti=" << t_min_idx_
-                << "][ci=" << current_cylinder_idx_ << "][dir=" << ray_.dir
-                << "]\n";
-#endif
+      if constexpr (kDebugLevel >= 2) {
+        std::cout << "NEW POS: " << pos_ << " [ti=" << t_min_idx_
+                  << "][ci=" << current_cylinder_idx_ << "][dir=" << dir_
+                  << "]\n";
+      }
 
       const auto outward = current_cylinder_idx_ == border_idx;
       if (outward || current_cylinder_idx_ == 0) {
@@ -88,35 +80,35 @@ class HollowCylinderWorker {
             outward ? p.refractive_index_external : p.refractive_index_internal;
         const auto mirror = outward ? p.mirror_external : p.mirror_internal;
         const auto res = c_.cylinders[current_cylinder_idx_].Refract(
-            ray_, p.refractive_index, eta_t, mirror, outward);
+            pos_, dir_, p.refractive_index, eta_t, mirror, outward);
 
         if (res.T > 0) {
-          if (const auto IT = intensity * res.T; IT > params.intensity_end) {
-            result.released_rays.push_back({{ray_.pos, res.refracted},
-                                            IT,
-                                            params.intensity_end,
-                                            use_prev_});
+          if (const auto new_i = intensity * res.T;
+              new_i > params.intensity_end) {
+            result.released_rays.push_back(
+                {pos_, res.refracted, new_i, params.intensity_end, use_prev_});
           } else if (outward) {
-            result.absorbed_at_the_border += IT;
+            result.absorbed_at_the_border += new_i;
           } else {
-            result.absorbed[0] += IT;
+            result.absorbed[0] += new_i;
           }
         }
 
         assert(res.R > 0);
-        ray_.dir = res.reflected;
+        dir_ = res.reflected;
         intensity *= res.R;
         use_prev_ = outward;
-#if HOLLOW_CYLINDER_DEBUG_LEVEL >= 2
-        std::cout << "REFLECT, new dir " << ray_.dir << '\n';
-#endif
+
+        if constexpr (kDebugLevel >= 2) {
+          std::cout << "REFLECT, new dir " << dir_ << '\n';
+        }
       }
     }
 
-#if HOLLOW_CYLINDER_DEBUG_LEVEL >= 2
-    std::cout << "[HollowCylinder iteration=LAST, intensity=" << intensity
-              << "]\n";
-#endif
+    if constexpr (kDebugLevel >= 2) {
+      std::cout << "[HollowCylinder iteration=LAST, intensity=" << intensity
+                << "]\n";
+    }
 
     Intersect();
 
@@ -128,22 +120,20 @@ class HollowCylinderWorker {
   }
 
  private:
-  void PrintT(const char* prompt, const Float t) const {
-#if HOLLOW_CYLINDER_DEBUG_LEVEL >= 2
-    std::cout << prompt << t;
-    if (t > kEps) {
-      std::cout << ' ' << ray_.Point(t);
+  void PrintT(const char* prompt, Float t) const {
+    if constexpr (kDebugLevel >= 2) {
+      std::cout << prompt << t;
+      if (t > kEps) {
+        std::cout << ' ' << pos_ + t * dir_;
+      }
+      std::cout << '\n';
     }
-    std::cout << '\n';
-#else
-    IgnoreUnused(prompt);
-    IgnoreUnused(t);
-#endif
   }
 
   void IntersectPrevCylinder() {
     if (current_cylinder_idx_ > 0) {
-      const auto t = c_.cylinders[current_cylinder_idx_ - 1].Intersect(ray_);
+      const auto t =
+          c_.cylinders[current_cylinder_idx_ - 1].Intersect(pos_, dir_);
       ts_[kIdxPrevCylinder] = t;
 
       PrintT("PrevCylinder  ", t);
@@ -154,7 +144,8 @@ class HollowCylinderWorker {
 
   void IntersectNextCylinder() {
     if (current_cylinder_idx_ + 1 < c_.cylinders.size()) {
-      const auto t = c_.cylinders[current_cylinder_idx_ + 1].Intersect(ray_);
+      const auto t =
+          c_.cylinders[current_cylinder_idx_ + 1].Intersect(pos_, dir_);
       ts_[kIdxNextCylinder] = t;
 
       PrintT("NextCylinder  ", t);
@@ -164,8 +155,9 @@ class HollowCylinderWorker {
   }
 
   void IntersectCurrCylinder() {
-    const auto t = c_.cylinders[current_cylinder_idx_].IntersectCurr(ray_);
-    ts_[kIdxCurrCylinder] = IsZero(t, kEps) || !use_prev_ ? -1 : t;
+    const auto t =
+        c_.cylinders[current_cylinder_idx_].IntersectCurr(pos_, dir_);
+    ts_[kIdxCurrCylinder] = IsZero(t) || !use_prev_ ? -1 : t;
 
     PrintT("CurrCylinder* ", t);
   }
@@ -178,9 +170,9 @@ class HollowCylinderWorker {
     t_min_idx_ = FindIndexOfMinimalNonNegative(ts_);
     assert(t_min_idx_ <= kIdxLastCylinder);
     IgnoreUnused(kIdxLastCylinder);
-    prev_pos_ = ray_.pos;
+    prev_pos_ = pos_;
     // TODO(a.kerimov): Fix all Point-s.
-    ray_.pos = ray_.Point(ts_[t_min_idx_]);
+    pos_ = pos_ + ts_[t_min_idx_] * dir_;
 
     prev_cylinder_idx_ = current_cylinder_idx_;
 
@@ -196,8 +188,9 @@ class HollowCylinderWorker {
   // NOLINTNEXTLINE(cppcoreguidelines-avoid-const-or-ref-data-members)
   const HollowCylinder& c_;
 
-  Ray ray_{};
-  Vector3F prev_pos_;
+  Vec3 pos_;
+  Vec3 dir_;
+  Vec3 prev_pos_;
 
   static constexpr size_t kIdxPrevCylinder = 0;
   static constexpr size_t kIdxNextCylinder = 1;
@@ -231,10 +224,10 @@ HollowCylinder::HollowCylinder(const Params& params,
   const auto insert_cylinder = [&temperature, &intensity, &attenuation, this,
                                 step](const Float radius) {
     cylinders.emplace_back(params_.center, radius);
-    const auto T = temperature((radius - step / 2) / params_.radius_min);
-    temperatures.emplace_back(T);
-    intensities.emplace_back(intensity(T));
-    attenuations.emplace_back(attenuation(T));
+    const auto t = temperature((radius - step / 2) / params_.radius_min);
+    temperatures.emplace_back(t);
+    intensities.emplace_back(intensity(t));
+    attenuations.emplace_back(attenuation(t));
   };
 
   insert_cylinder(params_.radius_min);
@@ -250,23 +243,23 @@ HollowCylinder::HollowCylinder(const Params& params,
   assert(intensities.size() == params_.steps + 1);
   assert(attenuations.size() == params_.steps + 1);
 
-#if HOLLOW_CYLINDER_DEBUG_LEVEL >= 1
-  std::cout << "[HollowCylinder]\n"
-               "Cylinders:\n";
-  for (auto& cylinder : cylinders) {
-    std::cout << cylinder.center() << ' ' << Sqrt(cylinder.radius2()) << '\n';
-  }
+  if constexpr (kDebugLevel >= 1) {
+    std::cout << "[HollowCylinder]\n"
+                 "Cylinders:\n";
+    for (auto& cylinder : cylinders) {
+      std::cout << cylinder.center() << ' ' << Sqrt(cylinder.radius2()) << '\n';
+    }
 
-  std::cout << "T:\n";
-  for (const auto t : temperatures) {
-    std::cout << t << '\n';
-  }
+    std::cout << "T:\n";
+    for (const auto t : temperatures) {
+      std::cout << t << '\n';
+    }
 
-  std::cout << "I:\n";
-  for (const auto i : intensities) {
-    std::cout << i << '\n';
+    std::cout << "I:\n";
+    for (const auto i : intensities) {
+      std::cout << i << '\n';
+    }
   }
-#endif
 }
 
 WorkerResult HollowCylinder::SolveDir(const WorkerParams& params) const {

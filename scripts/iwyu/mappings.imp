@@ -4,4 +4,6 @@
   { ref: "standard_mappings/libcxx.imp" },
   { ref: "standard_mappings/stl.c.headers.imp" },
   { ref: "standard_mappings/stl.public.imp" },
+
+  { ref: "gtest.imp" },
 ]

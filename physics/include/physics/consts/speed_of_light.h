@@ -1,12 +1,12 @@
 #pragma once
 
-#include "base/float.h"
+#include "base/config/float.h"
 
 namespace consts {
 
 /// Скорость света в вакууме.
-inline constexpr auto c = static_cast<Float>(299'792'458);  // м/с.
+inline constexpr auto kSpeedOfLight = 299'792'458.0_F;  // м/с.
 
-inline constexpr auto c_sm = 100 * c;  // см/c.
+inline constexpr auto kSpeedOfLightSm = 100 * kSpeedOfLight;  // см/c.
 
 }  // namespace consts

@@ -3,7 +3,7 @@
 #include <array>
 #include <cstddef>
 
-#include "base/float.h"
+#include "base/config/float.h"
 
 template <std::size_t Size>
 [[nodiscard]] std::size_t FindIndexOfMinimalNonNegative(

@@ -4,136 +4,110 @@
 #include <concepts>
 #include <cstddef>
 #include <initializer_list>
-#include <limits>
-#ifdef DEBUG
 #include <stdexcept>
-#endif
 
-#include "base/float_cmp.h"
-#include "base/noexcept_release.h"
-#include "math/sqrt.h"
+#include "base/config/float.h"
+#include "base/config/noexcept_release.h"
+#include "math/float/compare.h"
+#include "math/float/sqrt.h"
 
-template <std::size_t Size, std::floating_point T>
-class Vector : public std::array<T, Size> {
-  static_assert(2 <= Size && Size <= 4);
-  static_assert(sizeof(std::array<T, Size>) == sizeof(T) * Size);
-  using Base = std::array<T, Size>;
+template <std::size_t Size>
+class Vec : public std::array<Float, Size> {
+  static_assert(2 <= Size && Size <= 3);
+  static_assert(sizeof(std::array<Float, Size>) == sizeof(Float) * Size);
+  using Base = std::array<Float, Size>;
 
  public:
-  constexpr Vector() noexcept;
-  constexpr Vector(std::initializer_list<T> list) noexcept;
+  constexpr Vec() noexcept;
+  constexpr Vec(std::initializer_list<Float> list) noexcept;
 
-  template <std::size_t OtherSize>
-  explicit constexpr Vector(Vector<OtherSize, T> other) noexcept
-      requires(Size != OtherSize);
+  constexpr Vec(Vec a, Vec b) noexcept;
 
-  constexpr Vector(Vector tail, Vector tip) noexcept;
-
-  [[nodiscard]] constexpr T& x() noexcept;
-  [[nodiscard]] constexpr T x() const noexcept;
-  [[nodiscard]] constexpr T& y() noexcept requires(Size >= 2);
-  [[nodiscard]] constexpr T y() const noexcept requires(Size >= 2);
-  [[nodiscard]] constexpr T& z() noexcept requires(Size >= 3);
-  [[nodiscard]] constexpr T z() const noexcept requires(Size >= 3);
-  [[nodiscard]] constexpr T& w() noexcept requires(Size >= 4);
-  [[nodiscard]] constexpr T w() const noexcept requires(Size >= 4);
-
-  constexpr Vector& operator+=(Vector rhs) noexcept;
-  constexpr Vector& operator-=(Vector rhs) noexcept;
-  constexpr Vector& operator*=(Vector rhs) noexcept;
-  constexpr Vector& operator/=(Vector rhs) NOEXCEPT_RELEASE;
-  constexpr Vector& operator*=(T rhs) noexcept;
-  constexpr Vector& operator/=(T rhs) NOEXCEPT_RELEASE;
-
-  [[nodiscard]] static constexpr T Dot(Vector lhs, Vector rhs) noexcept;
-  [[nodiscard]] static constexpr Vector Cross(Vector lhs, Vector rhs) noexcept
-      requires(Size == 3);
-  [[nodiscard]] static constexpr T Skew(Vector lhs, Vector rhs) noexcept
-      requires(Size == 2);
-
-  [[nodiscard]] static constexpr T SquaredDistance(Vector lhs,
-                                                   Vector rhs) noexcept;
-  [[nodiscard]] static constexpr T Distance(Vector lhs, Vector rhs) noexcept;
-  [[nodiscard]] constexpr T SquaredLength() const noexcept;
-  [[nodiscard]] constexpr T Length() const noexcept;
-
-  constexpr void Normalize() NOEXCEPT_RELEASE;
-  [[nodiscard]] constexpr Vector Normalized() const NOEXCEPT_RELEASE;
-  [[nodiscard]] constexpr bool IsNormalized() const noexcept;
+  [[nodiscard]] constexpr Float& x() noexcept;
+  [[nodiscard]] constexpr Float x() const noexcept;
+  [[nodiscard]] constexpr Float& y() noexcept requires(Size >= 2);
+  [[nodiscard]] constexpr Float y() const noexcept requires(Size >= 2);
+  [[nodiscard]] constexpr Float& z() noexcept requires(Size >= 3);
+  [[nodiscard]] constexpr Float z() const noexcept requires(Size >= 3);
 
   constexpr void Negate() noexcept;
+
+  constexpr Vec& operator+=(Vec rhs) noexcept;
+  constexpr Vec& operator-=(Vec rhs) noexcept;
+  constexpr Vec& operator*=(Float rhs) noexcept;
+  constexpr Vec& operator/=(Float rhs) MT_NOEXCEPT_RELEASE;
+
+  [[nodiscard]] static constexpr Float Dot(Vec lhs, Vec rhs) noexcept;
+  [[nodiscard]] static constexpr Vec Cross(Vec lhs, Vec rhs) noexcept
+      requires(Size == 3);
+  [[nodiscard]] static constexpr Float Skew(Vec lhs, Vec rhs) noexcept
+      requires(Size == 2);
+
+  [[nodiscard]] static constexpr Float SquaredDistance(Vec lhs,
+                                                       Vec rhs) noexcept;
+  [[nodiscard]] static constexpr Float Distance(Vec lhs, Vec rhs) noexcept;
+  [[nodiscard]] constexpr Float SquaredLength() const noexcept;
+  [[nodiscard]] constexpr Float Length() const noexcept;
+
+  constexpr void Normalize() MT_NOEXCEPT_RELEASE;
+  [[nodiscard]] constexpr Vec Normalized() const MT_NOEXCEPT_RELEASE;
+  [[nodiscard]] constexpr bool IsNormalized() const noexcept;
 };
 
-template <std::size_t Size, std::floating_point T>
-constexpr Vector<Size, T>::Vector() noexcept : Base{} {}
+template <std::size_t Size>
+constexpr Vec<Size>::Vec() noexcept : Base{} {}
 
-template <std::size_t Size, std::floating_point T>
-constexpr Vector<Size, T>::Vector(const std::initializer_list<T> list) noexcept
-    : Base{} {
+template <std::size_t Size>
+constexpr Vec<Size>::Vec(std::initializer_list<Float> list) noexcept : Base{} {
   std::copy_n(list.begin(), std::min(Size, list.size()), Base::begin());
 }
 
-template <std::size_t Size, std::floating_point T>
-template <std::size_t OtherSize>
-constexpr Vector<Size, T>::Vector(const Vector<OtherSize, T> other) noexcept
-    requires(Size != OtherSize)
-    : Base{} {
-  std::copy_n(other.begin(), std::min(Size, OtherSize), Base::begin());
-}
+template <std::size_t Size>
+constexpr Vec<Size>::Vec(Vec a, Vec b) noexcept : Vec{b - a} {}
 
-template <std::size_t Size, std::floating_point T>
-constexpr Vector<Size, T>::Vector(const Vector tail, const Vector tip) noexcept
-    : Vector{tip - tail} {}
-
-template <std::size_t Size, std::floating_point T>
-constexpr T& Vector<Size, T>::x() noexcept {
+template <std::size_t Size>
+constexpr Float& Vec<Size>::x() noexcept {
   return (*this)[0];
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr T Vector<Size, T>::x() const noexcept {
+template <std::size_t Size>
+constexpr Float Vec<Size>::x() const noexcept {
   return (*this)[0];
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr T& Vector<Size, T>::y() noexcept requires(Size >= 2)
+template <std::size_t Size>
+constexpr Float& Vec<Size>::y() noexcept requires(Size >= 2)
 {
   return (*this)[1];
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr T Vector<Size, T>::y() const noexcept requires(Size >= 2)
+template <std::size_t Size>
+constexpr Float Vec<Size>::y() const noexcept requires(Size >= 2)
 {
   return (*this)[1];
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr T& Vector<Size, T>::z() noexcept requires(Size >= 3)
+template <std::size_t Size>
+constexpr Float& Vec<Size>::z() noexcept requires(Size >= 3)
 {
   return (*this)[2];
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr T Vector<Size, T>::z() const noexcept requires(Size >= 3)
+template <std::size_t Size>
+constexpr Float Vec<Size>::z() const noexcept requires(Size >= 3)
 {
   return (*this)[2];
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr T& Vector<Size, T>::w() noexcept requires(Size >= 4)
-{
-  return (*this)[3];
+template <std::size_t Size>
+constexpr void Vec<Size>::Negate() noexcept {
+  for (auto& coord : *this) {
+    coord = -coord;
+  }
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr T Vector<Size, T>::w() const noexcept requires(Size >= 4)
-{
-  return (*this)[3];
-}
-
-template <std::size_t Size, std::floating_point T>
-constexpr auto Vector<Size, T>::operator+=(const Vector rhs) noexcept
-    -> Vector& {
+template <std::size_t Size>
+constexpr auto Vec<Size>::operator+=(Vec rhs) noexcept -> Vec& {
   for (std::size_t i = 0; i < Size; ++i) {
     (*this)[i] += rhs[i];
   }
@@ -141,9 +115,8 @@ constexpr auto Vector<Size, T>::operator+=(const Vector rhs) noexcept
   return *this;
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr auto Vector<Size, T>::operator-=(const Vector rhs) noexcept
-    -> Vector& {
+template <std::size_t Size>
+constexpr auto Vec<Size>::operator-=(Vec rhs) noexcept -> Vec& {
   for (std::size_t i = 0; i < Size; ++i) {
     (*this)[i] -= rhs[i];
   }
@@ -151,49 +124,22 @@ constexpr auto Vector<Size, T>::operator-=(const Vector rhs) noexcept
   return *this;
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr auto Vector<Size, T>::operator*=(const Vector rhs) noexcept
-    -> Vector& {
-  for (std::size_t i = 0; i < Size; ++i) {
-    (*this)[i] *= rhs[i];
+template <std::size_t Size>
+constexpr auto Vec<Size>::operator*=(Float rhs) noexcept -> Vec& {
+  for (auto& item : *this) {
+    item *= rhs;
   }
 
   return *this;
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr Vector<Size, T>& Vector<Size, T>::operator/=(const Vector rhs)
-    NOEXCEPT_RELEASE {
-  for (std::size_t i = 0; i < Size; ++i) {
-#ifdef DEBUG
-    if (rhs[i] == T{}) [[unlikely]] {
-      throw std::overflow_error("Vector::operator/=");
+template <std::size_t Size>
+constexpr Vec<Size>& Vec<Size>::operator/=(Float rhs) MT_NOEXCEPT_RELEASE {
+  if constexpr (config::IsDebug()) {
+    if (IsZero(rhs)) [[unlikely]] {
+      throw std::overflow_error("Vec::operator/");
     }
-#endif
-
-    (*this)[i] /= rhs[i];
   }
-
-  return *this;
-}
-
-template <std::size_t Size, std::floating_point T>
-constexpr auto Vector<Size, T>::operator*=(const T rhs) noexcept -> Vector& {
-  for (auto& item : *this) {
-    item *= rhs;
-  }
-
-  return *this;
-}
-
-template <std::size_t Size, std::floating_point T>
-constexpr Vector<Size, T>& Vector<Size, T>::operator/=(const T rhs)
-    NOEXCEPT_RELEASE {
-#ifdef DEBUG
-  if (rhs == T{}) [[unlikely]] {
-    throw std::overflow_error("Vector::operator/");
-  }
-#endif
 
   for (auto& item : *this) {
     item *= rhs;
@@ -202,56 +148,50 @@ constexpr Vector<Size, T>& Vector<Size, T>::operator/=(const T rhs)
   return *this;
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr Vector<Size, T> operator-(Vector<Size, T> v) noexcept {
+template <std::size_t Size>
+constexpr Vec<Size> operator-(Vec<Size> v) noexcept {
   v.Negate();
   return v;
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr Vector<Size, T> operator+(Vector<Size, T> lhs,
-                                    const Vector<Size, T> rhs) noexcept {
-  return lhs += rhs;
+template <std::size_t Size>
+constexpr Vec<Size> operator+(Vec<Size> lhs, Vec<Size> rhs) noexcept {
+  lhs += rhs;
+  return lhs;
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr Vector<Size, T> operator-(Vector<Size, T> lhs,
-                                    const Vector<Size, T> rhs) noexcept {
-  return lhs -= rhs;
+template <std::size_t Size>
+constexpr Vec<Size> operator-(Vec<Size> lhs, Vec<Size> rhs) noexcept {
+  lhs -= rhs;
+  return lhs;
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr Vector<Size, T> operator*(Vector<Size, T> lhs,
-                                    const Vector<Size, T> rhs) noexcept {
-  return lhs *= rhs;
+template <std::size_t Size>
+constexpr Float operator*(Vec<Size> lhs, Vec<Size> rhs) noexcept {
+  return Vec<Size>::Dot(lhs, rhs);
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr Vector<Size, T> operator/(Vector<Size, T> lhs,
-                                    const Vector<Size, T> rhs)
-    NOEXCEPT_RELEASE {
-  return lhs /= rhs;
+template <std::size_t Size>
+constexpr Vec<Size> operator*(Vec<Size> lhs, Float rhs) noexcept {
+  lhs *= rhs;
+  return lhs;
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr Vector<Size, T> operator*(Vector<Size, T> lhs, const T rhs) noexcept {
-  return lhs *= rhs;
+template <std::size_t Size>
+constexpr Vec<Size> operator*(Float lhs, Vec<Size> rhs) noexcept {
+  rhs *= lhs;
+  return rhs;
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr Vector<Size, T> operator*(const T lhs, Vector<Size, T> rhs) noexcept {
-  return rhs *= lhs;
+template <std::size_t Size>
+constexpr Vec<Size> operator/(Vec<Size> lhs, Float rhs) MT_NOEXCEPT_RELEASE {
+  lhs /= rhs;
+  return lhs;
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr Vector<Size, T> operator/(Vector<Size, T> lhs,
-                                    const T rhs) NOEXCEPT_RELEASE {
-  return lhs /= rhs;
-}
-
-template <std::size_t Size, std::floating_point T>
-constexpr T Vector<Size, T>::Dot(const Vector lhs, const Vector rhs) noexcept {
-  T product{};
+template <std::size_t Size>
+constexpr Float Vec<Size>::Dot(Vec lhs, Vec rhs) noexcept {
+  auto product = kZero;
 
   for (std::size_t i = 0; i < Size; ++i) {
     product += lhs[i] * rhs[i];
@@ -260,9 +200,8 @@ constexpr T Vector<Size, T>::Dot(const Vector lhs, const Vector rhs) noexcept {
   return product;
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr auto Vector<Size, T>::Cross(const Vector lhs,
-                                      const Vector rhs) noexcept -> Vector
+template <std::size_t Size>
+constexpr auto Vec<Size>::Cross(Vec lhs, Vec rhs) noexcept -> Vec
     requires(Size == 3)
 {
   // clang-format off
@@ -272,62 +211,55 @@ constexpr auto Vector<Size, T>::Cross(const Vector lhs,
   // clang-format on
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr T Vector<Size, T>::Skew(const Vector lhs, const Vector rhs) noexcept
-    requires(Size == 2)
+template <std::size_t Size>
+constexpr Float Vec<Size>::Skew(Vec lhs, Vec rhs) noexcept requires(Size == 2)
 {
   return lhs[0] * rhs[1] - lhs[1] * rhs[0];
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr T Vector<Size, T>::SquaredDistance(const Vector lhs,
-                                             const Vector rhs) noexcept {
+template <std::size_t Size>
+constexpr Float Vec<Size>::SquaredDistance(Vec lhs, Vec rhs) noexcept {
   return (lhs - rhs).SquaredLength();
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr T Vector<Size, T>::Distance(const Vector lhs,
-                                      const Vector rhs) noexcept {
+template <std::size_t Size>
+constexpr Float Vec<Size>::Distance(Vec lhs, Vec rhs) noexcept {
   return Sqrt(SquaredDistance(lhs, rhs));
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr T Vector<Size, T>::SquaredLength() const noexcept {
+template <std::size_t Size>
+constexpr Float Vec<Size>::SquaredLength() const noexcept {
   return Dot(*this, *this);
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr T Vector<Size, T>::Length() const noexcept {
+template <std::size_t Size>
+constexpr Float Vec<Size>::Length() const noexcept {
   return Sqrt(SquaredLength());
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr void Vector<Size, T>::Normalize() NOEXCEPT_RELEASE {
+template <std::size_t Size>
+constexpr void Vec<Size>::Normalize() MT_NOEXCEPT_RELEASE {
   const auto squared_length = SquaredLength();
-#ifdef DEBUG
-  if (IsZero(squared_length)) [[unlikely]] {
-    throw std::overflow_error("Vector::Normalize");
+  if constexpr (config::IsDebug()) {
+    if (IsZero(squared_length)) [[unlikely]] {
+      throw std::overflow_error("Vec::Normalize");
+    }
   }
-#endif
 
-  *this *= T{1} / Sqrt(squared_length);
+  *this *= kOne / Sqrt(squared_length);
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr Vector<Size, T> Vector<Size, T>::Normalized() const NOEXCEPT_RELEASE {
+template <std::size_t Size>
+constexpr Vec<Size> Vec<Size>::Normalized() const MT_NOEXCEPT_RELEASE {
   auto normalized = *this;
   normalized.Normalize();
   return normalized;
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr bool Vector<Size, T>::IsNormalized() const noexcept {
-  return IsEqual(Length(), T{1}, std::numeric_limits<T>::epsilon());
+template <std::size_t Size>
+constexpr bool Vec<Size>::IsNormalized() const noexcept {
+  return IsEqual(Length(), kOne);
 }
 
-template <std::size_t Size, std::floating_point T>
-constexpr void Vector<Size, T>::Negate() noexcept {
-  for (auto& coord : *this) {
-    coord = -coord;
-  }
-}
+using Vec2 = Vec<2>;
+using Vec3 = Vec<3>;

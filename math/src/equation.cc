@@ -1,12 +1,12 @@
 #include "math/equation.h"
 
-#include "base/float_cmp.h"
 #include "math/fast_pow.h"
-#include "math/sqrt.h"
+#include "math/float/compare.h"
+#include "math/float/sqrt.h"
 
 namespace equation {
 
-Result SolveLinear(const Float a, const Float b, Float& x) noexcept {
+Result SolveLinear(Float a, Float b, Float& x) noexcept {
   if (IsZero(a)) [[unlikely]] {
     if (IsZero(b)) [[unlikely]] {
       return Result::kHasInfiniteSolutions;
@@ -18,9 +18,9 @@ Result SolveLinear(const Float a, const Float b, Float& x) noexcept {
   return Result::kHasRealSolution;
 }
 
-Result SolveQuadratic(const Float a,
-                      const Float b,
-                      const Float c,
+Result SolveQuadratic(Float a,
+                      Float b,
+                      Float c,
                       Float& x0,
                       Float& x1) noexcept {
   if (IsZero(a)) [[unlikely]] {
@@ -29,6 +29,7 @@ Result SolveQuadratic(const Float a,
     return result;
   }
 
+  // NOLINTNEXTLINE(readability-identifier-naming)
   const auto _2a = 2 * a;
   const auto discriminant = Sqr(b) - 2 * _2a * c;
   if (discriminant < 0) {

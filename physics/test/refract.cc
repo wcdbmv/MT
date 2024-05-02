@@ -2,34 +2,34 @@
 
 #include <cmath>
 
-#include "base/float.h"
+#include "base/config/float.h"
 #include "expect_vector_near.h"
-#include "math/linalg/vector3f.h"
+#include "math/linalg/vector.h"
 #include "physics/refract.h"
 
 TEST(RefractTest, AirToGlass) {
-  const auto I = Vector3F{1, 1, -1}.Normalized();
-  const auto N = Vector3F{0, 0, -1}.Normalized();
-  constexpr auto kEtaI = static_cast<Float>(1);
-  constexpr auto kEtaT = static_cast<Float>(1.5);
+  const auto incident = Vec3{1, 1, -1}.Normalized();
+  const auto normal = Vec3{0, 0, -1}.Normalized();
+  constexpr auto kEtaI = 1.0_F;
+  constexpr auto kEtaT = 1.5_F;
   constexpr auto kMu = kEtaI / kEtaT;
   const auto z = std::sqrt(19) / 3;
-  const auto expected = Vector3F{kMu, kMu, -z}.Normalized();
+  const auto expected = Vec3{kMu, kMu, -z}.Normalized();
 
-  const auto T = Refract(I, N, kEtaI, kEtaT);
-  ExpectVectorNear(T, expected);
+  const auto refracted = Refract(incident, normal, kEtaI, kEtaT);
+  ExpectVectorNear(refracted, expected);
 }
 
 TEST(RefractTest, GlassToAir) {
-  const auto expected = Vector3F{1, 1, -1}.Normalized();
-  const auto N = Vector3F{0, 0, -1}.Normalized();
-  constexpr auto kEtaI = static_cast<Float>(1);
-  constexpr auto kEtaT = static_cast<Float>(1.5);
+  const auto expected = Vec3{1, 1, -1}.Normalized();
+  const auto normal = Vec3{0, 0, -1}.Normalized();
+  constexpr auto kEtaI = 1.0_F;
+  constexpr auto kEtaT = 1.5_F;
   constexpr auto kMu = kEtaI / kEtaT;
   const auto z = std::sqrt(19) / 3;
-  const auto I = Vector3F{kMu, kMu, -z}.Normalized();
+  const auto incident = Vec3{kMu, kMu, -z}.Normalized();
 
   // NOLINTNEXTLINE(readability-suspicious-call-argument)
-  const auto T = Refract(-I, -N, kEtaT, kEtaI);
-  ExpectVectorNear(T, -expected);
+  const auto refracted = Refract(-incident, -normal, kEtaT, kEtaI);
+  ExpectVectorNear(refracted, -expected);
 }

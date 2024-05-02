@@ -1,10 +1,10 @@
 #pragma once
 
-#include "base/float.h"
-#include "base/noexcept_release.h"
-#include "math/linalg/vector3f.h"
+#include "base/config/float.h"
+#include "base/config/noexcept_release.h"
+#include "math/linalg/vector.h"
 
-[[nodiscard]] Vector3F Reflect(Vector3F I, Vector3F N) NOEXCEPT_RELEASE;
-[[nodiscard]] Vector3F ReflectEx(Vector3F I,
-                                 Vector3F N,
-                                 Float cos_i) NOEXCEPT_RELEASE;
+[[nodiscard]] Vec3 Reflect(Vec3 incident, Vec3 normal) MT_NOEXCEPT_RELEASE;
+[[nodiscard]] Vec3 ReflectEx(Vec3 incident,
+                             Vec3 normal,
+                             Float cos_i) MT_NOEXCEPT_RELEASE;

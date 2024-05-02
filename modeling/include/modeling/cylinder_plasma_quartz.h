@@ -3,8 +3,8 @@
 #include <cstddef>
 #include <vector>
 
+#include "base/config/float.h"
 #include "base/fast_pimpl.h"
-#include "base/float.h"
 
 struct CylinderPlasmaQuartz {
   CylinderPlasmaQuartz(Float nu, Float d_nu);

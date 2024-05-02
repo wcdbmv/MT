@@ -1,31 +1,58 @@
 CheckOptions:
   cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor: true
-Checks: "-*,\
-clang-analyzer-*,\
-bugprone-*,\
--bugprone-easily-swappable-parameters,\
-cert-*,\
-cppcoreguidelines-*,\
--cppcoreguidelines-avoid-magic-numbers,\
--cppcoreguidelines-non-private-member-variables-in-classes,\
--cppcoreguidelines-pro-bounds-constant-array-index,\
--cppcoreguidelines-special-member-functions,\
-google-*,\
--google-readability-braces-around-statements,\
-hicpp-*,\
--hicpp-braces-around-statements,\
--hicpp-no-array-decay,\
--hicpp-special-member-functions,\
--hicpp-uppercase-literal-suffix,\
-misc-*,\
--misc-include-cleaner,\
--misc-no-recursion,\
--misc-non-private-member-variables-in-classes,\
-modernize-*,\
--modernize-use-trailing-return-type,\
-performance-*,\
-portability-*,\
-readability-*,\
--readability-identifier-length,\
--readability-magic-numbers,\
-"
+  readability-identifier-naming.ClassCase: CamelCase
+  readability-identifier-naming.ClassMemberCase: lower_case
+  readability-identifier-naming.ConstexprVariableCase: CamelCase
+  readability-identifier-naming.ConstexprVariablePrefix: k
+  readability-identifier-naming.EnumCase: CamelCase
+  readability-identifier-naming.EnumConstantCase: CamelCase
+  readability-identifier-naming.EnumConstantPrefix: k
+  readability-identifier-naming.FunctionCase: CamelCase
+  readability-identifier-naming.GlobalConstantCase: CamelCase
+  readability-identifier-naming.GlobalConstantPrefix: k
+  readability-identifier-naming.StaticConstantCase: CamelCase
+  readability-identifier-naming.StaticConstantPrefix: k
+  readability-identifier-naming.StaticVariableCase: lower_case
+  readability-identifier-naming.MacroDefinitionCase: UPPER_CASE
+  readability-identifier-naming.MacroDefinitionIgnoredRegexp: '^[A-Z]+(_[A-Z]+)*_$'
+  readability-identifier-naming.MemberCase: lower_case
+  readability-identifier-naming.PrivateMemberSuffix: _
+  readability-identifier-naming.ProtectedMemberSuffix: _
+  readability-identifier-naming.PublicMemberSuffix: ''
+  readability-identifier-naming.NamespaceCase: lower_case
+  readability-identifier-naming.ParameterCase: lower_case
+  readability-identifier-naming.TypeAliasCase: CamelCase
+  readability-identifier-naming.TypedefCase: CamelCase
+  readability-identifier-naming.VariableCase: lower_case
+  readability-identifier-naming.IgnoreMainLikeFunctions: true
+
+Checks: [
+  -*,
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,  # https://clang.llvm.org/extra/clang-tidy/checks/bugprone/easily-swappable-parameters.html
+  cert-*,
+  clang-analyzer-*,
+  clang-diagnostic-*,
+  concurrency-*,
+  cppcoreguidelines-*,
+  -cppcoreguidelines-avoid-magic-numbers,  # Alias for readability-magic-numbers.
+  -cppcoreguidelines-non-private-member-variables-in-classes,  # Alias for misc-non-private-member-variables-in-classes.
+  -cppcoreguidelines-pro-bounds-constant-array-index,  # https://clang.llvm.org/extra/clang-tidy/checks/cppcoreguidelines/pro-bounds-constant-array-index.html.
+  google-*,
+  hicpp-*,
+  -hicpp-special-member-functions,  # Alias for cppcoreguidelines-special-member-functions.
+  misc-*,
+  -misc-include-cleaner,  # https://clang.llvm.org/extra/clang-tidy/checks/misc/include-cleaner.html
+  -misc-non-private-member-variables-in-classes,  # https://clang.llvm.org/extra/clang-tidy/checks/misc/non-private-member-variables-in-classes.html
+  modernize-*,
+  -modernize-use-trailing-return-type,  # https://clang.llvm.org/extra/clang-tidy/checks/modernize/use-trailing-return-type.html
+  performance-*,
+  portability-*,
+  readability-*,
+  -readability-function-cognitive-complexity,  # TODO(a.kerimov): Return.
+  -readability-identifier-length,  # https://clang.llvm.org/extra/clang-tidy/checks/readability/identifier-length.html
+  -readability-magic-numbers,  # https://clang.llvm.org/extra/clang-tidy/checks/readability/magic-numbers.html
+]
+
+FormatStyle: file
+WarningsAsErrors: "*"

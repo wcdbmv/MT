@@ -2,10 +2,10 @@
 
 #include <numbers>
 
-#include "base/float.h"
+#include "base/config/float.h"
 
 namespace consts {
 
-inline constexpr auto phi = std::numbers::phi_v<Float>;
+inline constexpr auto kPhi = std::numbers::phi_v<Float>;
 
 }  // namespace consts

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "base/float.h"
+#include "base/config/float.h"
 
 namespace consts {
 
 /// Постоянная Планка.
-inline constexpr auto h = static_cast<Float>(6.626'070'15e-34);  // Дж·с.
+inline constexpr auto kPlanckConstant = 6.626'070'15e-34_F;  // Дж·с.
 
 }  // namespace consts
