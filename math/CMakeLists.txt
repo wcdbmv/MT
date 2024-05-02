@@ -14,10 +14,12 @@ set(HEADERS
     include/math/float/sqrt.h
     include/math/linalg/vector.h
     include/math/linalg/vector_io.h
+    include/math/random.h
 )
 
 set(SOURCES
     src/equation.cc
+    src/random.cc
 )
 
 add_subdirectory(test)

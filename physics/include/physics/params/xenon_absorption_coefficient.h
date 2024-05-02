@@ -3,7 +3,7 @@
 #include <array>
 #include <cstddef>
 
-#include "base/float.h"
+#include "base/config/float.h"
 
 inline constexpr std::size_t kXenonTableRanges = 193;
 
@@ -54,7 +54,8 @@ inline constexpr std::array<Float, 13> kXenonTemperature = {
     9000, 10000, 11000, 12000, 13000, 14000,
 };
 
-inline constexpr std::array<std::array<Float, kXenonTableRanges>, kXenonTemperature.size()>
+inline constexpr std::array<std::array<Float, kXenonTableRanges>,
+                            kXenonTemperature.size()>
     kXenonAbsorptionCoefficient = {{
         {
             .125E-1, .136E-1, .143E-1, .143E-1, .144E-1, .144E-1, .144E-1,

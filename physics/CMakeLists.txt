@@ -5,12 +5,18 @@ set(HEADERS
     include/physics/consts/boltzmann_constant.h
     include/physics/consts/planck_constant.h
     include/physics/consts/speed_of_light.h
+    include/physics/params/mirror.h
+    include/physics/params/plasma.h
+    include/physics/params/quartz.h
+    include/physics/params/temperature.h
+    include/physics/params/xenon_absorption_coefficient.h
     include/physics/plancks_law.h
     include/physics/reflect.h
     include/physics/refract.h
 )
 
 set(SOURCES
+    src/plasma.cc
     src/reflect.cc
     src/refract.cc
 )
