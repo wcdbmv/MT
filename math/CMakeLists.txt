@@ -2,6 +2,8 @@ project(math
         LANGUAGES CXX)
 
 set(HEADERS
+    include/math/consts/golden_ratio.h
+    include/math/consts/pi.h
     include/math/float/compare.h
     include/math/float/eps.h
     include/math/float/exp.h
