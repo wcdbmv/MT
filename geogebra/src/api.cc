@@ -4,7 +4,7 @@
 
 namespace geogebra {
 
-std::string CylinderInfiniteZ(const std::string_view name, const Float radius) {
+std::string CylinderInfiniteZ(std::string_view name, Float radius) {
   constexpr std::string_view fmt =
       R"F(<expression label="{0}" exp="x^(2) + y^(2) = {1}^(2)" type="quadric"/>
 <element type="quadric" label="{0}">
@@ -20,7 +20,7 @@ std::string CylinderInfiniteZ(const std::string_view name, const Float radius) {
   return std::format(fmt, name, radius);
 }
 
-std::string Point3D(const std::string_view name, const Vector3F point) {
+std::string Point3D(std::string_view name, Vector3F point) {
   constexpr std::string_view fmt =
       R"F(<expression label="{0}" exp="({1:.16f}, {2:.16f}, {3:.16f})" type="point"/>
 <element type="point3d" label="{0}">
@@ -35,9 +35,9 @@ std::string Point3D(const std::string_view name, const Vector3F point) {
   return std::format(fmt, name, point.x(), point.y(), point.z());
 }
 
-std::string Ray3D(const std::string_view name,
-                  const std::string_view pos,
-                  const std::string_view dir) {
+std::string Ray3D(std::string_view name,
+                  std::string_view pos,
+                  std::string_view dir) {
   constexpr std::string_view fmt =
       R"F(<expression label="{1}{2}" exp="{1} + {2}" type="point" />
 <element type="point3d" label="{1}{2}">
@@ -97,9 +97,9 @@ std::string Point(std::string_view name, Vector3F point) {
   return std::format(fmt, name, point.x(), point.y());
 }
 
-std::string Ray(const std::string_view name,
-                const std::string_view pos,
-                const std::string_view dir) {
+std::string Ray(std::string_view name,
+                std::string_view pos,
+                std::string_view dir) {
   constexpr std::string_view fmt =
       R"F(<expression label="{1}{2}" exp="{1} + {2}" type="point" />
 <element type="point" label="{1}{2}">
