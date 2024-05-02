@@ -7,6 +7,8 @@ set(HEADERS
     include/math/float/exp.h
     include/math/float/log.h
     include/math/float/sqrt.h
+    include/math/linalg/vector.h
+    include/math/linalg/vector_io.h
 )
 
 add_library(${PROJECT_NAME} INTERFACE ${HEADERS})

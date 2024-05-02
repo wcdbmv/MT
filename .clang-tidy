@@ -33,6 +33,7 @@ Checks: [
   clang-diagnostic-*,
   concurrency-*,
   cppcoreguidelines-*,
+  -cppcoreguidelines-avoid-magic-numbers,  # Alias for readability-magic-numbers.
   google-*,
   hicpp-*,
   misc-*,
@@ -42,7 +43,8 @@ Checks: [
   performance-*,
   portability-*,
   readability-*,
-  -readability-identifier-length, # https://clang.llvm.org/extra/clang-tidy/checks/readability/identifier-length.html
+  -readability-identifier-length,  # https://clang.llvm.org/extra/clang-tidy/checks/readability/identifier-length.html
+  -readability-magic-numbers,  # https://clang.llvm.org/extra/clang-tidy/checks/readability/magic-numbers.html
 ]
 
 FormatStyle: file
