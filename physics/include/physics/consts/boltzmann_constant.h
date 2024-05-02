@@ -1,10 +1,10 @@
 #pragma once
 
-#include "base/float.h"
+#include "base/config/float.h"
 
 namespace consts {
 
 /// Постоянная Больцмана.
-inline constexpr auto k = static_cast<Float>(1.380'649e-23);  // Дж/К.
+inline constexpr auto kBolzmannConstant = 1.380'649e-23_F;  // Дж/К.
 
 }  // namespace consts

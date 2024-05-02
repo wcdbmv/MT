@@ -41,11 +41,12 @@ endif()
 
 add_subdirectory(base)
 add_subdirectory(math)
+add_subdirectory(physics)
 
 add_executable(${PROJECT_NAME} main.cc)
 
 target_link_libraries(${PROJECT_NAME}
-  PRIVATE base math)
+  PRIVATE base math physics)
 
 if(MT_ENABLE_IPO_LTO)
   include(cmake/IPO.LTO.cmake)
