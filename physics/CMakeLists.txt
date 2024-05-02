@@ -5,6 +5,7 @@ set(HEADERS
     include/physics/consts/boltzmann_constant.h
     include/physics/consts/planck_constant.h
     include/physics/consts/speed_of_light.h
+    include/physics/plancks_law.h
     include/physics/reflect.h
     include/physics/refract.h
 )
