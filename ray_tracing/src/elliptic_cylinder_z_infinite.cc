@@ -9,11 +9,11 @@
 #include "math/float/compare.h"
 #include "ray_tracing/utils.h"
 
-Vec3 EllipticCylinderZInfinite::Perpendicular(const Vec3 p) const noexcept {
+Vec3 EllipticCylinderZInfinite::Perpendicular(Vec3 p) const noexcept {
   return {(p.x() - center_.x()) / a2_, (p.y() - center_.y()) / b2_, 0};
 }
 
-bool EllipticCylinderZInfinite::IsOnShape(const Vec3 p) const noexcept {
+bool EllipticCylinderZInfinite::IsOnShape(Vec3 p) const noexcept {
   return IsEqual(
       Sqr(p.x() - center_.x()) / a2_ + Sqr(p.y() - center_.y()) / b2_, kOne);
 }

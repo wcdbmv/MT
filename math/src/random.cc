@@ -3,7 +3,7 @@
 #include <cassert>
 #include <random>
 
-[[nodiscard]] bool ImFeelingLucky(const Float probability) noexcept {
+[[nodiscard]] bool ImFeelingLucky(Float probability) noexcept {
   assert(0 <= probability && probability <= 1);
 
   thread_local std::mt19937 engine{std::random_device{}()};

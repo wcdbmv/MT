@@ -8,7 +8,6 @@ set(HEADERS
     include/physics/params/mirror.h
     include/physics/params/plasma.h
     include/physics/params/quartz.h
-    include/physics/params/temperature.h
     include/physics/params/xenon_absorption_coefficient.h
     include/physics/plancks_law.h
     include/physics/reflect.h

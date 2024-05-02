@@ -49,6 +49,7 @@ Checks: [
   performance-*,
   portability-*,
   readability-*,
+  -readability-function-cognitive-complexity,  # TODO(a.kerimov): Return.
   -readability-identifier-length,  # https://clang.llvm.org/extra/clang-tidy/checks/readability/identifier-length.html
   -readability-magic-numbers,  # https://clang.llvm.org/extra/clang-tidy/checks/readability/magic-numbers.html
 ]
