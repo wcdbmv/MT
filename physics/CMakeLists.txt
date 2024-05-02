@@ -5,12 +5,21 @@ set(HEADERS
     include/physics/consts/boltzmann_constant.h
     include/physics/consts/planck_constant.h
     include/physics/consts/speed_of_light.h
+    include/physics/reflect.h
+    include/physics/refract.h
 )
 
-add_library(${PROJECT_NAME} INTERFACE ${HEADERS})
+set(SOURCES
+    src/reflect.cc
+    src/refract.cc
+)
+
+add_subdirectory(test)
+
+add_library(${PROJECT_NAME} STATIC ${HEADERS} ${SOURCES})
 
 target_include_directories(${PROJECT_NAME}
-  INTERFACE include)
+  PUBLIC include)
 
-#target_link_libraries(
-#  PRIVATE base)
+target_link_libraries(${PROJECT_NAME}
+  PRIVATE base math)

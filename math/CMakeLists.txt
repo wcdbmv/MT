@@ -5,6 +5,7 @@ set(HEADERS
     include/math/consts/golden_ratio.h
     include/math/consts/pi.h
     include/math/equation.h
+    include/math/fast_pow.h
     include/math/float/compare.h
     include/math/float/eps.h
     include/math/float/exp.h

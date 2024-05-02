@@ -167,8 +167,8 @@ constexpr Vec<Size> operator-(Vec<Size> lhs, Vec<Size> rhs) noexcept {
 }
 
 template <std::size_t Size>
-constexpr Vec<Size> operator*(Vec<Size> lhs, Vec<Size> rhs) noexcept {
-  return Dot(lhs, rhs);
+constexpr Float operator*(Vec<Size> lhs, Vec<Size> rhs) noexcept {
+  return Vec<Size>::Dot(lhs, rhs);
 }
 
 template <std::size_t Size>

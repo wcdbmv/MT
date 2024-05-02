@@ -2,9 +2,9 @@
 
 #include <gtest/gtest.h>
 
-#include "base/float_cmp.h"
+#include "math/float/eps.h"
 
-void ExpectVectorNear(Vector3F actual, Vector3F expected) {
+void ExpectVectorNear(Vec3 actual, Vec3 expected) {
   EXPECT_NEAR(actual.x(), expected.x(), kEps);
   EXPECT_NEAR(actual.y(), expected.y(), kEps);
   EXPECT_NEAR(actual.z(), expected.z(), kEps);

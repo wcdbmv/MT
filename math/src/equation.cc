@@ -1,7 +1,7 @@
 #include "math/equation.h"
 
+#include "math/fast_pow.h"
 #include "math/float/compare.h"
-#include "math/float/pow.h"
 #include "math/float/sqrt.h"
 
 namespace equation {

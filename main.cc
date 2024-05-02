@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "math/float/pow.h"
+#include "math/fast_pow.h"
 #include "math/linalg/vector.h"
 #include "math/linalg/vector_io.h"
 #include "physics/consts/planck_constant.h"
