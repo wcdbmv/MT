@@ -1,4 +1,5 @@
 CheckOptions:
+  cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor: true
   readability-identifier-naming.ClassCase: CamelCase
   readability-identifier-naming.ClassMemberCase: lower_case
   readability-identifier-naming.ConstexprVariableCase: CamelCase
@@ -16,6 +17,7 @@ CheckOptions:
   readability-identifier-naming.MacroDefinitionIgnoredRegexp: '^[A-Z]+(_[A-Z]+)*_$'
   readability-identifier-naming.MemberCase: lower_case
   readability-identifier-naming.PrivateMemberSuffix: _
+  readability-identifier-naming.ProtectedMemberSuffix: _
   readability-identifier-naming.PublicMemberSuffix: ''
   readability-identifier-naming.NamespaceCase: lower_case
   readability-identifier-naming.ParameterCase: lower_case
@@ -34,10 +36,14 @@ Checks: [
   concurrency-*,
   cppcoreguidelines-*,
   -cppcoreguidelines-avoid-magic-numbers,  # Alias for readability-magic-numbers.
+  -cppcoreguidelines-non-private-member-variables-in-classes,  # Alias for misc-non-private-member-variables-in-classes.
+  -cppcoreguidelines-pro-bounds-constant-array-index,  # https://clang.llvm.org/extra/clang-tidy/checks/cppcoreguidelines/pro-bounds-constant-array-index.html.
   google-*,
   hicpp-*,
+  -hicpp-special-member-functions,  # Alias for cppcoreguidelines-special-member-functions.
   misc-*,
   -misc-include-cleaner,  # https://clang.llvm.org/extra/clang-tidy/checks/misc/include-cleaner.html
+  -misc-non-private-member-variables-in-classes,  # https://clang.llvm.org/extra/clang-tidy/checks/misc/non-private-member-variables-in-classes.html
   modernize-*,
   -modernize-use-trailing-return-type,  # https://clang.llvm.org/extra/clang-tidy/checks/modernize/use-trailing-return-type.html
   performance-*,

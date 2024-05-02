@@ -42,11 +42,12 @@ endif()
 add_subdirectory(base)
 add_subdirectory(math)
 add_subdirectory(physics)
+add_subdirectory(ray_tracing)
 
 add_executable(${PROJECT_NAME} main.cc)
 
 target_link_libraries(${PROJECT_NAME}
-  PRIVATE base math physics)
+  PRIVATE base math physics ray_tracing)
 
 if(MT_ENABLE_IPO_LTO)
   include(cmake/IPO.LTO.cmake)
