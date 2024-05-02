@@ -45,8 +45,7 @@ add_subdirectory(math)
 add_executable(${PROJECT_NAME} main.cc)
 
 target_link_libraries(${PROJECT_NAME}
-  INTERFACE base
-  PRIVATE math)
+  PRIVATE base math)
 
 if(MT_ENABLE_IPO_LTO)
   include(cmake/IPO.LTO.cmake)

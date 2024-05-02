@@ -4,6 +4,7 @@ project(math
 set(HEADERS
     include/math/consts/golden_ratio.h
     include/math/consts/pi.h
+    include/math/equation.h
     include/math/float/compare.h
     include/math/float/eps.h
     include/math/float/exp.h
@@ -14,10 +15,16 @@ set(HEADERS
     include/math/linalg/vector_io.h
 )
 
-add_library(${PROJECT_NAME} INTERFACE ${HEADERS})
+set(SOURCES
+    src/equation.cc
+)
+
+add_subdirectory(test)
+
+add_library(${PROJECT_NAME} STATIC ${HEADERS} ${SOURCES})
 
 target_include_directories(${PROJECT_NAME}
-  INTERFACE include)
+  PUBLIC include)
 
 target_link_libraries(${PROJECT_NAME}
-  INTERFACE base)
+  PRIVATE base)

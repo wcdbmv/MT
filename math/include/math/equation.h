@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-#include "base/float.h"
+#include "base/config/float.h"
 
 namespace equation {
 
