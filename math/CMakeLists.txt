@@ -4,6 +4,9 @@ project(math
 set(HEADERS
     include/math/float/compare.h
     include/math/float/eps.h
+    include/math/float/exp.h
+    include/math/float/log.h
+    include/math/float/sqrt.h
 )
 
 add_library(${PROJECT_NAME} INTERFACE ${HEADERS})
