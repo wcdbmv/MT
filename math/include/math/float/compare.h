@@ -3,9 +3,8 @@
 #include <algorithm>
 #include <cmath>
 
-#include "math/types/float.h"
-
-inline constexpr auto kEps = 1E-12_F;
+#include "base/config/float.h"
+#include "math/float/eps.h"
 
 [[nodiscard]] inline bool IsZero(Float value, Float eps = kEps) noexcept {
   return std::abs(value) < eps;

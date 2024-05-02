@@ -27,6 +27,7 @@ CheckOptions:
 Checks: [
   -*,
   bugprone-*,
+  -bugprone-easily-swappable-parameters,  # https://clang.llvm.org/extra/clang-tidy/checks/bugprone/easily-swappable-parameters.html
   cert-*,
   clang-analyzer-*,
   clang-diagnostic-*,
