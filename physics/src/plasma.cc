@@ -3,14 +3,13 @@
 #include <algorithm>
 #include <array>
 #include <cassert>
+#include <cmath>
 #include <cstddef>
 #include <iterator>
 
 #include "base/ignore_unused.h"
 #include "math/fast_pow.h"
 #include "math/float/compare.h"
-#include "math/float/exp.h"
-#include "math/float/log.h"
 #include "physics/params/xenon_absorption_coefficient.h"
 
 namespace {
@@ -66,17 +65,17 @@ Float AbsortionCoefficientFromTable(Float nu, Float t) noexcept {
   assert(nu_idx + 1 < kXenonFrequency.size());
 
   // TODO(a.kerimov): Cache?
-  const auto t_ln = Log(t);
-  const auto t0_ln = Log(kXenonTemperature[t_idx]);
-  const auto t1_ln = Log(kXenonTemperature[t_idx + 1]);
+  const auto t_ln = std::log(t);
+  const auto t0_ln = std::log(kXenonTemperature[t_idx]);
+  const auto t1_ln = std::log(kXenonTemperature[t_idx + 1]);
 
   const auto f0 = kXenonAbsorptionCoefficient[t_idx][nu_idx];
   const auto f1 = kXenonAbsorptionCoefficient[t_idx + 1][nu_idx];
-  const auto f0_ln = Log(f0);
-  const auto f1_ln = Log(f1);
+  const auto f0_ln = std::log(f0);
+  const auto f1_ln = std::log(f1);
 
   const auto f_ln = f0_ln + (t_ln - t0_ln) * (f1_ln - f0_ln) / (t1_ln - t0_ln);
-  const auto f = Exp(f_ln);
+  const auto f = std::exp(f_ln);
   return f;
 }
 

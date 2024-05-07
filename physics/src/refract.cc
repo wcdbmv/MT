@@ -1,9 +1,9 @@
 #include "physics/refract.h"
 
 #include <cassert>
+#include <cmath>
 
 #include "math/fast_pow.h"
-#include "math/float/sqrt.h"
 
 Vec3 Refract(Vec3 incident, Vec3 normal, Float eta_i, Float eta_t)
     MT_NOEXCEPT_RELEASE {
@@ -11,7 +11,7 @@ Vec3 Refract(Vec3 incident, Vec3 normal, Float eta_i, Float eta_t)
   const auto mu = eta_i / eta_t;
   const auto g2 = 1 - Sqr(mu) * (1 - Sqr(cos_i));
   assert(g2 > 0);
-  return RefractEx(incident, normal, mu, cos_i, Sqrt(g2));
+  return RefractEx(incident, normal, mu, cos_i, std::sqrt(g2));
 }
 
 Vec3 RefractEx(Vec3 incident, Vec3 normal, Float mu, Float cos_i, Float g)

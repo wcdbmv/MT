@@ -67,7 +67,7 @@ std::string Ray3D(std::string_view name,
 
 std::string Circle(std::string_view name, Float radius) {
   constexpr std::string_view fmt =
-    R"F(<expression label="{0}" exp="x^(2) + y^(2) = {1}^(2)" type="conic"/>
+      R"F(<expression label="{0}" exp="x^(2) + y^(2) = {1}^(2)" type="conic"/>
 <element type="conic" label="{0}">
 	<show object="true" label="true"/>
 	<objColor r="211" g="47" b="47" alpha="0.6499999761581421"/>
@@ -83,7 +83,7 @@ std::string Circle(std::string_view name, Float radius) {
 
 std::string Point(std::string_view name, Vector3F point) {
   constexpr std::string_view fmt =
-    R"F(<expression label="{0}" exp="({1:.16f}, {2:.16f})" type="point"/>
+      R"F(<expression label="{0}" exp="({1:.16f}, {2:.16f})" type="point"/>
 <element type="point" label="{0}">
 	<show object="true" label="true"/>
 	<objColor r="77" g="77" b="255" alpha="0"/>

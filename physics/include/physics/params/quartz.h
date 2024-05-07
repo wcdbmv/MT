@@ -1,7 +1,6 @@
 #pragma once
 
 #include "base/config/float.h"
-#include "math/float/pow.h"
 #include "base/ignore_unused.h"
 
 namespace params::quartz {
@@ -18,7 +17,7 @@ inline constexpr auto kEta = 1.4585_F;
 #else
   // TODO(a.kerimov): Find quartz absortion coefficient table.
   IgnoreUnused(nu);
-  return 0.001_F * Pow(t / 300, 1.5_F);
+  return 0.001_F * std::pow(t / 300, 1.5_F);
 #endif
 }
 

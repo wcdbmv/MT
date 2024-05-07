@@ -1,9 +1,9 @@
 #include "ray_tracing/shape.h"
 
 #include <cassert>
+#include <cmath>
 
 #include "math/fast_pow.h"
-#include "math/float/sqrt.h"
 #include "physics/reflect.h"
 #include "physics/refract.h"
 
@@ -52,7 +52,7 @@ Shape::FresnelResult Shape::Refract(Vec3 pos,
       // Полное внутреннее отражение.
       return result;
     }
-    const auto g = Sqrt(g2);
+    const auto g = std::sqrt(g2);
 
     result.refracted = ::RefractEx(incident, normal, mu, cos_i, g);
     result.refracted.Normalize();

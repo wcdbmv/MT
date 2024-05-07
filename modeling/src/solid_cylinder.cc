@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cassert>
+#include <cmath>
 #include <cstddef>
 #include <iostream>
 #include <string>
@@ -12,8 +13,6 @@
 #include "math/consts/pi.h"
 #include "math/float/compare.h"
 #include "math/float/eps.h"
-#include "math/float/exp.h"
-#include "math/float/sqrt.h"
 #include "math/linalg/vector.h"
 #include "math/linalg/vector_io.h"
 #include "ray_tracing/cylinder_z_infinite.h"
@@ -60,7 +59,7 @@ class SolidCylinderWorker {
       const auto idx = use_prev_ ? prev_cylinder_idx_ : current_cylinder_idx_;
       const auto dr = Vec3::Distance(prev_pos_, pos_);
       const auto k = c_.attenuations[idx];
-      const auto exp = Exp(-k * dr);
+      const auto exp = std::exp(-k * dr);
       const auto prev_intensity = intensity;
       intensity *= exp;
       result.absorbed[idx] += prev_intensity - intensity;
@@ -141,7 +140,7 @@ class SolidCylinderWorker {
       const auto idx = use_prev_ ? prev_cylinder_idx_ : current_cylinder_idx_;
       const auto dr = Vec3::Distance(prev_pos_, pos_);
       const auto k = c_.attenuations[idx];
-      const auto exp = Exp(-k * dr);
+      const auto exp = std::exp(-k * dr);
       intensity *= exp;
       intensity += c_.intensities[idx] * (1 - exp);
 
@@ -157,7 +156,7 @@ class SolidCylinderWorker {
     }
 
     // const auto cos_theta = dir.z();
-    // const auto sin_phi = Sqrt(Sqr(dir.x()) + Sqr(dir.y()));
+    // const auto sin_phi = std::sqrt(Sqr(dir.x()) + Sqr(dir.y()));
 
     std::cout << "INTENSITY BEFORE COSINE: " << intensity << "\n";
 
@@ -290,7 +289,8 @@ SolidCylinder::SolidCylinder(const Params& params,
     std::cout << "[SolidCylinder]\n"
                  "Cylinders:\n";
     for (auto& cylinder : cylinders) {
-      std::cout << cylinder.center() << ' ' << Sqrt(cylinder.radius2()) << '\n';
+      std::cout << cylinder.center() << ' ' << std::sqrt(cylinder.radius2())
+                << '\n';
     }
 
     std::cout << "T:\n";

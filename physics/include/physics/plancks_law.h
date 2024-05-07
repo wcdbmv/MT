@@ -1,9 +1,10 @@
 #pragma once
 
+#include <cmath>
+
 #include "base/config/float.h"
 #include "math/consts/pi.h"
 #include "math/fast_pow.h"
-#include "math/float/exp.h"
 #include "physics/consts/boltzmann_constant.h"
 #include "physics/consts/planck_constant.h"
 #include "physics/consts/speed_of_light.h"
@@ -24,7 +25,8 @@ namespace func {
 [[nodiscard]] constexpr Float UNu(Float nu, Float t) noexcept {
   return 8 * consts::kPi * consts::kPlanckConstant * Cube(nu) /
          (Cube(consts::kSpeedOfLightSm) *
-          (Exp(consts::kPlanckConstant * nu / (consts::kBolzmannConstant * t)) -
+          (std::exp(consts::kPlanckConstant * nu /
+                    (consts::kBolzmannConstant * t)) -
            1));
 }
 
@@ -36,7 +38,8 @@ namespace func {
 [[nodiscard]] constexpr Float I(Float nu, Float d_nu, Float t) noexcept {
   return 2 * consts::kPlanckConstant * Cube(nu) * d_nu /
          (Sqr(consts::kSpeedOfLightSm) *
-          (Exp(consts::kPlanckConstant * nu / (consts::kBolzmannConstant * t)) -
+          (std::exp(consts::kPlanckConstant * nu /
+                    (consts::kBolzmannConstant * t)) -
            1));
 }
 

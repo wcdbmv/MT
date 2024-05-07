@@ -9,7 +9,6 @@
 
 #include "base/erase_remove_if.h"
 #include "math/fast_pow.h"
-#include "math/float/exp.h"
 #include "math/linalg/vector.h"
 #include "modeling/fibonacci_sphere.h"
 #include "modeling/solid_cylinder.h"
@@ -65,8 +64,8 @@ inline constexpr auto kR = 0.35_F;      // см.
 inline constexpr auto kH = 1.0_F;       // см.
 
 inline constexpr auto kT0 = 12'000.0_F;  // К.
-inline constexpr auto kM = 8;           // 2-8.
-inline constexpr auto kRho = 0.98_F;    // 0-1.
+inline constexpr auto kM = 8;            // 2-8.
+inline constexpr auto kRho = 0.98_F;     // 0-1.
 
 /// Температура.
 [[nodiscard]] constexpr Float T(Float z) noexcept {

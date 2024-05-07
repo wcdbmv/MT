@@ -1,8 +1,9 @@
 #include "math/equation.h"
 
+#include <cmath>
+
 #include "math/fast_pow.h"
 #include "math/float/compare.h"
-#include "math/float/sqrt.h"
 
 namespace equation {
 
@@ -36,7 +37,7 @@ Result SolveQuadratic(Float a,
     return Result::kNoRealSolution;
   }
 
-  const auto sqrt_d = Sqrt(discriminant);
+  const auto sqrt_d = std::sqrt(discriminant);
   x0 = (-b - sqrt_d) / _2a;
   x1 = (-b + sqrt_d) / _2a;
   return Result::kHasRealSolution;

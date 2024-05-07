@@ -9,7 +9,6 @@
 
 #include "base/erase_remove_if.h"
 #include "math/fast_pow.h"
-#include "math/float/exp.h"
 #include "math/linalg/vector.h"
 #include "modeling/fibonacci_sphere.h"
 #include "modeling/hollow_cylinder.h"
@@ -82,7 +81,7 @@ inline constexpr auto kH = 1.0_F;         // см.
   assert(z <= kR1 / kR);
   constexpr auto kA = 78848.21035368084688136380896708527_F;
   constexpr auto kB = 3.674377435745371909154547914447763_F;
-  return kA * Exp(-kB * z);
+  return kA * std::exp(-kB * z);
 #else
   IgnoreUnused(z);
   return kT0;

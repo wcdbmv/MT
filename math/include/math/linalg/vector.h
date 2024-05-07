@@ -6,10 +6,11 @@
 #include <initializer_list>
 #include <stdexcept>
 
+#include <cmath>
+
 #include "base/config/float.h"
 #include "base/config/noexcept_release.h"
 #include "math/float/compare.h"
-#include "math/float/sqrt.h"
 
 template <std::size_t Size>
 class Vec : public std::array<Float, Size> {
@@ -224,7 +225,7 @@ constexpr Float Vec<Size>::SquaredDistance(Vec lhs, Vec rhs) noexcept {
 
 template <std::size_t Size>
 constexpr Float Vec<Size>::Distance(Vec lhs, Vec rhs) noexcept {
-  return Sqrt(SquaredDistance(lhs, rhs));
+  return std::sqrt(SquaredDistance(lhs, rhs));
 }
 
 template <std::size_t Size>
@@ -234,7 +235,7 @@ constexpr Float Vec<Size>::SquaredLength() const noexcept {
 
 template <std::size_t Size>
 constexpr Float Vec<Size>::Length() const noexcept {
-  return Sqrt(SquaredLength());
+  return std::sqrt(SquaredLength());
 }
 
 template <std::size_t Size>
@@ -246,7 +247,7 @@ constexpr void Vec<Size>::Normalize() MT_NOEXCEPT_RELEASE {
     }
   }
 
-  *this *= kOne / Sqrt(squared_length);
+  *this *= kOne / std::sqrt(squared_length);
 }
 
 template <std::size_t Size>

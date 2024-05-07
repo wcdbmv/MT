@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cassert>
+#include <cmath>
 #include <cstddef>
 #include <iostream>
 #include <string>
@@ -9,10 +10,8 @@
 
 #include "base/config/float.h"
 #include "base/ignore_unused.h"
-#include "math/float/eps.h"
 #include "math/float/compare.h"
-#include "math/float/exp.h"
-#include "math/float/sqrt.h"
+#include "math/float/eps.h"
 #include "math/linalg/vector.h"
 #include "math/linalg/vector_io.h"
 #include "ray_tracing/cylinder_z_infinite.h"
@@ -60,7 +59,7 @@ class HollowCylinderWorker {
       const auto idx = use_prev_ ? prev_cylinder_idx_ : current_cylinder_idx_;
       const auto dr = Vec3::Distance(prev_pos_, pos_);
       const auto k = c_.attenuations[idx];
-      const auto exp = Exp(-k * dr);
+      const auto exp = std::exp(-k * dr);
       const auto prev_intensity = intensity;
       intensity *= exp;
       result.absorbed[idx] += prev_intensity - intensity;
@@ -247,7 +246,8 @@ HollowCylinder::HollowCylinder(const Params& params,
     std::cout << "[HollowCylinder]\n"
                  "Cylinders:\n";
     for (auto& cylinder : cylinders) {
-      std::cout << cylinder.center() << ' ' << Sqrt(cylinder.radius2()) << '\n';
+      std::cout << cylinder.center() << ' ' << std::sqrt(cylinder.radius2())
+                << '\n';
     }
 
     std::cout << "T:\n";

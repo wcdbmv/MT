@@ -8,10 +8,6 @@ set(HEADERS
     include/math/fast_pow.h
     include/math/float/compare.h
     include/math/float/eps.h
-    include/math/float/exp.h
-    include/math/float/log.h
-    include/math/float/pow.h
-    include/math/float/sqrt.h
     include/math/linalg/vector.h
     include/math/linalg/vector_io.h
     include/math/random.h
