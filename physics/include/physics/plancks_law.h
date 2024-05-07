@@ -20,7 +20,7 @@ namespace func {
 /// называют спектром излучения абсолютно чёрного тела.
 /// @param nu Частота излучения [Гц].
 /// @param t  Абсолютная температура [К].
-/// @returns  Спектральная плотность излучения.
+/// @returns  Спектральная плотность излучения [Дж * с / см^3].
 [[nodiscard]] constexpr Float UNu(Float nu, Float t) noexcept {
   return 8 * consts::kPi * consts::kPlanckConstant * Cube(nu) /
          (Cube(consts::kSpeedOfLightSm) *
@@ -30,7 +30,9 @@ namespace func {
 
 /// Интенсивность.
 ///
-/// 4πI/c = u_nu
+/// 4πI/c = u_nu (* d_nu)
+/// I = u_nu * c (* d_nu) / 4π
+/// [Вт / см^2]
 [[nodiscard]] constexpr Float I(Float nu, Float d_nu, Float t) noexcept {
   return 2 * consts::kPlanckConstant * Cube(nu) * d_nu /
          (Sqr(consts::kSpeedOfLightSm) *

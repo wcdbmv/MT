@@ -1,4 +1,99 @@
-#if defined(XENON_TABLE_COEFFICIENT)
+#if 1  // NOLINT(readability-avoid-unconditional-preprocessor-if)
+#include <cassert>
+#include <cstddef>
+#include <format>
+#include <iostream>
+
+#include "math/fast_pow.h"
+#include "physics/params/plasma.h"
+#include "physics/params/xenon_absorption_coefficient.h"
+
+namespace {
+inline constexpr auto kT0 = 10'000.0_F;  // К.
+inline constexpr auto kTW = 2'000.0_F;   // К.
+inline constexpr auto kM = 4;            // 2-8
+
+inline constexpr auto kR = 0.35_F;  // см.
+inline constexpr auto kN = static_cast<std::size_t>(40);
+
+[[nodiscard]] constexpr Float T(Float z) noexcept {
+  assert(0 <= z && z <= 1);
+  return kT0 + (kTW - kT0) * FastPow<kM>(z);
+}
+
+}  // namespace
+
+int main() {
+  // Оптическая плотность tau = integral k * dr.
+  std::cout << "range | tau\n";
+  for (std::size_t i = 0; i < kXenonTableRanges; ++i) {
+    const auto nu_min = kXenonFrequency[i];
+    const auto nu_max = kXenonFrequency[i + 1];
+    const auto d_nu = nu_max - nu_min;
+    const auto nu = nu_min + d_nu / 2;
+
+    auto tau = 0.0_F;
+    for (std::size_t j = 0; j < kN; ++j) {
+      constexpr auto kStep = kR / kN;
+      const auto r = kStep * static_cast<Float>(j + 1);
+      const auto z = r / kR;
+
+      const auto t = T(z);
+      const auto k = params::plasma::AbsortionCoefficientFromTable(nu, t);
+
+      tau += k * kStep;
+    }
+
+    std::cout << std::format("{:5d}   {:.6f}\n", i + 1, tau);
+    if (i + 1 == 81 || i + 1 == 170) {
+      std::cout << std::format("[{}, {}]\n", nu_min, nu_max);
+    }
+  }
+}
+#elif 1  // NOLINT(readability-avoid-unconditional-preprocessor-if)
+#ifndef XENON_TABLE_COEFFICIENT
+#error "Define XENON_TABLE_COEFFICIENT"
+#endif
+#include <array>
+#include <cassert>
+#include <cstddef>
+#include <iostream>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include "base/config/float.h"
+#include "modeling/cylinder_plasma.h"
+#include "physics/params/xenon_absorption_coefficient.h"
+
+int main() {
+  constexpr std::size_t kI = 169;
+  const auto nu_min = kXenonFrequency[kI];
+  const auto nu_max = kXenonFrequency[kI + 1];
+  const auto d_nu = nu_max - nu_min;
+  const auto nu_avg = nu_min + d_nu / 2;
+  std::cout << "[[-----------------------------------------------------------"
+               "-------------------]]\n"
+               "[[i="
+            << kI << ", nu_min=" << nu_min << ", nu_max=" << nu_max
+            << ", d_nu=" << d_nu << ", nu_avg=" << nu_avg
+            << "]]\n"
+               "[[-----------------------------------------------------------"
+               "-------------------]]\n";
+  auto r = CylinderPlasma{nu_avg, d_nu}.Solve();
+
+  Float total_plasma = 0;
+  std::cout << "TOTAL ABSORBED PLASMA:\n";
+  for (const auto j : r.absorbed_plasma) {
+    std::cout << j << '\n';
+    total_plasma += j;
+  }
+
+  std::cout << /* "ABSORBED MIRROR: " << */ r.absorbed_mirror << '\n';
+  std::cout << /* "SUM: " << */ total_plasma + r.absorbed_mirror << '\n';
+  std::cout << "INTENSITY ALL: " << r.intensity_all << '\n';
+}
+#elif defined(XENON_TABLE_COEFFICIENT)
 #include <array>
 #include <cassert>
 #include <cstddef>

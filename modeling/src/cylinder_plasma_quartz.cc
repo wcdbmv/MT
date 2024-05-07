@@ -61,7 +61,7 @@ DummyOut& operator<<(DummyOut& dummy_out, T&&) noexcept {  // NOLINT
 #define GEOGEBRA_OUT_2D gDummyOut
 #endif
 
-inline namespace {
+namespace {
 
 inline constexpr auto kT0 = 10'000.0_F;  // К.
 inline constexpr auto kTW = 2'000.0_F;   // К.

@@ -8,6 +8,7 @@
 
 #include "base/ignore_unused.h"
 #include "math/fast_pow.h"
+#include "math/float/compare.h"
 #include "math/float/exp.h"
 #include "math/float/log.h"
 #include "physics/params/xenon_absorption_coefficient.h"
@@ -24,7 +25,20 @@ MT_IGNORE_UNUSED_BEGIN
   return 10000.0_F;
 }
 
-[[nodiscard]] Float AbsortionCoefficientFromTable(Float nu, Float t) noexcept {
+[[nodiscard]] constexpr Float AbsortionCoefficientFromDefault(
+    Float nu,
+    Float t) noexcept {
+  IgnoreUnused(nu);
+  return 0.04_F * Sqr(t / 2000);
+}
+
+MT_IGNORE_UNUSED_END
+
+}  // namespace
+
+namespace params::plasma {
+
+Float AbsortionCoefficientFromTable(Float nu, Float t) noexcept {
   static_assert(kXenonTemperature.size() == 13);
   assert(IsEqual(kXenonTemperature[0], 2000.0_F));
   assert(IsEqual(kXenonTemperature[1], 3000.0_F));
@@ -42,7 +56,7 @@ MT_IGNORE_UNUSED_BEGIN
 
   assert(kXenonTemperature.front() <= t && t <= kXenonTemperature.back());
   const auto t_idx = static_cast<size_t>(t) / 1000 - 2;
-  assert(t_idx <= 8);
+  assert(t_idx <= 10);
 
   const auto* lower = std::ranges::lower_bound(kXenonFrequency, nu);
   assert(lower != kXenonFrequency.end());
@@ -65,19 +79,6 @@ MT_IGNORE_UNUSED_BEGIN
   const auto f = Exp(f_ln);
   return f;
 }
-
-[[nodiscard]] constexpr Float AbsortionCoefficientFromDefault(
-    Float nu,
-    Float t) noexcept {
-  IgnoreUnused(nu);
-  return 0.04_F * Sqr(t / 2000);
-}
-
-MT_IGNORE_UNUSED_END
-
-}  // namespace
-
-namespace params::plasma {
 
 Float AbsortionCoefficient(Float nu, Float t) noexcept {
 #if defined(CONSTANT_TEMPERATURE)

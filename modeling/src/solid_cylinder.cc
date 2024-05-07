@@ -205,7 +205,7 @@ class SolidCylinderWorker {
   void IntersectCurrCylinder() {
     const auto t =
         c_.cylinders[current_cylinder_idx_].IntersectCurr(pos_, dir_);
-    ts_[kIdxCurrCylinder] = IsZero(t, kEps) || !use_prev_ ? -1 : t;
+    ts_[kIdxCurrCylinder] = IsZero(t, kEps) ? -1 : t;
 
     PrintT("CurrCylinder* ", t);
   }
@@ -227,9 +227,9 @@ class SolidCylinderWorker {
       --current_cylinder_idx_;
     } else if (t_min_idx_ == kIdxNextCylinder) {
       ++current_cylinder_idx_;
-    } else {
-      use_prev_ = !use_prev_;
     }
+
+    use_prev_ = current_cylinder_idx_ <= prev_cylinder_idx_;
   }
 
   // NOLINTNEXTLINE(cppcoreguidelines-avoid-const-or-ref-data-members)
