@@ -22,7 +22,8 @@ namespace {
 
 // TODO(a.kerimov): Написать тесты.
 
-constexpr int kDebugLevel = 0;  // 0-2.
+constexpr auto kDebugLevel = 0;
+static_assert(0 <= kDebugLevel && kDebugLevel <= 2);
 
 class SolidCylinderWorker {
  public:

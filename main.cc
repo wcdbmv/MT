@@ -1,9 +1,11 @@
 #if 1  // NOLINT(readability-avoid-unconditional-preprocessor-if)
+#include <array>
 #include <cassert>
 #include <cstddef>
 #include <format>
 #include <iostream>
 
+#include "base/config/float.h"
 #include "math/fast_pow.h"
 #include "physics/params/plasma.h"
 #include "physics/params/xenon_absorption_coefficient.h"
