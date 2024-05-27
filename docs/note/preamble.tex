@@ -50,11 +50,12 @@
 \renewcommand{\PageBottomMargin}{2cm}
 
 \usepackage[
-	left=\PageLeftMargin,
-	right=\PageRightMargin,
-	top=\PageTopMargin,
-	bottom=\PageBottomMargin,
-	headsep=0pt
+	showframe,%
+	left=\PageLeftMargin,%
+	right=\PageRightMargin,%
+	top=\PageTopMargin,%
+	bottom=\PageBottomMargin,%
+	headsep=0pt%
 ]{geometry}
 %% Абзацный отступ должен быть одинаковым по всему тексту отчета и равен 1,25 см.
 \usepackage{indentfirst}
@@ -277,6 +278,7 @@
 
 \newcommand{\TableHeader}[2]{%
 	\parbox{#1}{%
+		\everypar{\hspace*{0pt}}%
 		\vspace{.5\baselineskip}%
 		\centering{\textbf{#2}}%
 		\vspace{.5\baselineskip}%

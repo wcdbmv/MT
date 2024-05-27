@@ -25,3 +25,43 @@
 %% Рекомендуемый объем аналитического раздела 25—30 страниц.
 
 \chapter{Аналитический раздел}
+
+\def\wA{5mm}
+\def\wB{27mm}
+\def\wC{23mm}
+\def\wD{23mm}
+\def\wE{23mm}
+\def\wF{23mm}
+\def\wG{23mm}
+\def\wH{23mm}
+\def\wI{22mm}
+\def\wJ{22mm}
+\begin{FixLineStretch}
+\begin{sidewaystable}
+	\small
+	\caption{Сравнительный анализ существующих методов моделирования световых полей}
+	\label{tbl:existing-modeling-methods}
+	\begin{tabular}{|p{\wA}|p{\wB}|p{\wC}|p{\wD}|p{\wE}|p{\wF}|p{\wG}|p{\wH}|p{\wI}|p{\wJ}|}
+		\hline
+		\TableHeader{\wA}{№} & \TableHeader{\wB}{Метод}                                                                                & \TableHeader{\wC}{Учёт излучения плазмы источника из объёма} & \TableHeader{\wD}{Учёт неоднородного распределения параметров плазмы по объему} & \TableHeader{\wE}{Нахождение распределения поглощённой мощности по объёму плазмы} & \TableHeader{\wF}{Использование параллельных алгоритмов} & \TableHeader{\wG}{Возможность применения метода для построения замкнутых систем моделирования} & \TableHeader{\wH}{Универсальность подходов для расчёта систем с плазмой произвольной оптической плотности} & \TableHeader{\wI}{Отсутствие вероятностного розыгрыша лучей} & \TableHeader{\wJ}{Доступность ПМО и ЭВМ} \\ \hline
+		1                    & \everypar{\hspace*{0pt}} Зональный \cite{radiation-heat-transfer}                                       & Нет                                                          & Нет                                                                             & Нет                                                                               & Да                                                       & Нет                                                                                            & Нет                                                                                                        & Да                                                           & Нет                                      \\ \hline
+		2                    & \everypar{\hspace*{0pt}} Обобщённых угловых коэффициентов \cite{encyclopedia-of-low-temperature-plasma} & Нет                                                          & Нет                                                                             & Нет                                                                               & Да                                                       & Нет                                                                                            & Нет                                                                                                        & Да                                                           & Нет                                      \\ \hline
+		3                    & \everypar{\hspace*{0pt}} Дискретных ординат \cite{surzhikov}                                            & Да                                                           & Нет                                                                             & Нет                                                                               & Да                                                       & Да                                                                                             & Нет                                                                                                        & Да                                                           & Нет                                      \\ \hline
+		4                    & \everypar{\hspace*{0pt}} Дискретно-лучевой \cite{gradov-dissertation}                                   & Да                                                           & Да                                                                              & Нет                                                                               & Нет                                                      & Да                                                                                             & Да                                                                                                         & Нет                                                          & Да                                       \\ \hline
+	\end{tabular}
+\end{sidewaystable}
+\end{FixLineStretch}
+\let\wJ\relax
+\let\wI\relax
+\let\wH\relax
+\let\wG\relax
+\let\wF\relax
+\let\wE\relax
+\let\wD\relax
+\let\wC\relax
+\let\wB\relax
+\let\wA\relax
+
+
+
+\let\wF\relax
