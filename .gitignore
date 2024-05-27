@@ -2,5 +2,17 @@
 .idea/
 cmake-build-*/
 
+# LaTeX
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.log
+*.out
+*.pdf
+*.run.xml
+*.synctex.gz
+*.toc
+
 # macOS
 .DS_Store
