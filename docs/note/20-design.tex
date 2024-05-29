@@ -53,12 +53,12 @@
 	t_i = (x_i, y_i) = \left(\left\{\frac{i}{\varphi}\right\}, \frac{i}{n}\right) \text{ для } 0 \leqslant i < n,
 \end{equation}
 
-\noindent где $\displaystyle \varphi = \frac{1+√5}{2}$, а оператор фигурные скобки обозначает дробную часть аргумента.
+\noindent где $\displaystyle \varphi = \frac{1+\sqrt5}{2}$, а оператор фигурные скобки обозначает дробную часть аргумента.
 
 Эти множества точек можно наложить с единичного квадрата $[0, 1)^2$ на сферу $S^2$ при помощи цилиндрического равноплощадного проецирования:
 \begin{align}
-	(x, y) \to (\theta, \phi)&\colon (2 \pi x, \arccos⁡{(1 - 2y)}, \\
-	(\theta, \phi) \to (x, y, z)&\colon (\cos\theta \sin⁡\phi, \sin⁡\theta \sin⁡\phi, \cos⁡\phi).
+	(x, y) \to (\theta, \phi)&\colon (2 \pi x, \arccos{(1 - 2y)}, \\
+	(\theta, \phi) \to (x, y, z)&\colon (\cos\theta \sin\phi, \sin\theta \sin\phi, \cos\phi).
 \end{align}
 
 Стоит заметить, что существует множество стандартов обозначений углов в сферической геометрии.
@@ -70,9 +70,9 @@
 
 \begin{equation}
 	\begin{cases}
-		x = \sin{⁡\left(\pi \cdot \frac mM\right)}\cos⁡{\left(2\pi \cdot \frac nN\right)}, \\
-		y = \sin⁡{\left(\pi \cdot \frac mM\right)}\sin{\left(2\pi \cdot \frac nN\right)}, \\
-		z = \cos⁡{\left(\pi \cdot \frac mM\right)}, \\
+		x = \sin{\left(\pi \cdot \frac mM\right)}\cos{\left(2\pi \cdot \frac nN\right)}, \\
+		y = \sin{\left(\pi \cdot \frac mM\right)}\sin{\left(2\pi \cdot \frac nN\right)}, \\
+		z = \cos{\left(\pi \cdot \frac mM\right)}, \\
 		m = \{0, \ldots, M\}, n = \{0, \ldots, N-1\},
 	\end{cases}
 \end{equation}
@@ -83,7 +83,7 @@
 
 
 \begin{equation}
-	\mathrm{d}\Omega = \sin⁡{\theta} \, \mathrm{d}\theta \, \mathrm{d}\phi,
+	\mathrm{d}\Omega = \sin{\theta} \, \mathrm{d}\theta \, \mathrm{d}\phi,
 \end{equation}
 
 \noindent где $\displaystyle \theta = \frac{\pi}{M}$, $\displaystyle \phi = \frac{2\pi}{N}$.
@@ -262,7 +262,7 @@
 Спектр такого равновесного излучения называют спектром излучения абсолютно чёрного тела.
 
 \begin{equation}
-	u_\nu(T, \nu) = \frac{8\pi h\nu^3}{c^3\exp⁡{\left(\frac{h\nu}{kT} - 1\right)}} \; \left[\text{Дж}\cdot\text{с}/\text{м}^3\right],
+	u_\nu(T, \nu) = \frac{8\pi h\nu^3}{c^3\exp{\left(\frac{h\nu}{kT} - 1\right)}} \; \left[\text{Дж}\cdot\text{с}/\text{м}^3\right],
 \end{equation}
 
 \noindent где $h = 6,62607015 \cdot 10^{-34} \; \left[\text{Дж}\cdot\text{с}\right]$~— постоянная Планка, $c = 299792458 \; \left[\text{м}/\text{с}\right]$~— скорость света в вакууме, $k = 1,380649 \cdot 10^{-23} \; \left[\text{Дж}/\text{К}\right]$~— постоянная Больцмана, $\nu \; \left[\text{Дж}\right]$~— частота излучения, $T \; \left[\text{К}\right]$~— абсолютная температура.
@@ -319,7 +319,7 @@
 \begin{equation}
 	\begin{matrix}
 		k_{\text{пл}}(T, \nu) = \\
-		\exp⁡{\left(\ln{k_t(T_{min}, \nu)} + \frac{(\ln{⁡T} - \ln⁡{T_{min}})(\ln⁡{k_t(T_{max}, \nu)} - \ln{⁡k_t(T_{min}, \nu)})}{\ln⁡{T_{max} - \ln⁡{T_{min}}}\right)},
+		\exp{\left(\ln{k_t(T_{min}, \nu)} + \frac{(\ln{T} - \ln{T_{min}})(\ln{k_t(T_{max}, \nu)} - \ln{k_t(T_{min}, \nu)})}{\ln{T_{max}} - \ln{T_{min}}}\right)},
 	\end{matrix}
 \end{equation}
 
