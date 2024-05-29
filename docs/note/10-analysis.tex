@@ -60,7 +60,7 @@
 Указанные системы могут быть идентифицированы как системы, назначением и основой функционирования которых является интенсивное электромагнитное воздействие на материалы, среды и процессы.
 Речь идет о системах накачки лазеров, различного типа облучательных установках, технологических процессах, базирующихся на фотохимическом и фотобиологическом действиях света, светотехнических устройствах самого широкого назначения и~т.~д.
 
-\section{Существующие методы моделирования термодинамических систем}
+\section{Существующие методы моделирования световых систем}
 
 \subsection{Зональный метод}
 
@@ -69,16 +69,11 @@
 могут считаться близкими к изотермическим. Затем для каждой
 площади и объема записывается уравнение баланса энергии. При
 этом получается система уравнений относительно неизвестных
-тепловых потоков или температур аналогично тому, как это было
-описано в разд. 17.3 для изотермического газа. Этот метод
+тепловых потоков или температур. Этот метод
 не является элегантным в формальном математическом смысле,
 но на практике он очень полезен. Достаточно подробное описание
-метода приведено Хоттелем и Сэрофим [2]. Хоттель и Коэн [15],
-а также Эйнштейн [18, 19] применили его для пространственных задач.
-В этом разделе рассматривается обмен энергией только
-путем излучения; распространение метода на задачи, в которых
-учитывается также теплопроводность и конвекция, можно найти
-в гл. 19 и работе [2].
+метода приведено Хоттелем и Сэрофим \cite{hottel-1}. Хоттель и Коэн \cite{hottel-2},
+а также Эйнштейн \cite{einstein-1, einstein-2} применили его для пространственных задач.
 
 Зональный метод имеет преимущество перед методом Кертиса~—
 Годсона, заключающееся в том, что этим методом можно решать
@@ -87,223 +82,34 @@
 распределение температуры известно, если же оно неизвестно, то для
 определения температуры газа следует применить метод итераций.
 
-Рассмотрим основные положения зонального метода для газа,
-коэффициент поглощения которого постоянен. Рассмотрим объем
-$V_\gamma$ (рисунок \ref{img:ziegel-17-18}) и поверхность $A_k$. Согласно уравнению (13.33),
-плотность потока излучения (без учета индуцированного
-излучения) элемента объема $\mathrm dV_y$ равна $4\pi a_\lambda i'_{\lambda b}\mathrm dV_\gamma\mathrm d\lambda$, или же на единицу
-телесного угла, включающего $\mathrm dV_y$ она равна $a_\lambda i'_{\lambda b}\mathrm dV_\gamma\mathrm d\lambda$. Если
-смотреть со стороны элемента объема $\mathrm dV_y$, то элемент поверхности
-$\mathrm dA_k$ стягивает телесный угол $\mathrm dA_k\cos{\beta_k/S^2_{\gamma-k}}$. Доля излучения,
-пропускаемая на длине пути луча $S_{\gamma-k}$, равна
+Зональный метод задаёт уравнение теплового баланса в объёме $V_\gamma$ (рисунок \ref{img:ziegel-17-18}) с постоянными свойствами, ограниченной поверхностью $A_k$:
 
 \begin{equation}
-	\exp{\left[ -\int_{S_\gamma}^{S_k} a_\lambda \left(S^*\right) \mathrm dS^* \right]}.
+	4a\sigma T^4_\gamma V_\gamma = \sum_{\gamma^* = 1}^{\Gamma} \sigma T^4_{\gamma^*} \overline{g_{\gamma^*} g_\gamma} + \sum_{k=1}^{N} q_{0, k} \overline{g_\gamma s_k},
 \end{equation}
+
+\noindent где
+\begin{itemize}
+	\item $a$ — постоянный коэффициент поглощения газа;
+	\item $\Gamma$ — количество конечных объёмов, на которые разделён газ;
+	\item $N$ — количество конечных площадей, на которые разделена поверхность;
+	\item $\sigma$ — постоянная Стефана — Больцмана;
+	\item $T_\gamma$ — абсолютная температура газа $\gamma$;
+	\item $q_{0, k}$ — плотность потока излучения, падающего на поверхность $k$;
+	\item $\displaystyle \overline{g_{\gamma^*} g_\gamma} \equiv \frac{a^2}{\pi} \int\displaylimits_{V_\gamma} \int\displaylimits_{V_{\gamma^*}} \frac{\tau(S_{\gamma^*-\gamma}) \,\mathrm dV_{\gamma^*} \,\mathrm dV_\gamma}{S^2_{\gamma^*-\gamma}}$ — взаимная поверхность обмена излучения между двумя газами $\gamma^*$ и $\gamma$;
+	\item $\displaystyle \overline{g_\gamma s_k} \equiv \frac a\pi  \int\displaylimits_{V_\gamma} \int\displaylimits_{A_k} \frac{\cos{\beta_k}}{S^2_{\gamma-k}} \tau (S_{\gamma - k}) \mathrm dA_k \, \mathrm dV_\gamma$ — взаимная поверхность обмена излучения между газом $\gamma$ и поверхностью $k$;
+	\item $\tau(S)$ — пропускательная способность площадки $S$.
+\end{itemize}
 
 \img{width=0.65\linewidth}{ziegel-17-18}{Излучение от объема газа $V_\gamma$ к поверхности $A_k$}.
 
-\noindent Перемножая эти величины и интегрируя по $V_\gamma$ и $A_k$, получим
-плотность монохроматического потока излучения, падающего
-на поверхность $A_k$ от объема газа $A_\gamma$,
-
-\begin{equation}
-	\mathrm dq_{\lambda i, \gamma - k}A_k = \mathrm d\lambda \int_{V_\gamma} \int_{A_k} \frac{a_\gamma(\gamma)i'_{\lambda b}(\gamma)\cos{\beta_k}}{S^2_{\gamma-k}}
-	\exp{\left[ -\int_{S_\gamma}^{S_k} a_\lambda \left(S^*\right) \mathrm dS^* \right]} \mathrm dA_k \, \mathrm dV_\gamma.
-\end{equation}
-
-\noindent Если величину $a_\lambda(\gamma)$ принять постоянной, то экспоненчиальный член примет вид
-
-\begin{equation}
-	\label{eqn:ziegel-17-94}
-	\exp{\left[ -a_\lambda (S_k - S_\gamma) \right]} = \tau_\lambda (S_{\gamma - k}).
-\end{equation}
-
-\noindent Полный объем газа разбивается на ряд элементарных объемов
-$V_\gamma$ и предполагается, что в пределах каждого объема $V_\gamma$
-параметры среды постоянны. Тогда уравнение \eqref{eqn:ziegel-17-94} упрощается
-и принимает следующий вид:
-
-\begin{equation}
-	\label{eqn:ziegel-17-95}
-	\mathrm dq_{\lambda i, \gamma - k}A_k = \mathrm d\lambda a_\lambda i'_{\lambda b}(\gamma)  \int_{V_\gamma} \int_{A_k} \frac{\cos{\beta_k}}{S^2_{\gamma-k}}
-	\tau_\lambda (S_{\gamma - k}) \mathrm dA_k \, \mathrm dV_\gamma.
-\end{equation}
-
-\noindent Если к тому же газ еще и серый, то уравнение \eqref{eqn:ziegel-17-95}
-интегрируется по всему спектру и определяется плотность интегрального
-потока излучения, падающего на $A_k$:
-
-\begin{equation}
-	\label{eqn:ziegel-17-96}
-	q_{i, \gamma - k}A_k = a\frac{\sigma T^4_\gamma}{\pi} \int_{V_\gamma} \int_{A_k} \frac{\cos{\beta_k}}{S^2_{\gamma-k}}
-	\tau (S_{\gamma - k}) \mathrm dA_k \, \mathrm dV_\gamma.
-\end{equation}
-
-Определим теперь взаимную поверхность обмена излучением
-между газом и поверхностью в виде
-
-\begin{equation}
-	\label{eqn:ziegel-17-97}
-	\overline{g_\gamma s_k} \equiv \frac a\pi  \int_{V_\gamma} \int_{A_k} \frac{\cos{\beta_k}}{S^2_{\gamma-k}}
-	\tau (S_{\gamma - k}) \mathrm dA_k \, \mathrm dV_\gamma.
-\end{equation}
-
-\noindent Тогда уравнение \eqref{eqn:ziegel-17-96} можно записать в виде
-
-\begin{equation}
-	q_{i, \gamma - k} A_k = \overline{g_\gamma s_k} \sigma T^4_\gamma.
-\end{equation}
-
-\noindent Следовательно, поток излучения, падающий на $A_k$, может
-считаться потоком излучения черного тела $\sigma T^4_\gamma$ для газа объемом
-$V_\gamma$, излучающего с эффективной поверхности $\overline{g_\gamma s_k}$.
-
-Пусть объем газа разделен на $\Gamma$ конечных объемов. Плотность
-потока излучения, падающего на элемент поверхности $A_k$ от всех
-этих объемов, равна
-
-\begin{equation}
-	(q_{i, k})_{\text{от газа}} = \frac{1}{A_k} \sum_{\gamma = 1}^{\Gamma} \overline{g_\gamma s_k} \sigma T^4_\gamma.
-\end{equation}
-
-Рассмотрим теперь теплообмен излучением между граничными
-поверхностями оболочки. Поток излучения, распространяющийся
-от поверхности $A_j$ к поверхности $A_k$ в случае неизотермического
-газа, обладающего постоянными свойствами серого газа, равен
-
-\begin{equation}
-	\label{eqn:ziegel-17-100}
-	q_{i, j-k} A_k = \frac{q_{0, j}}{\pi} \int_{A_k} \int_{A_j} \tau (S_{j - k})
-	\frac{\cos{\beta_j} \cos{\beta_k} \, \mathrm dA_j \, \mathrm dA_k}{S^2_{j-k}},
-\end{equation}
-
-\noindent где величина $q_{0, j}$, как в обычной теории излучения для оболочки,
-считается постоянной в пределах поверхности $A_j$. Определим
-теперь взаимную поверхность пары тел в виде
-
-\begin{equation}
-	\overline{s_j s_k} \equiv = \int_{A_k} \int_{A_j} \tau (S_{j - k})
-	\frac{\cos{\beta_j} \cos{\beta_k} \, \mathrm dA_j \, \mathrm dA_k}{\pi S^2_{j-k}}.
-\end{equation}
-
-\noindent Тогда уравнение \eqref{eqn:ziegel-17-100} можно записать следующим образом:
-
-\begin{equation}
-	q_{i, j-k} A_k = \overline{s_j s_k} q_{0, j}.
-\end{equation}
-
-\noindent Следовательно, поток излучения $q_{i, j-k}A_k$ от $A_i$ на $A_k$ равен
-произведению плотности потока эффективного излучения $q_{0, j}$
-исходящего от $A_j$, на эффективную площадь $\overline{s_j s_k}$. Поток излучения,
-падающий на площадку $A_k$ от всех $N$ граничных поверхностей, равен
-
-\begin{equation}
-	(q_{i, k})_{\text{от поврехн}} = \frac{1}{A_k} \sum_{j=1}^{N} \overline{s_j s_k} q_{0, j}.
-\end{equation}
-
-Тогда общий поток излучения, падающий на поверхность $A_k$,
-может быть получен в виде
-
-\begin{equation}
-	\label{eqn:ziegel-17-104}
-	q_{i, k} = (q_{i, k})_{\text{от поврехн}} + (q_{i, k})_{\text{от газа}} =
-	\frac{1}{A_k} \left( \sum_{j=1}^{N} \overline{s_js_k}q_{0, j} + \sum_{\gamma=1}^{\Gamma} \overline{g_\gamma s_k}\sigma T^4_\gamma \right).
-\end{equation}
-
-\noindent Для поверхности $A_k$ применимы также обычные уравнения
-результирующего излучения [(8.1) и (8.2)]
-
-\begin{equation}
-	q_k = q_{0, k} - q_{i, k},
-\end{equation}
-\begin{equation}
-	\label{eqn:ziegel-17-106}
-	q_{0, k} = \in_k \! \sigma T^4_k + (1 - \in_k) q_{i, k}.
-\end{equation}
-
-В тех задачах, в которых температура $T_\gamma$ задана для всех
-элементарных объемов газа $V_\gamma$, уравнений \eqref{eqn:ziegel-17-104}~— \eqref{eqn:ziegel-17-106}
-достаточно для решения относительно $N$ неизвестных значений
-$T_k$ или $q_k$ или относительно некоторой комбинации из $N$ величин
-$T_k$ и $q_k$. Другие $N$ значений $T_k$ и $q_k$ должны быть заданы в виде
-граничных условий. Затем можно применить методы разд. 8.3.
-Значения $\overline{s_j s_k}$ и $\overline{g_\gamma s_k}$ табулированы Хоттелем и Коэном [15] для
-изотермических объемов кубической формы с изотермическими
-граничными поверхностями. Хоттель и Сэрофим [2] приводят
-справочную таблицу коэффициентов для одиннадцати объемов других
-конфигураций и большое количество табличных данных для
-объемов цилиндрической формы.
-
-Если неизвестны температуры $T_\gamma$ для $\Gamma$ газовых объемов,
-то следует найти $\Gamma$ дополнительных уравнений. Они получатся
-путем составления баланса энергии для каждого элементарного
-объема газа. При радиационном равновесии излучение и
-поглощение в каждом элементарном объеме газа $V_\gamma$ одинаковы (в газе
-нет ни тепловых стоков, ни источников). Тогда для серого газа
-$c$ постоянными свойствами уравнение теплового баланса в объеме
-$V_\gamma$ будет следующим:
-
-\begin{equation}
-	\label{eqn:ziegel-17-107}
-	\begin{aligned}
-		4a\sigma T^4_\gamma V_\gamma = & \sum_{\text{все } V_{\gamma^*}} \int_{V_\gamma} \int_{V_{\gamma^*}} \frac{4a\sigma T^4_{\gamma^*} \, \mathrm dV_{\gamma^*}}{4\pi} \tau (S_{\gamma^*-\gamma}) \frac{a \, \mathrm dV_\gamma}{S^2_{\gamma^*-\gamma}} + \\
-		+ & \sum_{\text{все } A_k} \int_{V_\gamma} \int_{A_k} \frac{q_{0, k} \cos{\beta_k}}{\pi} \, \mathrm dA_k \tau(S_{k-\gamma}) \frac {a \, \mathrm dV_\gamma}{S^2_{k-\gamma}} = \\
-		= a^2 & \sum_{\gamma^* = 1}^{\Gamma} \sigma T^4_{\gamma^*} \int_{V_\gamma} \int_{V_{\gamma^*}} \frac{\tau(S_{\gamma^* - \gamma}) \, \mathrm dV_{\gamma^*} \, \mathrm dV_\gamma}{\pi S^2_{\gamma^* - \gamma}} + \\
-		+ a & \sum_{k=1}^{N} q_{0, k} \int_{V_\gamma} \int_{A_k} \frac{\cos{\beta_k}}{\pi S^2_{k-\gamma}} \tau(S_{k-\gamma}) \, \mathrm dA_k \,\mathrm dV_\gamma.
-	\end{aligned}
-\end{equation}
-
-Предполагается, что $a$ — постоянная величина по всему
-замкнутому объему и что объемы $V_\gamma$ и все $V_{\gamma^*}$ являются изотермическими.
-Величина $q_{0, k}$, как обычно, принимается постоянной на
-поверхности $A_k$.
-
-Определим взаимную поверхность обмена излучением между
-поверхностью и газом в виде
-
-\begin{equation}
-	\label{eqn:ziegel-17-108}
-	\overline{s_k g_\gamma} \equiv \frac a\pi \int_{V_\gamma} \int_{A_k} \frac{\cos{\beta_k}}{S^2_{k-\gamma}} \tau(S_{k-\gamma}) \,\mathrm dA_k \,\mathrm dV_\gamma.
-\end{equation}
-
-Сравнение \eqref{eqn:ziegel-17-108} и \eqref{eqn:ziegel-17-97} показывает, что существует
-соотношение взаимности между взаимными поверхностями обмена
-поверхность~— газ и газ~— поверхность
-
-\begin{equation}
-	\overline{s_k g_\gamma} = \overline{g_\gamma s_k}.
-\end{equation}
-
-Определим теперь взаимную поверхность обмена излучением
-между двумя газами в виде
-
-\begin{equation}
-	\label{eqn:ziegel-17-110}
-	\overline{g_{\gamma^*} g_\gamma} \equiv \frac{a^2}{\pi} \int_{V_\gamma} \int_{V_{\gamma^*}} \frac{\tau(S_{\gamma^*-\gamma}) \,\mathrm dV_{\gamma^*} \,\mathrm dV_\gamma}{S^2_{\gamma^*-\gamma}}.
-\end{equation}
-
-\noindent Подставляя \eqref{eqn:ziegel-17-108} — \eqref{eqn:ziegel-17-110} в \eqref{eqn:ziegel-17-107}, получим
-
-\begin{equation}
-	\label{eqn:ziegel-17-111}
-	4a\sigma T^4_\gamma V_\gamma = \sum_{\gamma^* = 1}^{\Gamma} \sigma T^4_{\gamma^*} \overline{g_{\gamma^*} g_\gamma} + \sum_{k=1}^{N} q_{0, k} \overline{g_\gamma s_k}.
-\end{equation}
-
-\noindent Величины $\overline{g_{\gamma^*} g_\gamma}$ также табулированы [15], так что уравнение
-\eqref{eqn:ziegel-17-111} для каждого объема $V_\gamma$ дает дополнительную систему
-из $\Gamma$ уравнений, необходимую для вычисления распределения
-температуры в газе.
-
-% убрал пару абзацев
-
 Описанный здесь метод расчета был развит далее Хоттелем
-и др. [1, 2, 15]. При этом имеется возможность приближенным,
+и~др. \cite{hottel-1, hottel-2}. При этом имеется возможность приближенным,
 но доступным способом учесть спектральную зависимость свойств
 газа. Изменения этих свойств в зависимости от положения в
 замкнутом объеме учитываются путем определения соответствующего
 среднего коэффициента поглощения между каждой серией зон.
-Эйнштейн [18, 19] модифицировал коэффициенты $\overline{gs}$ и $\overline{gg}$ с целью
+Эйнштейн \cite{einstein-1, einstein-2} модифицировал коэффициенты $\overline{gs}$ и $\overline{gg}$ с целью
 достижения большей точности расчетов при наличии больших
 градиентов. Все эти приближенные методы становятся сложными
 при наличии сильной зависимости коэффициента поглощения
@@ -316,13 +122,13 @@ $V_\gamma$ будет следующим:
 \subsection{Дискретно-лучевой метод}
 
 \def\wA{5mm}
-\def\wB{27mm}
+\def\wB{28mm}
 \def\wC{23mm}
 \def\wD{23mm}
 \def\wE{23mm}
 \def\wF{23mm}
 \def\wG{23mm}
-\def\wH{23mm}
+\def\wH{22mm}
 \def\wI{22mm}
 \def\wJ{22mm}
 \begin{FixLineStretch}
