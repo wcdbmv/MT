@@ -10,3 +10,173 @@
 %% Рекомендуемый объем экспериментального раздела 10—15 страниц.
 
 \chapter{Исследовательский раздел}
+
+\begin{figure}[ht]
+	\noindent\begin{tikzpicture}
+		\begin{axis}[
+			xlabel = {$\nu$},
+			ylabel = {$\tau$},
+			xmin = 0, xmax = 2.8e+15,
+			grid = both,
+			width = \linewidth,
+			height = 0.5\linewidth,
+		]
+			\addplot table [x=nu, y=tau]{inc/data/optical_density.dat};
+		\end{axis}
+	\end{tikzpicture}
+
+	\noindent\begin{tikzpicture}
+		\begin{axis}[
+			xlabel = {$\nu$},
+			ylabel = {$\tau$},
+			domain=1e+14:4e+14,
+			xmin = 1e+14, xmax = 7e+14,
+			grid = both,
+			width = 0.485\linewidth,
+			height = 0.5\linewidth,
+		]
+			\addplot table [x=nu, y=tau]{inc/data/optical_density.dat};
+	\end{axis}
+	\end{tikzpicture}\begin{tikzpicture}
+		\begin{semilogyaxis}[
+			xlabel = {$\nu$},
+			ylabel = {$\tau$},
+			xmin = 19e+14, xmax = 28e+14,
+			grid = both,
+			width = 0.485\linewidth,
+			height = 0.5\linewidth,
+		]
+			\addplot table [x=nu, y=tau]{inc/data/optical_density.dat};
+		\end{semilogyaxis}
+	\end{tikzpicture}
+	\captionsetup{justification=centering}
+	\caption{Оптическая плотность}
+	\label{plt:optical-density}
+\end{figure}
+
+\begin{figure}[ht]
+	\noindent\begin{tikzpicture}
+		\begin{axis}[
+			xlabel = {$z$},
+			ylabel = {$I \;\; [\text{Вт}/\text{см}^2]$},
+			xmin = 0, xmax = 1.025,
+			grid = both,
+			width = \linewidth,
+			height = 0.5\linewidth,
+		]
+			\addplot table [x=zmax, y=mmb2]{inc/data/Xe_R=0.35.dat};
+			\addlegendentry{$\rho = 0.90$}
+			\addplot table [x=zmax, y=mmm2]{inc/data/Xe_R=0.35.dat};
+			\addlegendentry{$\rho = 0.95$}
+			\addplot table [x=zmax, y=mmt2]{inc/data/Xe_R=0.35.dat};
+			\addlegendentry{$\rho = 0.98$}
+		\end{axis}
+	\end{tikzpicture}
+
+	\noindent\begin{tikzpicture}
+		\begin{axis}[
+			xlabel = {$z$},
+			ylabel = {$I \;\; [\text{Вт}/\text{см}^3]$},
+			xmin = 0, xmax = 1.025,
+			grid = both,
+			width = 0.98\linewidth,
+			height = 0.5\linewidth,
+		]
+			\addplot table [x=zmax, y=mmb3]{inc/data/Xe_R=0.35.dat};
+			\addlegendentry{$\rho = 0.90$}
+			\addplot table [x=zmax, y=mmm3]{inc/data/Xe_R=0.35.dat};
+			\addlegendentry{$\rho = 0.95$}
+			\addplot table [x=zmax, y=mmt3]{inc/data/Xe_R=0.35.dat};
+			\addlegendentry{$\rho = 0.98$}
+		\end{axis}
+	\end{tikzpicture}
+	\captionsetup{justification=centering}
+	\caption{$\rho$}
+	\label{plt:rho}
+\end{figure}
+
+\begin{figure}[ht]
+	\noindent\begin{tikzpicture}
+		\begin{axis}[
+			xlabel = {$z$},
+			ylabel = {$I \;\; [\text{Вт}/\text{см}^2]$},
+			xmin = 0, xmax = 1.025,
+			yticklabel style={/pgf/number format/.cd,fixed,precision=2},
+			grid = both,
+			width = 0.965\linewidth,
+			height = 0.5\linewidth,
+		]
+			\addplot table [x=zmax, y=mbm2]{inc/data/Xe_R=0.35.dat};
+			\addlegendentry{$m = 2$}
+			\addplot table [x=zmax, y=mmm2]{inc/data/Xe_R=0.35.dat};
+			\addlegendentry{$m = 4$}
+			\addplot table [x=zmax, y=mtm2]{inc/data/Xe_R=0.35.dat};
+			\addlegendentry{$m = 8$}
+		\end{axis}
+	\end{tikzpicture}
+
+	\noindent\begin{tikzpicture}
+		\begin{axis}[
+			xlabel = {$z$},
+			ylabel = {$I \;\; [\text{Вт}/\text{см}^3]$},
+			xmin = 0, xmax = 1.025,
+			grid = both,
+			width = 0.98\linewidth,
+			height = 0.5\linewidth,
+		]
+			\addplot table [x=zmax, y=mbm3]{inc/data/Xe_R=0.35.dat};
+			\addlegendentry{$m = 2$}
+			\addplot table [x=zmax, y=mmm3]{inc/data/Xe_R=0.35.dat};
+			\addlegendentry{$m = 4$}
+			\addplot table [x=zmax, y=mtm3]{inc/data/Xe_R=0.35.dat};
+			\addlegendentry{$m = 8$}
+		\end{axis}
+	\end{tikzpicture}
+	\captionsetup{justification=centering}
+	\caption{$m$}
+	\label{plt:m}
+\end{figure}
+
+\begin{figure}[ht]
+	\noindent\begin{tikzpicture}
+		\begin{axis}[
+			xlabel = {$z$},
+			ylabel = {$I \;\; [\text{Вт}/\text{см}^2]$},
+			xmin = 0, xmax = 1.025,
+			yticklabel style={/pgf/number format/.cd,fixed,precision=2},
+			grid = both,
+			width = 0.965\linewidth,
+			height = 0.5\linewidth,
+		]
+			\addplot table [x=zmax, y=bmm2]{inc/data/Xe_R=0.35.dat};
+			\addlegendentry{$T_0 = 8000 \; \text{К}$}
+			\addplot table [x=zmax, y=mmm2]{inc/data/Xe_R=0.35.dat};
+			\addlegendentry{$T_0 = 10000 \; \text{К}$}
+			\addplot table [x=zmax, y=tmm2]{inc/data/Xe_R=0.35.dat};
+			\addlegendentry{$T_0 = 12000 \; \text{К}$}
+		\end{axis}
+	\end{tikzpicture}
+
+	\noindent\begin{tikzpicture}
+		\begin{axis}[
+			xlabel = {$z$},
+			ylabel = {$I \;\; [\text{Вт}/\text{см}^3]$},
+			xmin = 0, xmax = 1.025,
+			grid = both,
+			width = 0.98\linewidth,
+			height = 0.5\linewidth,
+		]
+			\addplot table [x=zmax, y=bmm3]{inc/data/Xe_R=0.35.dat};
+			\addlegendentry{$T_0 = 8000 \; \text{К}$}
+			\addplot table [x=zmax, y=mmm3]{inc/data/Xe_R=0.35.dat};
+			\addlegendentry{$T_0 = 10000 \; \text{К}$}
+			\addplot table [x=zmax, y=tmm3]{inc/data/Xe_R=0.35.dat};
+			\addlegendentry{$T_0 = 12000 \; \text{К}$}
+		\end{axis}
+	\end{tikzpicture}
+	\captionsetup{justification=centering}
+	\caption{$t$}
+	\label{plt:t}
+\end{figure}
+
+\section*{Выводы}

@@ -210,6 +210,9 @@
 \captionsetup*[figure]{labelformat=gostfigure}
 \captionsetup*[table]{labelformat=gosttable}
 \renewcommand{\thesubfigure}{\asbuk{subfigure}}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
 %%
 %% 6.5.1 Иллюстрации (чертежи, графики, схемы, компьютерные распечатки, диаграммы, фотоснимки) следует располагать в отчете непосредственно после текста отчета, где они упоминаются впервые, или на следующей странице (по возможности ближе к соответствующим частям текста отчета).
 %% На все иллюстрации в отчете должны быть даны ссылки.
@@ -489,6 +492,9 @@
 	identifierstyle=\color{black},
 	sensitive=false%,
 	%	comment=[l]{\#}
+}
+\lstdefinelanguage{C++23}[]{C++}{
+	morekeywords={constexpr}
 }
 %%
 \newcommand{\code}[1]{\texttt{#1}}

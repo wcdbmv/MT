@@ -21,9 +21,29 @@
 
 \section{Выбор языка программирования}
 
+В роли основного языка программирования для реализации метода модеирования световых полей систем сложной конфигурации был выбран высокопроизводительный язык C++ \cite{cpp}.
+
+Этот язык позволяет использовать множество парадигм разработки, в том числе и объектно-ориентированную, которая, в свою очередь, даёт возможность чётко структурировать программу и легко модифицировать отдельные её компоненты независимо от других.
+
+Также немаловажным фактором является предоставляемая языком C++ возможность эффективного использования вычислительных ресурсов системы благодаря широкому набору функций из стандартной библиотеки самой современной на текущей момент версии (C++23).
+
 \section{Используемые технологии}
 
+\begin{itemize}
+	\item CLion 2024.1 \cite{clion} — кроссплатформенная интегрированная среда разработки для языков C и C++, разрабатываемая компанией JetBrains, позволяющая быстро и просто создавать современные и безопасные приложения.
+	\item CMake 3.29.4 \cite{cmake} — многофункцианальная кроссплатформенная система сборки ПО, фактически являющаяся стандартом для сборки C++ кода.
+	\item Clang 18.1.6 \cite{clang} — современный комплиятор для языков семейства C (C, C++, Objective C/C++, OpenCL, CUDA и RenderScript) на базе инфрастуктуры LLVM.
+	\item Clang-Format 18.1.6 \cite{clang-format} — широко-используемый инструмент, предназначенный для автоматического переформатирования исходных файлов C++ в соответствии с настраиваемыми руководствами по стилю.
+	\item Clang-Tidy 18.1.6 \cite{clang-tidy} — статический анализатор C++ кода, обнаруживающий и исправляющий места в коде, подверженные ошибкам, проблемам с производительностью, переносимостью и удобностью поддержки.
+	\item IPO/LTO (Interprocedural optimization / Link time optimization) \cite{ipo-lto}~— оптимизация времени компоновки, отличаемая от других оптимизаций компилятора тем, что анализирует всю программу, а не отдельную функцию или блок кода.
+	\item IWYU (Include What You Use) 0.22 \cite{iwyu} — инструмент для обнаружения и оптимизации зависимостей заголовков в C++ коде.
+	\item Qt 6.7.0 \cite{qt} — кроссплатформенная библиотека и набор инструментов для создаиня современных графических прриложений на языке C++;
+	\item GoogleTest 1.14.0 \cite{googletest} — фреймворк для тестирования C++ кода, разрабатываемый компанией Google.
+\end{itemize}
+
 \section{Формат ввода-вывода}
+
+Если имеется
 
 \section{Структура ПО}
 
@@ -31,4 +51,80 @@
 
 \section{Сборка ПО}
 
+Сборка осуществляется системой CMake по сценарию, описанному в листинге \ref{lst:cmake}, где вместо \code{[options...]} можно использовать несколько ключей из следующего списка:
+\begin{enumerate}
+	\item \code{-DMT\_ENABLE\_CLANG\_TIDY=ON} — для активации статического анализатора кода при сборке проекта;
+	\item \code{-DMT\_ENABLE\_COMPILER\_WARNINGS=ON} — для активации широкого набора стандартных предупреждений компилятора при сборке проекта;
+	\item \code{-DMT\_ENABLE\_IPO\_LTO=ON} — для активации оптимизаций времени компоновки;
+	\item \code{-DMT\_ENABLE\_IWYU=ON} — для активации предупреждений о неоптимальных зависимостях заголовков при сборке;
+	\item \code{-DMT\_ENABLE\_UNSAFE\_MATH\_OPTIMIZATIONS=ON} — для активации небезопасных агрессивных математических оптимизаций при сборке проекта;
+	\item \code{-DMT\_USE\_DOUBLE=ON} — для использования чисел с плавающей запятой двойной точности;
+	\item \code{-DCMAKE\_BUILD\_TYPE=Debug} — для сборки проекта в отладочном режиме;
+	\item \code{-DCMAKE\_BUILD\_TYPE=Release} — для сборки проекта в релизном режиме;
+	\item \code{-DCMAKE\_BUILD\_TYPE=RelWithDebInfo} — для сборки проекта в релизном режиме с отладочной информацией.
+\end{enumerate}
+
+% Компилятор должен поддерживать определённые ключевые особенности из стандарта C++ 20.
+% Узнать, какие версии компиляторов поддерживают последний стандарт можно ознакомившись с информацией из источника \cite{cpp-compiler-support}.
+
+\begin{lstlisting}[gobble=8, language=bash, caption={Сборка\label{lst:cmake}}]
+	mkdir build
+	cd build
+	cmake [options...] ..
+	cmake --build . --target MT
+	cmake --build . --target GUI
+\end{lstlisting}
+
 \section{Модульное тестирование}
+
+В листингах \ref{lst:cpp-unit-test-equation}—\ref{lst:cpp-unit-tests-intersection} представлены примеры модульных тестов основных функций моделирования траектории движения луча в световой системе на базе фреймворка GoogleTest.
+
+\begin{lstlisting}[gobble=8, language=C++23, caption={Юнит-тест функции решения квадратных уравнений\label{lst:cpp-unit-test-equation}}]
+	TEST(EquationTest, QuadraticEquationTwoRealSolutions) {
+	  auto x0 = kZero;
+	  auto x1 = kZero;
+
+	  const auto result = equation::SolveQuadratic(5, 6, 1, x0, x1);
+
+	  ASSERT_EQ(result, equation::Result::kHasRealSolution);
+	  ASSERT_NEAR(x0, -1.0_F, kEps);
+	  ASSERT_NEAR(x1, -0.2_F, kEps);
+	}
+\end{lstlisting}
+
+\begin{lstlisting}[gobble=8, language=C++23, caption={Юнит-тест функции отражения\label{lst:cpp-unit-test-reflection}}]
+	TEST(ReflectTest, ReflectRay45Degree) {
+	  const auto incident = Vec3{1, -1, 0}.Normalized();
+	  const auto normal = Vec3{0, -1, 0}.Normalized();
+	  const auto expected = Vec3{1, 1, 0}.Normalized();
+
+	  const auto reflected = Reflect(incident, normal);
+	  ExpectVectorNear(reflected, expected);
+	}
+\end{lstlisting}
+
+\begin{lstlisting}[gobble=8, language=C++23, caption={Юнит-тест функции преломления\label{lst:cpp-unit-test-refraction}}]
+	TEST(RefractTest, AirToGlass) {
+	  const auto incident = Vec3{1, 1, -1}.Normalized();
+	  const auto normal = Vec3{0, 0, -1}.Normalized();
+	  constexpr auto kEtaI = 1.0_F;
+	  constexpr auto kEtaT = 1.5_F;
+	  constexpr auto kMu = kEtaI / kEtaT;
+	  const auto z = std::sqrt(19) / 3;
+	  const auto expected = Vec3{kMu, kMu, -z}.Normalized();
+
+	  const auto refracted = Refract(incident, normal, kEtaI, kEtaT);
+	  ExpectVectorNear(refracted, expected);
+	}
+\end{lstlisting}
+
+\begin{lstlisting}[gobble=8, language=C++23, caption={Юнит-тест метода пересечения луча с поверхностью цилиндра\label{lst:cpp-unit-tests-intersection}}]
+	TEST(CylinderZInfinite, IntersectX) {
+	  const CylinderZInfinite cylinder{{}, 2};
+	  constexpr Vec3 kPos{-10, 0, 0};
+	  constexpr Vec3 kDir{1, 0, 0};
+	  ASSERT_EQ(cylinder.Intersect(kPos, kDir), 8);
+	}
+\end{lstlisting}
+
+\section*{Выводы}

@@ -351,14 +351,64 @@
 	\end{matrix}
 \end{equation}
 
-\noindent где $T_{min}$, $T_{max}$ — ближайший табличный диапазон температур, $k_t$~— табличное значение коэффициента оптического поглощения плазмы.
+\noindent где
+\begin{itemize}
+	\item $T_{min}$, $T_{max}$ — ближайший табличный диапазон температур,
+	\item $k_t$~— табличное значение коэффициента оптического поглощения плазмы.
+\end{itemize}
+
 На рисунке \ref{img:xenon-absorption-coefficient} представлено распределение показателя поглощения при температуре 3500 К.
 
 \section{Дискретно-лучевой метод моделирования световых полей в системах сложной конфигурации}
 
-На рисунке \ref{img:A1} представлена детализированная диаграмма IDEF0 компонента A0.
+На рисунке \ref{img:02_A0} представлена детализированная диаграмма IDEF0 ветки A0.
 
-\img{width=\linewidth}{A1}{Диаграмма IDEF0 компонента A0}
+\img{width=\linewidth}{02_A0}{IDEF0 — декомпозиция ветки A0}
+
+\begin{algorithm}[H]
+	\caption{Генерация решётки Фибоначчи на сфере}
+	\label{alg:fibonacci-sphere}
+	\begin{algorithmic}[1]
+		\State \textbf{Вход:} $N$ — количество направлений
+		\State \textbf{Выход:} $D$ — список направлений
+		\State Создать пустой список векторов $D$
+		\ForAll{$i$ от $0$ до $N - 1$}
+			\State $x \gets i / \varphi$
+			\State $y \gets i / N$
+			\State $\theta \gets 2 \pi x$
+			\State $\phi \gets \arccos{(1 - 2y)}$
+			\State $dir_x \gets \cos\theta \sin\phi$
+			\State $dir_y \gets \sin\theta \sin\phi$
+			\State $dir_z \gets \cos\phi$
+			\State $dir \gets (dir_x, dir_y, dir_z)$
+			\State $Push(D, dir)$
+		\EndFor
+	\end{algorithmic}
+\end{algorithm}
+
+% TODO(a.kerimov): центры площадок
+
+\begin{algorithm}[H]
+	\caption{Генерация каркасной сферической решётки}
+	\label{alg:wire-sphere}
+	\begin{algorithmic}[1]
+
+		\State Создать пустой список векторов $D$
+		\ForAll{$m$ от $0$ до $M$}
+			\ForAll{$n$ от $0$ до $N - 1$}
+				\State $x \gets n / N$
+				\State $y \gets m / M$
+				\State $\theta \gets 2 \pi x$
+				\State $\phi \gets \pi y$
+				\State $dir_x \gets \cos\theta \sin\phi$
+				\State $dir_y \gets \sin\theta \sin\phi$
+				\State $dir_z \gets \cos\phi$
+				\State $dir \gets (dir_x, dir_y, dir_z)$
+				\State $Push(D, dir)$
+			\EndFor
+		\EndFor
+	\end{algorithmic}
+\end{algorithm}
 
 На рисунке \ref{img:worker} представлена схема алгоритма параллельной трассировки лучей.
 
@@ -373,3 +423,7 @@
 \end{itemize}
 
 \img{width=\linewidth}{ray-tracing}{Схема алгоритма трассировки луча}
+
+\img{width=\linewidth}{nearest-surface}{Схема алгоритма поиска ближайшей поверхности пересечения}
+
+\section*{Выводы}
