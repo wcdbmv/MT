@@ -2,6 +2,10 @@
 .idea/
 cmake-build-*/
 
+# QtCreator
+build/
+*.user
+
 # LaTeX
 *.aux
 *.bbl
