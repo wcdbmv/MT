@@ -315,6 +315,7 @@
 Например, распределение температуры плазмы может быть описано, как
 
 \begin{equation}
+	\label{eqn:xenon-temperature}
 	T = T_0 + (T_w - T_0)z^m,
 \end{equation}
 
@@ -361,9 +362,19 @@
 
 \section{Дискретно-лучевой метод моделирования световых полей в системах сложной конфигурации}
 
-На рисунке \ref{img:02_A0} представлена детализированная диаграмма IDEF0 ветки A0.
+На рисунке \ref{img:02_A0_03_A3} представлена детализированная диаграмма IDEF0 веток A0 и A3.
 
-\img{width=\linewidth}{02_A0}{IDEF0 — декомпозиция ветки A0}
+Алгоритмы \ref{alg:fibonacci-sphere} и \ref{alg:wire-sphere} описывают способы генерации объёмного излучения.
+
+\begin{figure}[p]
+	\center{
+		\includegraphics[width=\linewidth]{inc/img/02_A0}
+		\includegraphics[width=\linewidth]{inc/img/03_A3}
+	}
+	\captionsetup{justification=centering}
+	\caption{IDEF0 — декомпозиция веток A0 и A3}
+	\label{img:02_A0_03_A3}
+\end{figure}
 
 \begin{algorithm}[H]
 	\caption{Генерация решётки Фибоначчи на сфере}
@@ -377,10 +388,7 @@
 			\State $y \gets i / N$
 			\State $\theta \gets 2 \pi x$
 			\State $\phi \gets \arccos{(1 - 2y)}$
-			\State $dir_x \gets \cos\theta \sin\phi$
-			\State $dir_y \gets \sin\theta \sin\phi$
-			\State $dir_z \gets \cos\phi$
-			\State $dir \gets (dir_x, dir_y, dir_z)$
+			\State $dir \gets (\cos\theta \sin\phi, \sin\theta \sin\phi, \cos\phi)$
 			\State $Push(D, dir)$
 		\EndFor
 	\end{algorithmic}
@@ -392,7 +400,8 @@
 	\caption{Генерация каркасной сферической решётки}
 	\label{alg:wire-sphere}
 	\begin{algorithmic}[1]
-
+		\State \textbf{Вход:} $M$ — количество широт, $N$ — количество меридианов
+		\State \textbf{Выход:} $D$ — список направлений
 		\State Создать пустой список векторов $D$
 		\ForAll{$m$ от $0$ до $M$}
 			\ForAll{$n$ от $0$ до $N - 1$}
@@ -400,10 +409,7 @@
 				\State $y \gets m / M$
 				\State $\theta \gets 2 \pi x$
 				\State $\phi \gets \pi y$
-				\State $dir_x \gets \cos\theta \sin\phi$
-				\State $dir_y \gets \sin\theta \sin\phi$
-				\State $dir_z \gets \cos\phi$
-				\State $dir \gets (dir_x, dir_y, dir_z)$
+				\State $dir \gets (\cos\theta \sin\phi, \sin\theta \sin\phi, \cos\phi)$
 				\State $Push(D, dir)$
 			\EndFor
 		\EndFor
@@ -412,18 +418,24 @@
 
 На рисунке \ref{img:worker} представлена схема алгоритма параллельной трассировки лучей.
 
-\img{width=\linewidth}{worker}{Схема алгоритма параллельной трассировки лучей}
+\imgh{width=\linewidth}{worker}{Схема алгоритма параллельной трассировки лучей}
 
-На рисунке \ref{img:ray-tracing} представлена схема алгоритм трассировки луча:
+На рисунке \ref{img:ray-tracing} представлена схема алгоритма трассировки луча:
 \begin{itemize}
-	\item поиск ближайшей поверхности пересечения — поиск поверхности с наименьшим значением $t^+$: \eqref{eqn:cylinder-possible-t}, \eqref{eqn:elliptic-cylinder-possible-t};
+	\item поиск ближайшей поверхности пересечения — поиск поверхности с наименьшим значением $t^+$: \eqref{eqn:cylinder-possible-t}, \eqref{eqn:elliptic-cylinder-possible-t}, схема алгоритма представлена на рисунке \ref{img:nearest-surface};
 	\item геометрическое отражение: \eqref{eqn:reflection};
 	\item преломление: \eqref{eqn:refraction-begin} — \eqref{eqn:refraction-end};
 	\item перерасчёт интенсивности: \eqref{eqn:intensity-begin} — \eqref{eqn:intensity-end}.
 \end{itemize}
 
-\img{width=\linewidth}{ray-tracing}{Схема алгоритма трассировки луча}
+\imgh{width=\linewidth}{ray-tracing}{Схема алгоритма трассировки луча}
 
-\img{width=\linewidth}{nearest-surface}{Схема алгоритма поиска ближайшей поверхности пересечения}
+\imgh{width=\linewidth}{nearest-surface}{Схема алгоритма поиска ближайшей поверхности пересечения}
 
 \section*{Выводы}
+
+В конструкторском разделе выпускной квалификационной работы был спроектирован дискретно-лучевой метод моделирования световых полей в системах с неоднородными поглощающими и излучающими средами на основе параллельных вычислений.
+
+Метод был декомпозирован на этапы, каждый из которых был описан по шагам, а также указаны входные и выходные параметры.
+
+% Число базовых классификаторов было решено определить в ходе работы над исследовательским разделом.
