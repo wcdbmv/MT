@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>972</width>
-    <height>600</height>
+    <width>1020</width>
+    <height>696</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="xeTab">
        <attribute name="title">
@@ -100,7 +100,7 @@
            <item row="1" column="0">
             <widget class="QLabel" name="xeNLabel">
              <property name="text">
-              <string>N&lt;sub&gt;разбиений&lt;/sub&gt; =</string>
+              <string>N&lt;sub&gt;Xe&lt;/sub&gt; =</string>
              </property>
             </widget>
            </item>
@@ -1381,13 +1381,6 @@
              </layout>
             </widget>
            </item>
-           <item row="11" column="0" colspan="2">
-            <widget class="QPushButton" name="xeCalculatePushButton">
-             <property name="text">
-              <string>Рассчитать поглощённую мощность</string>
-             </property>
-            </widget>
-           </item>
            <item row="9" column="0">
             <widget class="QLabel" name="xeLatitudeLabel">
              <property name="text">
@@ -1494,6 +1487,13 @@
                </widget>
               </item>
              </layout>
+            </widget>
+           </item>
+           <item row="11" column="0" colspan="2">
+            <widget class="QPushButton" name="xeCalculatePushButton">
+             <property name="text">
+              <string>Рассчитать поглощённую мощность</string>
+             </property>
             </widget>
            </item>
           </layout>
@@ -1611,7 +1611,7 @@
                 </widget>
                </item>
                <item>
-                <spacer name="verticalSpacer">
+                <spacer name="xeDataTotalVerticalSpacer">
                  <property name="orientation">
                   <enum>Qt::Vertical</enum>
                  </property>
@@ -1639,13 +1639,1721 @@
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
          <widget class="QGroupBox" name="xeSiO2GroupBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="title">
            <string>Параметры системы</string>
           </property>
+          <layout class="QFormLayout" name="formLayout_2">
+           <property name="sizeConstraint">
+            <enum>QLayout::SetDefaultConstraint</enum>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLabel" name="xeSiO2RLabel">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>R [см] =</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QWidget" name="xeSiO2RWidget" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_13">
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QDoubleSpinBox" name="xeSiO2RDoubleSpinBox">
+                <property name="minimum">
+                 <double>0.010000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>1.000000000000000</double>
+                </property>
+                <property name="singleStep">
+                 <double>0.010000000000000</double>
+                </property>
+                <property name="value">
+                 <double>0.350000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="xeSiO2RHorizontalSlider">
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>100</number>
+                </property>
+                <property name="value">
+                 <number>35</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="xeSiO2NPlasmaLabel">
+             <property name="text">
+              <string>N&lt;sub&gt;Xe&lt;/sub&gt; =</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QWidget" name="xeSiO2NPlasmaWidget" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_14">
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QSpinBox" name="xeSiO2NPlasmaSpinBox">
+                <property name="minimum">
+                 <number>10</number>
+                </property>
+                <property name="maximum">
+                 <number>100</number>
+                </property>
+                <property name="value">
+                 <number>40</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="xeSiO2NPlasmaHorizontalSlider">
+                <property name="minimum">
+                 <number>10</number>
+                </property>
+                <property name="maximum">
+                 <number>100</number>
+                </property>
+                <property name="value">
+                 <number>40</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="xeSiO2TLabel1">
+             <property name="text">
+              <string>T(z) =</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLabel" name="xeSiO2TLabel2">
+             <property name="text">
+              <string>T&lt;sub&gt;0&lt;/sub&gt; + (T&lt;sub&gt;w&lt;/sub&gt; - T&lt;sub&gt;0&lt;/sub&gt;) z&lt;sup&gt;m&lt;/sup&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="xeSiO2T0Label">
+             <property name="text">
+              <string>T&lt;sub&gt;0&lt;/sub&gt; [К] =</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QWidget" name="xeSiO2T0Widget" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_15">
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QSpinBox" name="xeSiO2T0SpinBox">
+                <property name="minimum">
+                 <number>2000</number>
+                </property>
+                <property name="maximum">
+                 <number>14000</number>
+                </property>
+                <property name="singleStep">
+                 <number>1000</number>
+                </property>
+                <property name="value">
+                 <number>10000</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="xeSiO2T0HorizontalSlider">
+                <property name="minimum">
+                 <number>2000</number>
+                </property>
+                <property name="maximum">
+                 <number>14000</number>
+                </property>
+                <property name="singleStep">
+                 <number>1000</number>
+                </property>
+                <property name="value">
+                 <number>10000</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="xeSiO2TwLabel">
+             <property name="text">
+              <string>T&lt;sub&gt;w&lt;/sub&gt; [К] =</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QWidget" name="xeSiO2TwWidget" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_16">
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QSpinBox" name="xeSiO2TwSpinBox">
+                <property name="minimum">
+                 <number>2000</number>
+                </property>
+                <property name="maximum">
+                 <number>14000</number>
+                </property>
+                <property name="singleStep">
+                 <number>1000</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="xeSiO2TwHorizontalSlider">
+                <property name="minimum">
+                 <number>2000</number>
+                </property>
+                <property name="maximum">
+                 <number>14000</number>
+                </property>
+                <property name="singleStep">
+                 <number>1000</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="xeSiO2MLabel">
+             <property name="text">
+              <string>m =</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="QWidget" name="xeSiO2MWidget" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_17">
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QSpinBox" name="xeSiO2MSpinBox">
+                <property name="minimum">
+                 <number>2</number>
+                </property>
+                <property name="maximum">
+                 <number>8</number>
+                </property>
+                <property name="value">
+                 <number>4</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="xeSiO2MHorizontalSlider">
+                <property name="minimum">
+                 <number>2</number>
+                </property>
+                <property name="maximum">
+                 <number>8</number>
+                </property>
+                <property name="value">
+                 <number>4</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="9" column="0">
+            <widget class="QLabel" name="xeSiO2RhoLabel">
+             <property name="text">
+              <string>ρ =</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="1">
+            <widget class="QWidget" name="xeSiO2RhoWidget" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_19">
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QDoubleSpinBox" name="xeSiO2RhoDoubleSpinBox">
+                <property name="maximum">
+                 <double>1.000000000000000</double>
+                </property>
+                <property name="singleStep">
+                 <double>0.010000000000000</double>
+                </property>
+                <property name="value">
+                 <double>0.950000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="xeSiO2RhoHorizontalSlider">
+                <property name="maximum">
+                 <number>100</number>
+                </property>
+                <property name="value">
+                 <number>95</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="10" column="0">
+            <widget class="QLabel" name="xeSiO2DeltaNuLabel">
+             <property name="text">
+              <string>Δν* =</string>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="1">
+            <widget class="QComboBox" name="xeSiO2DeltaNuComboBox">
+             <property name="currentIndex">
+              <number>80</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>1 [0,02000; 0,10000] τ=0,453094</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>2 [0,10000; 0,19000] τ=0,041756</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>3 [0,19000; 0,19400] τ=0,038327</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>4 [0,19400; 0,19453] τ=0,066908</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>5 [0,19453; 0,19463] τ=0,074315</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>6 [0,19463; 0,19500] τ=0,069073</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>7 [0,19500; 0,20300] τ=0,050592</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>8 [0,20300; 0,20358] τ=0,136334</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>9 [0,20358; 0,20368] τ=0,157921</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>10 [0,20368; 0,20400] τ=0,145639</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>11 [0,20400; 0,21900] τ=0,044242</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>12 [0,21900; 0,21963] τ=0,097134</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>13 [0,21963; 0,21973] τ=0,113461</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>14 [0,21973; 0,22020] τ=0,097887</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>15 [0,22020; 0,23700] τ=0,029988</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>16 [0,23700; 0,23762] τ=0,062096</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>17 [0,23762; 0,23770] τ=0,070670</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>18 [0,23770; 0,23820] τ=0,063372</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>19 [0,23820; 0,25000] τ=0,026291</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>20 [0,25000; 0,27000] τ=0,027330</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>21 [0,27000; 0,27058] τ=0,102251</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>22 [0,27058; 0,27068] τ=0,119697</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>23 [0,27068; 0,27120] τ=0,104185</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>24 [0,27120; 0,27300] τ=0,056466</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>25 [0,27300; 0,27674] τ=0,061646</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>26 [0,27674; 0,27679] τ=0,256039</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>27 [0,27679; 0,27681] τ=0,258153</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>28 [0,27681; 0,27685] τ=0,255848</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>29 [0,27685; 0,27700] τ=0,228038</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>30 [0,27700; 0,28500] τ=0,034483</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>31 [0,28500; 0,30227] τ=0,108708</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>32 [0,30227; 0,30231] τ=2,459570</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>33 [0,30231; 0,30233] τ=2,482447</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>34 [0,30233; 0,30237] τ=2,464308</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>35 [0,30237; 0,30608] τ=0,630581</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>36 [0,30608; 0,30612] τ=1,830686</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>37 [0,30612; 0,30614] τ=1,923094</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>38 [0,30614; 0,30618] τ=1,843685</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>39 [0,30618; 0,31000] τ=0,309246</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>40 [0,31000; 0,31525] τ=0,110026</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>41 [0,31525; 0,31533] τ=0,166310</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>42 [0,31533; 0,31537] τ=0,167757</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>43 [0,31537; 0,31545] τ=0,165919</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>44 [0,31545; 0,31999] τ=0,145840</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>45 [0,31999; 0,32003] τ=0,292548</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>46 [0,32003; 0,32723] τ=0,204689</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>47 [0,32723; 0,32725] τ=1,208728</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>48 [0,32725; 0,32737] τ=1,327049</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>49 [0,32737; 0,32741] τ=1,427401</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>50 [0,32741; 0,32743] τ=1,436117</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>51 [0,32743; 0,32747] τ=1,420276</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>52 [0,32747; 0,33160] τ=0,332985</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>53 [0,33160; 0,33165] τ=0,500131</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>54 [0,33165; 0,33167] τ=0,523007</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>55 [0,33167; 0,33172] τ=0,497513</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>56 [0,33172; 0,33506] τ=0,206254</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>57 [0,33506; 0,33510] τ=0,389096</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>58 [0,33510; 0,33512] τ=0,392612</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>59 [0,33512; 0,33516] τ=0,394608</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>60 [0,33516; 0,33587] τ=0,356191</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>61 [0,33587; 0,33591] τ=0,379613</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>62 [0,33591; 0,33593] τ=0,378892</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>63 [0,33593; 0,33597] τ=0,373219</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>64 [0,33597; 0,33840] τ=0,254085</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>65 [0,33840; 0,33860] τ=0,393005</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>66 [0,33860; 0,34010] τ=1,611784</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>67 [0,34010; 0,34015] τ=5,236591</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>68 [0,34015; 0,34017] τ=5,510583</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>69 [0,34017; 0,34021] τ=5,259549</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>70 [0,34021; 0,35670] τ=0,240408</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>71 [0,35670; 0,35674] τ=0,442245</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>72 [0,35674; 0,35676] τ=0,460791</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>73 [0,35676; 0,35680] τ=0,447289</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>74 [0,35680; 0,35937] τ=0,304882</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>75 [0,35937; 0,35941] τ=0,913586</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>76 [0,35941; 0,35943] τ=0,922837</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>77 [0,35943; 0,35947] τ=0,913037</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>78 [0,35947; 0,36222] τ=0,392111</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>79 [0,36222; 0,36230] τ=0,657120</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>80 [0,36230; 0,36232] τ=0,677860</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>81 [0,36232; 0,36240] τ=0,691569</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>82 [0,36240; 0,36286] τ=0,751478</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>83 [0,36286; 0,36290] τ=0,843519</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>84 [0,36290; 0,36292] τ=0,847831</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>85 [0,36292; 0,36296] τ=0,845844</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>86 [0,36296; 0,36440] τ=1,317436</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>87 [0,36440; 0,36444] τ=3,200984</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>88 [0,36444; 0,36446] τ=3,326977</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>89 [0,36446; 0,36450] τ=3,182919</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>90 [0,36450; 0,36552] τ=1,577110</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>91 [0,36552; 0,36556] τ=1,026669</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>92 [0,36556; 0,36558] τ=1,025371</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>93 [0,36558; 0,36562] τ=0,990468</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>94 [0,36562; 0,38030] τ=0,111634</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>95 [0,38030; 0,38034] τ=0,236559</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>96 [0,38034; 0,38036] τ=0,240241</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>97 [0,38036; 0,38040] τ=0,237278</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>98 [0,38040; 0,39252] τ=0,066584</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>99 [0,39252; 0,39256] τ=0,275252</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>100 [0,39256; 0,39258] τ=0,279478</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>101 [0,39258; 0,39262] τ=0,273145</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>102 [0,39262; 0,40540] τ=0,059641</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>103 [0,40540; 0,42130] τ=0,049330</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>104 [0,42130; 0,44120] τ=0,048227</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>105 [0,44120; 0,48390] τ=0,044851</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>106 [0,48390; 0,50000] τ=0,040230</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>107 [0,50000; 0,52630] τ=0,039206</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>108 [0,52630; 0,55550] τ=0,036081</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>109 [0,55550; 0,58820] τ=0,033606</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>110 [0,58820; 0,62406] τ=0,038225</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>111 [0,62406; 0,63366] τ=0,044208</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>112 [0,63366; 0,63372] τ=0,087517</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>113 [0,63372; 0,63830] τ=0,049385</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>114 [0,63830; 0,64221] τ=0,069598</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>115 [0,64221; 0,64225] τ=0,098316</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>116 [0,64225; 0,64873] τ=0,070409</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>117 [0,64873; 0,64878] τ=0,074699</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>118 [0,64878; 0,66650] τ=0,040133</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>119 [0,66650; 0,66654] τ=0,076555</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>120 [0,66654; 0,69770] τ=0,027153</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>121 [0,69770; 0,83330] τ=0,025148</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>122 [0,83330; 1,03448] τ=0,017665</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>123 [1,03448; 1,20000] τ=0,014304</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>124 [1,20000; 1,40000] τ=0,012968</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>125 [1,40000; 1,60000] τ=0,028234</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>126 [1,60000; 1,94100] τ=0,131994</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>127 [1,94100; 2,00100] τ=0,639191</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>128 [2,00100; 2,02100] τ=3,096142</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>129 [2,02100; 2,02500] τ=7,618836</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>130 [2,02500; 2,03200] τ=16,55029</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>131 [2,03200; 2,03500] τ=42,53016</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>132 [2,03500; 2,03900] τ=167,6602</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>133 [2,03900; 2,04000] τ=770,7660</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>134 [2,04000; 2,04040] τ=1841,997</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>135 [2,04040; 2,04050] τ=2838,513</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>136 [2,04050; 2,04120] τ=10849,88</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>137 [2,04120; 2,04152] τ=55817,48</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>138 [2,04152; 2,04220] τ=10958,55</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>139 [2,04220; 2,04240] τ=2675,061</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>140 [2,04240; 2,04280] τ=1607,619</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>141 [2,04280; 2,04340] τ=837,9147</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>142 [2,04340; 2,04700] τ=217,8147</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>143 [2,04700; 2,05000] τ=51,78228</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>144 [2,05000; 2,05500] τ=21,48218</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>145 [2,05500; 2,06100] τ=9,463837</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>146 [2,06100; 2,08100] τ=3,275052</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>147 [2,08100; 2,14100] τ=0,676392</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>148 [2,14100; 2,21555] τ=0,221963</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>149 [2,21555; 2,26550] τ=0,310193</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>150 [2,26550; 2,29500] τ=1,179824</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>151 [2,29500; 2,30000] τ=3,638607</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>152 [2,30000; 2,31000] τ=13,26591</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>153 [2,31000; 2,31355] τ=97,86295</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>154 [2,31355; 2,31470] τ=662,5731</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>155 [2,31470; 2,31525] τ=4131,962</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>156 [2,31525; 2,31535] τ=15048,77</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>157 [2,31535; 2,31540] τ=25301,51</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>158 [2,31540; 2,31545] τ=38760,77</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>159 [2,31545; 2,31565] τ=75607,48</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>160 [2,31565; 2,31570] τ=36954,15</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>161 [2,31570; 2,31575] τ=24375,72</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>162 [2,31575; 2,31585] τ=14586,33</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>163 [2,31585; 2,31630] τ=4576,167</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>164 [2,31630; 2,31755] τ=744,0506</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>165 [2,31755; 2,32000] τ=127,3907</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>166 [2,32000; 2,33000] τ=17,77103</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>167 [2,33000; 2,33500] τ=4,159016</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>168 [2,33500; 2,36550] τ=1,360523</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>169 [2,36550; 2,38460] τ=1,025301</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>170 [2,38460; 2,38960] τ=2,507276</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>171 [2,38960; 2,39660] τ=11,43476</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>172 [2,39660; 2,39860] τ=108,2283</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>173 [2,39860; 2,39930] τ=857,5737</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>174 [2,39930; 2,39950] τ=4122,767</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>175 [2,39950; 2,39970] τ=20944,32</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>176 [2,39970; 2,40000] τ=4156,586</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>177 [2,40000; 2,40060] τ=758,9203</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>178 [2,40060; 2,40260] τ=112,6380</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>179 [2,40260; 2,40960] τ=11,54810</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>180 [2,40960; 2,41460] τ=2,432070</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>181 [2,41460; 2,50670] τ=0,427638</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>182 [2,50670; 2,51000] τ=2,190533</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>183 [2,51000; 2,51578] τ=22,18220</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>184 [2,51578; 2,51648] τ=432,5654</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>185 [2,51648; 2,51668] τ=3456,842</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>186 [2,51668; 2,51673] τ=13434,17</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>187 [2,51673; 2,51683] τ=3547,804</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>188 [2,51683; 2,51688] τ=1602,814</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>189 [2,51688; 2,51708] τ=896,8291</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>190 [2,51708; 2,51778] τ=260,2361</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>191 [2,51778; 2,52000] τ=38,04561</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>192 [2,52000; 2,52670] τ=4,338089</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>193 [2,52670; 3,00000] τ=2627,273</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="11" column="0">
+            <widget class="QLabel" name="xeSiO2NMeridianLabel">
+             <property name="text">
+              <string>N&lt;sub&gt;меридианов&lt;/sub&gt; =</string>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="1">
+            <widget class="QWidget" name="xeSiO2NMeridianWidget" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_21">
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QSpinBox" name="xeSiO2NMeridianSpinBox">
+                <property name="minimum">
+                 <number>20</number>
+                </property>
+                <property name="maximum">
+                 <number>300</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
+                </property>
+                <property name="value">
+                 <number>100</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="xeSiO2NMeridianHorizontalSlider">
+                <property name="minimum">
+                 <number>20</number>
+                </property>
+                <property name="maximum">
+                 <number>300</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
+                </property>
+                <property name="value">
+                 <number>100</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="12" column="0">
+            <widget class="QLabel" name="xeSiO2LatitudeLabel">
+             <property name="text">
+              <string>N&lt;sub&gt;широт&lt;/sub&gt; =</string>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="1">
+            <widget class="QWidget" name="xeSiO2NLatitudeWidget" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_20">
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QSpinBox" name="xeSiO2NLatitudeSpinBox">
+                <property name="minimum">
+                 <number>20</number>
+                </property>
+                <property name="maximum">
+                 <number>300</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
+                </property>
+                <property name="value">
+                 <number>100</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="xeSiO2NLatitudeHorizontalSlider">
+                <property name="minimum">
+                 <number>20</number>
+                </property>
+                <property name="maximum">
+                 <number>300</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
+                </property>
+                <property name="value">
+                 <number>100</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="13" column="0">
+            <widget class="QLabel" name="xeSiO2NThreadsLabel">
+             <property name="text">
+              <string>N&lt;sub&gt;потоков&lt;/sub&gt; =</string>
+             </property>
+            </widget>
+           </item>
+           <item row="13" column="1">
+            <widget class="QWidget" name="xeSiO2NThreadsWidget" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_18">
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QSpinBox" name="xeSiO2NThreadsSpinBox">
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>8</number>
+                </property>
+                <property name="value">
+                 <number>4</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="xeSiO2NThreadsHorizontalSlider">
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>8</number>
+                </property>
+                <property name="value">
+                 <number>4</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="14" column="0" colspan="2">
+            <widget class="QPushButton" name="xeSiO2CalculatePushButton">
+             <property name="text">
+              <string>Рассчитать поглощённую мощность</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="xeSiO2DeltaLabel">
+             <property name="text">
+              <string>δ [см] =</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QWidget" name="xeSiO2DeltaWidget" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_32">
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QDoubleSpinBox" name="xeSiO2DeltaDoubleSpinBox">
+                <property name="minimum">
+                 <double>0.010000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>1.000000000000000</double>
+                </property>
+                <property name="singleStep">
+                 <double>0.010000000000000</double>
+                </property>
+                <property name="value">
+                 <double>0.100000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="xeSiO2DeltaHorizontalSlider">
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>100</number>
+                </property>
+                <property name="value">
+                 <number>10</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="xeSiO2NQuartzLabel">
+             <property name="text">
+              <string>N&lt;sub&gt;SiO2&lt;/sub&gt; =</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QWidget" name="xeSiO2NQuartzWidget" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_33">
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QSpinBox" name="xeSiO2NQuartzSpinBox">
+                <property name="minimum">
+                 <number>10</number>
+                </property>
+                <property name="maximum">
+                 <number>100</number>
+                </property>
+                <property name="value">
+                 <number>15</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="xeSiO2NQuartzHorizontalSlider">
+                <property name="minimum">
+                 <number>10</number>
+                </property>
+                <property name="maximum">
+                 <number>100</number>
+                </property>
+                <property name="value">
+                 <number>15</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="8" column="0">
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>T(z) =</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>a * exp(-b * z)</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
         <item>
-         <widget class="QWidget" name="xeSiO2Widget" native="true"/>
+         <widget class="QTabWidget" name="xeSiO2TabWidget">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="XeSiO2PaintWidget" name="xeSiO2PaintWidget">
+           <attribute name="title">
+            <string>Модель</string>
+           </attribute>
+          </widget>
+          <widget class="QWidget" name="xeSiO2PlotWidget">
+           <attribute name="title">
+            <string>График</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <item>
+             <widget class="XeSiO2PlotWidget" name="xeSiO2I2PlotWidget"/>
+            </item>
+            <item>
+             <widget class="XeSiO2PlotWidget" name="xeSiO2I3PlotWidget"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="xeSiO2DataWidget">
+           <attribute name="title">
+            <string>Данные</string>
+           </attribute>
+           <layout class="QHBoxLayout" name="horizontalLayout_31">
+            <item>
+             <widget class="QGroupBox" name="xeSiO2DataI2GroupBox">
+              <property name="title">
+               <string>I [Вт/см^2]</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_7">
+               <item row="0" column="0">
+                <widget class="QTextEdit" name="xeSiO2DataI2TextEdit">
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="xeSiO2DataI3GroupBox">
+              <property name="title">
+               <string>I [Вт/см^3]</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_8">
+               <item row="0" column="0">
+                <widget class="QTextEdit" name="xeSiO2DataI3TextEdit">
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QWidget" name="xeSiO2DataTotalWidget" native="true">
+              <layout class="QVBoxLayout" name="verticalLayout_4">
+               <item>
+                <widget class="QGroupBox" name="xeSiO2DataTotalIntensityGroupBox">
+                 <property name="title">
+                  <string>Излучено [Вт/см^2]</string>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_9">
+                  <item row="0" column="0">
+                   <widget class="QLineEdit" name="xeSiO2DataTotalIntensityLineEdit">
+                    <property name="readOnly">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QGroupBox" name="xeSiO2DataTotalAbsorbedPlasmaGroupBox">
+                 <property name="title">
+                  <string>Поглощено плазмой [Вт/см^2]</string>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_10">
+                  <item row="0" column="0">
+                   <widget class="QLineEdit" name="xeSiO2DataTotalAbsorbedPlasmaLineEdit">
+                    <property name="readOnly">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QGroupBox" name="xeSiO2DataTotalAbsorbedMirrorGroupBox">
+                 <property name="title">
+                  <string>Поглощено отражателем [Вт/см^2]</string>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_11">
+                  <item row="0" column="0">
+                   <widget class="QLineEdit" name="xeSiO2DataTotalAbsorbedMirrorLineEdit">
+                    <property name="readOnly">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <spacer name="xeSiO2DataTotalVerticalSpacer">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -1658,7 +3366,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>972</width>
+     <width>1020</width>
      <height>37</height>
     </rect>
    </property>
@@ -1676,6 +3384,17 @@
    <class>XePlotWidget</class>
    <extends>QGraphicsView</extends>
    <header>xe_plot_widget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>XeSiO2PaintWidget</class>
+   <extends>QWidget</extends>
+   <header>xe_sio2_paint_widget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>XeSiO2PlotWidget</class>
+   <extends>QGraphicsView</extends>
+   <header>xe_sio2_plot_widget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

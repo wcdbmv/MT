@@ -99,6 +99,11 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
+  InitXeTab();
+  InitXeSiO2Tab();
+}
+
+void MainWindow::InitXeTab() {
   ConnectDoubleSpinBoxAndSlider(ui->xeRDoubleSpinBox, ui->xeRHorizontalSlider);
   ConnectSpinBoxAndSlider(ui->xeNSpinBox, ui->xeNHorizontalSlider);
   connect(ui->xeNSpinBox, &QSpinBox::valueChanged, ui->xePaintWidget,
@@ -181,6 +186,55 @@ MainWindow::MainWindow(QWidget* parent)
     ui->xeDataTotalAbsorbedMirrorLineEdit->setText(
         QString::number(xe_res->absorbed_mirror));
   });
+}
+
+void MainWindow::InitXeSiO2Tab() {
+  ConnectDoubleSpinBoxAndSlider(ui->xeSiO2RDoubleSpinBox,
+                                ui->xeSiO2RHorizontalSlider);
+  connect(ui->xeSiO2RDoubleSpinBox, &QDoubleSpinBox::valueChanged,
+          ui->xeSiO2PaintWidget, [this](double) {
+            xe_sio2_res.reset();
+            ui->xeSiO2PaintWidget->update();
+          });
+  ConnectSpinBoxAndSlider(ui->xeSiO2NPlasmaSpinBox,
+                          ui->xeSiO2NPlasmaHorizontalSlider);
+  connect(ui->xeSiO2NPlasmaSpinBox, &QSpinBox::valueChanged,
+          ui->xeSiO2PaintWidget, [this](int) {
+            xe_sio2_res.reset();
+            ui->xeSiO2PaintWidget->update();
+          });
+
+  ConnectDoubleSpinBoxAndSlider(ui->xeSiO2DeltaDoubleSpinBox,
+                                ui->xeSiO2DeltaHorizontalSlider);
+  connect(ui->xeSiO2DeltaDoubleSpinBox, &QDoubleSpinBox::valueChanged,
+          ui->xeSiO2PaintWidget, [this](double) {
+            xe_sio2_res.reset();
+            ui->xeSiO2PaintWidget->update();
+          });
+  ConnectSpinBoxAndSlider(ui->xeSiO2NQuartzSpinBox,
+                          ui->xeSiO2NQuartzHorizontalSlider);
+  connect(ui->xeSiO2NQuartzSpinBox, &QSpinBox::valueChanged,
+          ui->xeSiO2PaintWidget, [this](int) {
+            xe_sio2_res.reset();
+            ui->xeSiO2PaintWidget->update();
+          });
+
+  ConnectSpinBoxAndSlider(ui->xeSiO2T0SpinBox, ui->xeSiO2T0HorizontalSlider);
+  ConnectSpinBoxAndSlider(ui->xeSiO2TwSpinBox, ui->xeSiO2TwHorizontalSlider);
+  ConnectSpinBoxAndSlider(ui->xeSiO2MSpinBox, ui->xeSiO2MHorizontalSlider);
+
+  ConnectDoubleSpinBoxAndSlider(ui->xeSiO2RhoDoubleSpinBox,
+                                ui->xeSiO2RhoHorizontalSlider);
+
+  ConnectSpinBoxAndSlider(ui->xeSiO2NMeridianSpinBox,
+                          ui->xeSiO2NMeridianHorizontalSlider);
+  ConnectSpinBoxAndSlider(ui->xeSiO2NLatitudeSpinBox,
+                          ui->xeSiO2NLatitudeHorizontalSlider);
+  ConnectSpinBoxAndSlider(ui->xeSiO2NThreadsSpinBox,
+                          ui->xeSiO2NThreadsHorizontalSlider);
+
+  ui->xeSiO2I2PlotWidget->setAxisY("I [Вт/см^2]");
+  ui->xeSiO2I3PlotWidget->setAxisY("I [Вт/см^3]");
 }
 
 MainWindow::~MainWindow() {

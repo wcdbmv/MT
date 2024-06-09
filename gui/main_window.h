@@ -7,6 +7,7 @@
 #include <QtCore>
 
 #include "modeling/cylinder_plasma.h"
+#include "modeling/cylinder_plasma_quartz.h"
 
 class QWidget;
 
@@ -26,4 +27,9 @@ class MainWindow : public QMainWindow {
  public:
   Ui::MainWindow* ui;
   std::optional<CylinderPlasma::Result> xe_res;
+  std::optional<CylinderPlasmaQuartz::Result> xe_sio2_res;
+
+ private:
+  void InitXeTab();
+  void InitXeSiO2Tab();
 };
