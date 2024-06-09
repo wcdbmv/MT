@@ -2,8 +2,8 @@
 
 #include <QPainter>
 
-#include "mainwindow.h"
-#include "./ui_mainwindow.h"
+#include "main_window.h"
+#include "./ui_main_window.h"
 
 XePlotWidget::XePlotWidget(QWidget* parent) : QWidget{parent} {}
 
