@@ -24,18 +24,12 @@ void ConnectSpinBoxAndSlider(QDoubleSpinBox* spin_box, QSlider* slider) {
 
   QObject::connect(spin_box, &QDoubleSpinBox::valueChanged, slider, [=](double value) {
     const auto count = Round((value - spin_box_minimum) / spin_box_step);
-    const auto slider_value = slider_minimum + slider_step * count;
-    if (slider_value != slider->value()) {
-      slider->setValue(slider_value);
-    }
+    slider->setValue(slider_minimum + slider_step * count);
   });
 
   QObject::connect(slider, &QSlider::valueChanged, spin_box, [=](int value) {
     const auto count = (value - slider_minimum) / slider_step;
-    const auto spin_box_count = Round((spin_box->value() - spin_box_minimum) / spin_box_step);
-    if (count != spin_box_count) {
-      spin_box->setValue(spin_box_minimum + spin_box_step * count);
-    }
+    spin_box->setValue(spin_box_minimum + spin_box_step * count);
   });
 }
 
@@ -45,10 +39,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  ConnectSpinBoxAndSlider(ui->xeRDoubleSpinBox, ui->xeRHorizontalSlider);
-  connect(ui->xeRDoubleSpinBox, &QDoubleSpinBox::valueChanged, ui->xePlotWidget, [this](double) {
-    ui->xePlotWidget->update();
-  });
+  ConnectSpinBoxAndSlider(ui->rDoubleSpinBox, ui->rHorizontalSlider);
 }
 
 MainWindow::~MainWindow() {

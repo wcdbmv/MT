@@ -20,13 +20,13 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="tabXe">
+      <widget class="QWidget" name="xeTab">
        <attribute name="title">
         <string>Xe</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="QGroupBox" name="groupBox">
+         <widget class="QGroupBox" name="xeGroupBox">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -41,7 +41,7 @@
             <enum>QLayout::SetDefaultConstraint</enum>
            </property>
            <item row="0" column="0">
-            <widget class="QLabel" name="rLabel">
+            <widget class="QLabel" name="xeRLabel">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -54,7 +54,7 @@
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QWidget" name="rWidget" native="true">
+            <widget class="QWidget" name="xeRWidget" native="true">
              <layout class="QHBoxLayout" name="horizontalLayout_3">
               <property name="topMargin">
                <number>0</number>
@@ -63,7 +63,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QDoubleSpinBox" name="rDoubleSpinBox">
+               <widget class="QDoubleSpinBox" name="xeRDoubleSpinBox">
                 <property name="minimum">
                  <double>0.010000000000000</double>
                 </property>
@@ -79,7 +79,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QSlider" name="rHorizontalSlider">
+               <widget class="QSlider" name="xeRHorizontalSlider">
                 <property name="minimum">
                  <number>1</number>
                 </property>
@@ -101,24 +101,24 @@
          </widget>
         </item>
         <item>
-         <widget class="QWidget" name="widget" native="true"/>
+         <widget class="XePlotWidget" name="xePlotWidget" native="true"/>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tabXeSiO2">
+      <widget class="QWidget" name="xeSiO2Tab">
        <attribute name="title">
         <string>Xe — SiO2</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QGroupBox" name="groupBox_2">
+         <widget class="QGroupBox" name="xeSiO2GroupBox">
           <property name="title">
            <string>Параметры системы</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QWidget" name="widget_2" native="true"/>
+         <widget class="QWidget" name="xeSiO2Widget" native="true"/>
         </item>
        </layout>
       </widget>
@@ -138,6 +138,14 @@
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>XePlotWidget</class>
+   <extends>QWidget</extends>
+   <header>xe_plot_widget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
