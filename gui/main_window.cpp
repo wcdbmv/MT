@@ -9,7 +9,7 @@ int Round(double value) {
   return static_cast<int>(std::round(value));
 }
 
-void ConnectSpinBoxAndSlider(QDoubleSpinBox* spin_box, QSlider* slider) {
+void ConnectDoubleSpinBoxAndSlider(QDoubleSpinBox* spin_box, QSlider* slider) {
   const auto spin_box_minimum = spin_box->minimum();
   const auto spin_box_maximum = spin_box->maximum();
   const auto spin_box_step = spin_box->singleStep();
@@ -39,14 +39,49 @@ void ConnectSpinBoxAndSlider(QDoubleSpinBox* spin_box, QSlider* slider) {
   });
 }
 
+void ConnectSpinBoxAndSlider(QSpinBox* spin_box, QSlider* slider) {
+  const auto spin_box_minimum = spin_box->minimum();
+  const auto spin_box_maximum = spin_box->maximum();
+  const auto spin_box_step = spin_box->singleStep();
+  const auto spin_box_count = (spin_box_maximum - spin_box_minimum) / spin_box_step;
+
+  const auto slider_minimum = slider->minimum();
+  const auto slider_maximum = slider->maximum();
+  const auto slider_step = slider->singleStep();
+  const auto slider_count = (slider_maximum - slider_minimum) / slider_step;
+
+  assert(spin_box_count == slider_count);
+
+  QObject::connect(spin_box, &QSpinBox::valueChanged, slider, [=](int value) {
+    const auto count = (value - spin_box_minimum) / spin_box_step;
+    const auto slider_value = slider_minimum + slider_step * count;
+    if (slider_value != slider->value()) {
+      slider->setValue(slider_value);
+    }
+  });
+
+  QObject::connect(slider, &QSlider::valueChanged, spin_box, [=](int value) {
+    const auto count = (value - slider_minimum) / slider_step;
+    const auto spin_box_value = spin_box_minimum + spin_box_step * count;
+    if (spin_box_value != spin_box->value()) {
+      spin_box->setValue(spin_box_value);
+    }
+  });
+}
+
 }  // namespace
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  ConnectSpinBoxAndSlider(ui->xeRDoubleSpinBox, ui->xeRHorizontalSlider);
+  ConnectDoubleSpinBoxAndSlider(ui->xeRDoubleSpinBox, ui->xeRHorizontalSlider);
   connect(ui->xeRDoubleSpinBox, &QDoubleSpinBox::valueChanged, ui->xePlotWidget, [this](double) {
+    ui->xePlotWidget->update();
+  });
+
+  ConnectSpinBoxAndSlider(ui->xeNSpinBox, ui->xeNHorizontalSlider);
+  connect(ui->xeNSpinBox, &QSpinBox::valueChanged, ui->xePlotWidget, [this](int) {
     ui->xePlotWidget->update();
   });
 }

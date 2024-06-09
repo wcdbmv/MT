@@ -18,4 +18,11 @@ void XePlotWidget::paintEvent(QPaintEvent* event) {
 
   painter.setPen(QPen{Qt::black, 4});
   painter.drawEllipse((width() - side) / 2, (height() - side) / 2, side, side);
+
+  painter.setPen(QPen{Qt::black, 1});
+  const auto n = win->ui->xeNSpinBox->value();
+  for (int i = 1; i < n; ++i) {
+    const auto side_i = side * i / n;
+    painter.drawEllipse((width() - side_i) / 2, (height() - side_i) / 2, side_i, side_i);
+  }
 }
