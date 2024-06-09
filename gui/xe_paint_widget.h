@@ -3,6 +3,8 @@
 #include <QObject>
 #include <QWidget>
 
+class QPaintEvent;
+
 class XePaintWidget : public QWidget {
   Q_OBJECT
  public:

@@ -1,16 +1,21 @@
 #include "main_window.h"
 #include "./ui_main_window.h"
 
+#include <array>
 #include <cassert>
 #include <cmath>
+#include <cstddef>
 
-#include <QArgument>
+#include <QComboBox>
 #include <QDoubleSpinBox>
 #include <QPushButton>
 #include <QSlider>
 #include <QSpinBox>
 
 #include "xe_paint_widget.h"
+
+#include "base/config/float.h"
+#include "physics/params/xenon_absorption_coefficient.h"
 
 namespace {
 
@@ -89,12 +94,12 @@ MainWindow::MainWindow(QWidget* parent)
   ui->setupUi(this);
 
   ConnectDoubleSpinBoxAndSlider(ui->xeRDoubleSpinBox, ui->xeRHorizontalSlider);
-  connect(ui->xeRDoubleSpinBox, &QDoubleSpinBox::valueChanged,
-          ui->xePaintWidget, [this](double) { ui->xePaintWidget->update(); });
-
   ConnectSpinBoxAndSlider(ui->xeNSpinBox, ui->xeNHorizontalSlider);
   connect(ui->xeNSpinBox, &QSpinBox::valueChanged, ui->xePaintWidget,
-          [this](int) { ui->xePaintWidget->update(); });
+          [this](int) {
+            xe_res.reset();
+            ui->xePaintWidget->update();
+          });
 
   ConnectSpinBoxAndSlider(ui->xeT0SpinBox, ui->xeT0HorizontalSlider);
   ConnectSpinBoxAndSlider(ui->xeTwSpinBox, ui->xeTwHorizontalSlider);
@@ -110,8 +115,37 @@ MainWindow::MainWindow(QWidget* parent)
   ConnectSpinBoxAndSlider(ui->xeNThreadsSpinBox,
                           ui->xeNThreadsHorizontalSlider);
 
-  connect(ui->xeCalculatePushButton, &QPushButton::clicked, [] {
+  connect(ui->xeCalculatePushButton, &QPushButton::clicked, [this] {
+    const auto nu_idx =
+        static_cast<std::size_t>(ui->xeDeltaNuComboBox->currentIndex());
+    const auto nu_min = kXenonFrequency[nu_idx];
+    const auto nu_max = kXenonFrequency[nu_idx + 1];
+    const auto d_nu = nu_max - nu_min;
+    const auto nu_avg = nu_min + d_nu / 2;
 
+    const CylinderPlasma::Params params{
+        .r = ui->xeRDoubleSpinBox->value(),
+        .n_plasma = static_cast<std::size_t>(ui->xeNSpinBox->value()),
+
+        .t0 = static_cast<Float>(ui->xeT0SpinBox->value()),
+        .tw = static_cast<Float>(ui->xeTwSpinBox->value()),
+        .m = ui->xeMSpinBox->value(),
+
+        .rho = ui->xeRhoDoubleSpinBox->value(),
+
+        .nu = nu_avg,
+        .d_nu = d_nu,
+
+        .n_meridian = static_cast<std::size_t>(ui->xeNMeridianSpinBox->value()),
+        .n_latitude = static_cast<std::size_t>(ui->xeNLatitudeSpinBox->value()),
+
+        .n_threads = static_cast<std::size_t>(ui->xeNThreadsSpinBox->value()),
+    };
+
+    xe_res = CylinderPlasma{params}.Solve();
+
+    ui->xePaintWidget->update();
+    Q_EMIT XeSolved();
   });
 }
 

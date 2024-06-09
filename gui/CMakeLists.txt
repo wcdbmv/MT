@@ -71,3 +71,6 @@ endif()
 set_source_files_properties(main.cc PROPERTIES
   SKIP_LINTING ON
 )
+
+target_link_libraries(${PROJECT_NAME}
+  PRIVATE base modeling physics)

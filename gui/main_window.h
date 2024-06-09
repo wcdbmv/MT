@@ -1,8 +1,12 @@
 #pragma once
 
+#include <optional>
+
 #include <QMainWindow>
 #include <QObject>
 #include <QtCore>
+
+#include "modeling/cylinder_plasma.h"
 
 class QWidget;
 
@@ -19,6 +23,10 @@ class MainWindow : public QMainWindow {
   MainWindow(QWidget* parent = nullptr);
   ~MainWindow();
 
+ Q_SIGNALS:
+  void XeSolved();
+
  public:
   Ui::MainWindow* ui;
+  std::optional<CylinderPlasma::Result> xe_res;
 };

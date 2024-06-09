@@ -52,5 +52,8 @@
   { symbol: [ "std::wstring", private, "<string>", public ] },
   { symbol: [ "std::stringstream", private, "<sstream>", public ] },
 
+  { symbol: [ "std::allocator", private, "<memory>", public ] },
+  { symbol: [ "std::allocator", private, "<vector>", public ] },
+
   { include: [ "<ratio>", public, "<chrono>", public ] },
 ]
