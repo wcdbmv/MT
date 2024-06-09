@@ -5,7 +5,7 @@ project(MT
         HOMEPAGE_URL https://github.com/wcdbmv/MT
         LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -48,6 +48,7 @@ endif()
 add_compile_definitions(XENON_TABLE_COEFFICIENT)
 
 add_subdirectory(base)
+add_subdirectory(gui)
 add_subdirectory(math)
 add_subdirectory(modeling)
 add_subdirectory(physics)

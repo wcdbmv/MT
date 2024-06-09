@@ -1,6 +1,6 @@
-#ifndef XE_PAINT_WIDGET_H
-#define XE_PAINT_WIDGET_H
+#pragma once
 
+#include <QObject>
 #include <QWidget>
 
 class XePaintWidget : public QWidget {
@@ -11,5 +11,3 @@ class XePaintWidget : public QWidget {
  protected:
   void paintEvent(QPaintEvent* event) override;
 };
-
-#endif  // XE_PAINT_WIDGET_H

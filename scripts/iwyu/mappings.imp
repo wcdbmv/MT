@@ -6,4 +6,5 @@
   { ref: "standard_mappings/stl.public.imp" },
 
   { ref: "gtest.imp" },
+  { ref: "qt6.7.0_1.imp" },
 ]

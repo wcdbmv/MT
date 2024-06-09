@@ -1,7 +1,10 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QMainWindow>
+#include <QObject>
+#include <QtCore>
+
+class QWidget;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -19,4 +22,3 @@ class MainWindow : public QMainWindow {
  public:
   Ui::MainWindow* ui;
 };
-#endif  // MAINWINDOW_H
