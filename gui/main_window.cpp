@@ -84,6 +84,10 @@ MainWindow::MainWindow(QWidget* parent)
   connect(ui->xeNSpinBox, &QSpinBox::valueChanged, ui->xePlotWidget, [this](int) {
     ui->xePlotWidget->update();
   });
+
+  ConnectSpinBoxAndSlider(ui->xeT0SpinBox, ui->xeT0HorizontalSlider);
+  ConnectSpinBoxAndSlider(ui->xeTwSpinBox, ui->xeTwHorizontalSlider);
+  ConnectSpinBoxAndSlider(ui->xeMSpinBox, ui->xeMHorizontalSlider);
 }
 
 MainWindow::~MainWindow() {
