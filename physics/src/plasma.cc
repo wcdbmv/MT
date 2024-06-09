@@ -59,7 +59,7 @@ Float AbsortionCoefficientFromTable(Float nu, Float t) noexcept {
 
   assert(kXenonTemperature.front() <= t && t <= kXenonTemperature.back());
   const auto t_idx = static_cast<size_t>(t) / 1000 - 2;
-  assert(t_idx <= 10);
+  assert(t_idx <= 12);
 
   const auto* lower = std::ranges::lower_bound(kXenonFrequency, nu);
   assert(lower != kXenonFrequency.end());

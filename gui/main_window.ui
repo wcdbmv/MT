@@ -1407,10 +1407,10 @@
               <item>
                <widget class="QSpinBox" name="xeNLatitudeSpinBox">
                 <property name="minimum">
-                 <number>10</number>
+                 <number>20</number>
                 </property>
                 <property name="maximum">
-                 <number>200</number>
+                 <number>300</number>
                 </property>
                 <property name="singleStep">
                  <number>10</number>
@@ -1423,10 +1423,10 @@
               <item>
                <widget class="QSlider" name="xeNLatitudeHorizontalSlider">
                 <property name="minimum">
-                 <number>10</number>
+                 <number>20</number>
                 </property>
                 <property name="maximum">
-                 <number>200</number>
+                 <number>300</number>
                 </property>
                 <property name="singleStep">
                  <number>10</number>
@@ -1461,10 +1461,10 @@
               <item>
                <widget class="QSpinBox" name="xeNMeridianSpinBox">
                 <property name="minimum">
-                 <number>10</number>
+                 <number>20</number>
                 </property>
                 <property name="maximum">
-                 <number>200</number>
+                 <number>300</number>
                 </property>
                 <property name="singleStep">
                  <number>10</number>
@@ -1477,10 +1477,10 @@
               <item>
                <widget class="QSlider" name="xeNMeridianHorizontalSlider">
                 <property name="minimum">
-                 <number>10</number>
+                 <number>20</number>
                 </property>
                 <property name="maximum">
-                 <number>200</number>
+                 <number>300</number>
                 </property>
                 <property name="singleStep">
                  <number>10</number>
@@ -1513,6 +1513,14 @@
            <attribute name="title">
             <string>График</string>
            </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <item>
+             <widget class="XePlotWidget" name="xeI2PlotWidget"/>
+            </item>
+            <item>
+             <widget class="XePlotWidget" name="xeI3PlotWidget"/>
+            </item>
+           </layout>
           </widget>
           <widget class="QWidget" name="xeDataWidget">
            <attribute name="title">
@@ -1663,6 +1671,11 @@
    <extends>QWidget</extends>
    <header>xe_paint_widget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>XePlotWidget</class>
+   <extends>QGraphicsView</extends>
+   <header>xe_plot_widget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

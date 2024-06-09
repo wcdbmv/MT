@@ -18,6 +18,7 @@
 #include <QString>
 
 #include "xe_paint_widget.h"
+#include "xe_plot_widget.h"
 
 #include "base/config/float.h"
 #include "physics/params/xenon_absorption_coefficient.h"
@@ -120,6 +121,9 @@ MainWindow::MainWindow(QWidget* parent)
   ConnectSpinBoxAndSlider(ui->xeNThreadsSpinBox,
                           ui->xeNThreadsHorizontalSlider);
 
+  ui->xeI2PlotWidget->setAxisY("I [Вт/см^2]");
+  ui->xeI3PlotWidget->setAxisY("I [Вт/см^3]");
+
   connect(ui->xeCalculatePushButton, &QPushButton::clicked, [this] {
     const auto nu_idx =
         static_cast<std::size_t>(ui->xeDeltaNuComboBox->currentIndex());
@@ -150,6 +154,9 @@ MainWindow::MainWindow(QWidget* parent)
     xe_res = CylinderPlasma{params}.Solve();
 
     ui->xePaintWidget->update();
+
+    ui->xeI2PlotWidget->setData(xe_res->absorbed_plasma);
+    ui->xeI3PlotWidget->setData(xe_res->absorbed_plasma3);
 
     auto total_plasma = kZero;
     QString strI2;
