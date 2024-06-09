@@ -88,6 +88,10 @@ MainWindow::MainWindow(QWidget* parent)
   ConnectSpinBoxAndSlider(ui->xeT0SpinBox, ui->xeT0HorizontalSlider);
   ConnectSpinBoxAndSlider(ui->xeTwSpinBox, ui->xeTwHorizontalSlider);
   ConnectSpinBoxAndSlider(ui->xeMSpinBox, ui->xeMHorizontalSlider);
+
+  ConnectDoubleSpinBoxAndSlider(ui->xeRhoDoubleSpinBox, ui->xeRhoHorizontalSlider);
+
+  ConnectSpinBoxAndSlider(ui->xeNThreadsSpinBox, ui->xeNThreadsHorizontalSlider);
 }
 
 MainWindow::~MainWindow() {
