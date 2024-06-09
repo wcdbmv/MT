@@ -17,6 +17,7 @@ option(MT_ENABLE_IPO_LTO "" ON)
 option(MT_ENABLE_IWYU "" ON)
 option(MT_ENABLE_UNSAFE_MATH_OPTIMIZATIONS "" OFF)
 option(MT_USE_DOUBLE "" ON)
+option(MT_USE_DIFFUSE_REFLECTION "" OFF)
 
 if(MT_ENABLE_CLANG_TIDY)
   include(cmake/ClangTidy.cmake)
@@ -37,6 +38,10 @@ endif()
 
 if(MT_USE_DOUBLE)
   add_compile_definitions(MT_USE_DOUBLE)
+endif()
+
+if(MT_USE_DIFFUSE_REFLECTION)
+  add_compile_definitions(MT_USE_DIFFUSE_REFLECTION)
 endif()
 
 #add_compile_definitions(CONSTANT_TEMPERATURE)

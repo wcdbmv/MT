@@ -7,6 +7,10 @@
 #include "physics/reflect.h"
 #include "physics/refract.h"
 
+#ifdef MT_USE_DIFFUSE_REFLECTION
+#include "math/random.h"
+#endif
+
 Vec3 Shape::Normal(Vec3 p) const MT_NOEXCEPT_RELEASE {
   return Perpendicular(p).Normalized();
 }
@@ -43,6 +47,20 @@ Shape::FresnelResult Shape::Refract(Vec3 pos,
 
   if (mirror > 0) {
     result.R = mirror;
+
+#ifdef MT_USE_DIFFUSE_REFLECTION
+    assert(outward);
+    const auto i = 2 * RandFloat() - 1;
+    const auto j_max = std::sqrt(1 - Sqr(i));
+    const auto j = 2 * j_max * (RandFloat() - 0.5_F);
+    const auto k = std::sqrt(1 - Sqr(i) - Sqr(j));
+
+    const auto n1 = Vec3::Cross(incident, -normal).Normalized();
+    const auto n2 = Vec3::Cross(-normal, n1).Normalized();
+
+    result.reflected = i * n1 + j * n2 - k * normal;
+    result.reflected.Normalize();
+#endif  // MT_USE_DIFFUSE_REFLECTION
   } else {
     const auto mu = eta_i / eta_t;
     const auto mu2 = Sqr(mu);
@@ -55,7 +73,6 @@ Shape::FresnelResult Shape::Refract(Vec3 pos,
     const auto g = std::sqrt(g2);
 
     result.refracted = ::RefractEx(incident, normal, mu, cos_i, g);
-    result.refracted.Normalize();
 
     // https://steps3d.narod.ru/tutorials/fresnel-tutorial.html
     const auto c = cos_i * mu;

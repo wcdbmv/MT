@@ -57,37 +57,7 @@ DummyOut& operator<<(DummyOut& dummy_out, T&&) noexcept {  // NOLINT
 #define GEOGEBRA_OUT_2D gDummyOut
 #endif
 
-namespace {
-
-inline constexpr auto kTW = 2'000.0_F;  // К.
-inline constexpr auto kR = 0.35_F;      // см.
-inline constexpr auto kH = 1.0_F;       // см.
-
-inline constexpr auto kT0 = 12'000.0_F;  // К.
-inline constexpr auto kM = 8;            // 2-8.
-inline constexpr auto kRho = 0.98_F;     // 0-1.
-
-/// Температура.
-[[nodiscard]] constexpr Float T(Float z) noexcept {
-  assert(0 <= z && z <= 1);
-#ifndef CONSTANT_TEMPERATURE
-  return kT0 + (kTW - kT0) * FastPow<kM>(z);
-#else
-  IgnoreUnused(z);
-  return kT0;
-#endif
-}
-
-}  // namespace
-
-constexpr auto kStep = 0.00875_F;  // R / 40;
-
-[[nodiscard]] std::size_t NPlasma() noexcept {
-  return static_cast<size_t>(std::round(kR / kStep));
-}
-
 // TODO(a.kerimov): Выяснить, что происходит при 400000+ и CONSTANT_TEMPERATURE
-constexpr auto kSpherePoints = 1000;
 
 // TODO(a.kerimov): Написать тесты.
 
@@ -97,33 +67,40 @@ constexpr auto kOrigin = Vec3{};
 
 class CylinderPlasma::Impl {
  public:
-  Impl(Float nu, Float d_nu)
-      : plasma_{{.center = kOrigin,
-                 .radius = kR,
-                 .steps = NPlasma(),
-                 .refractive_index = params::plasma::kEta,
-                 .refractive_index_external = params::air::kEta,
-                 .mirror = kRho},
-                T,
-                [nu, d_nu](Float t) { return func::I(nu, d_nu, t); },
-                [nu](Float t) {
-                  return params::plasma::AbsortionCoefficient(nu, t);
-                }} {
+  explicit Impl(const Params& params)
+      : params_{params},
+        sphere_points_{params_.n_meridian * params_.n_latitude / 10},
+        plasma_{
+            {.center = kOrigin,
+             .radius = params.r,
+             .steps = params.n_plasma,
+             .refractive_index = params::plasma::kEta,
+             .refractive_index_external = params::air::kEta,
+             .mirror = params.rho},
+            [this](Float z) {
+              assert(0 <= z && z <= 1);
+              return params_.t0 +
+                     (params_.tw - params_.t0) * FastPow(z, params_.m);
+            },
+            [this](Float t) { return func::I(params_.nu, params_.d_nu, t); },
+            [this](Float t) {
+              return params::plasma::AbsortionCoefficient(params_.nu, t);
+            }} {
     InitDirs();
   }
 
   Result Solve() {
     Result r;
-    r.absorbed_plasma = std::vector<Float>(NPlasma());
+    r.absorbed_plasma = std::vector<Float>(params_.n_plasma);
 
-    constexpr auto kInitialPos = Vec3{kR, 0, kH / 2};
+    const auto initial_pos = Vec3{params_.r, 0, 0};
 
     std::vector<Float> is;
     is.reserve(dirs_.size());
     Float max_intensity{};
     for (const auto dir : dirs_) {
       const auto i =
-          plasma_.CalculateIntensity(kInitialPos, dir, kSpherePoints);
+          plasma_.CalculateIntensity(initial_pos, dir, sphere_points_);
       is.push_back(i);
       r.intensity_all += i;
       max_intensity = std::max(i, max_intensity);
@@ -137,11 +114,11 @@ class CylinderPlasma::Impl {
 
       const auto intensity_before_reflection = is[jj];
       const auto intensity_after_reflection =
-          kRho * intensity_before_reflection;
+          params_.rho * intensity_before_reflection;
       r.absorbed_mirror +=
           intensity_before_reflection - intensity_after_reflection;
 
-      auto res = plasma_.SolveDir({kInitialPos, dir, intensity_after_reflection,
+      auto res = plasma_.SolveDir({initial_pos, dir, intensity_after_reflection,
                                    0.000001 * max_intensity});
       r.absorbed_mirror += res.absorbed_at_the_border;
 
@@ -166,18 +143,21 @@ class CylinderPlasma::Impl {
 
  private:
   void InitDirs() {
-    dirs_ = FibonacciSphere(kSpherePoints);
+    dirs_ = FibonacciSphere(sphere_points_);
     EraseRemoveIf(dirs_, [](Vec3 dir) { return dir.x() <= 0; });
     for (const auto dir : dirs_) {
       DEBUG_OUT << dir << '\n';
     }
   }
 
+  CylinderPlasma::Params params_;
+  std::size_t sphere_points_;
+
   SolidCylinder plasma_;
   std::vector<Vec3> dirs_;
 };
 
-CylinderPlasma::CylinderPlasma(Float nu, Float d_nu) : pimpl_{nu, d_nu} {}
+CylinderPlasma::CylinderPlasma(const Params& params) : pimpl_{params} {}
 
 CylinderPlasma::~CylinderPlasma() = default;
 

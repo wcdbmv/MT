@@ -58,3 +58,15 @@ template <int power>
 
   return {};
 }
+
+constexpr Float FastPow(Float a, int n) {
+  Float res = 1;
+  while (n) {
+    if (n & 1) {
+      res *= a;
+    }
+    a *= a;
+    n >>= 1;
+  }
+  return res;
+}

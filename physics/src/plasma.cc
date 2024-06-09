@@ -7,10 +7,14 @@
 #include <cstddef>
 #include <iterator>
 
+#include "base/config/build_type.h"
 #include "base/ignore_unused.h"
 #include "math/fast_pow.h"
-#include "math/float/compare.h"
 #include "physics/params/xenon_absorption_coefficient.h"
+
+#ifdef MT_DEBUG
+#include "math/float/compare.h"
+#endif
 
 namespace {
 

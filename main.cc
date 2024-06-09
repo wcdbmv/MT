@@ -1,4 +1,4 @@
-#if 1  // NOLINT(readability-avoid-unconditional-preprocessor-if)
+#if 0  // NOLINT(readability-avoid-unconditional-preprocessor-if)
 #include <array>
 #include <cassert>
 #include <cstddef>
@@ -27,7 +27,7 @@ inline constexpr auto kN = static_cast<std::size_t>(40);
 
 int main() {
   // Оптическая плотность tau = integral k * dr.
-  std::cout << "range | tau\n";
+  std::cout << "range          tau      nu_min      nu_max          nu\n";
   for (std::size_t i = 0; i < kXenonTableRanges; ++i) {
     const auto nu_min = kXenonFrequency[i];
     const auto nu_max = kXenonFrequency[i + 1];
@@ -46,10 +46,8 @@ int main() {
       tau += k * kStep;
     }
 
-    std::cout << std::format("{:5d}   {:.6f}\n", i + 1, tau);
-    if (i + 1 == 81 || i + 1 == 170) {
-      std::cout << std::format("[{}, {}]\n", nu_min, nu_max);
-    }
+    std::cout << std::format("{:5d} {:12.6f} {:11g} {:11g} {:11g}\n", i + 1, tau,
+                             nu_min, nu_max, nu);
   }
 }
 #elif 1  // NOLINT(readability-avoid-unconditional-preprocessor-if)
@@ -74,6 +72,25 @@ int main() {
   const auto nu_max = kXenonFrequency[kI + 1];
   const auto d_nu = nu_max - nu_min;
   const auto nu_avg = nu_min + d_nu / 2;
+
+  const auto params = CylinderPlasma::Params{
+    .r = 0.35_F,
+    .n_plasma = 40,
+
+    .t0 = 10000.0_F,
+    .tw = 2000.0_F,
+    .m = 4,
+
+    .rho = 0.95_F,
+
+    .nu = nu_avg,
+    .d_nu = d_nu,
+
+    .n_meridian = 100,
+    .n_latitude = 100,
+
+    .n_threads = 4,
+  };
   std::cout << "[[-----------------------------------------------------------"
                "-------------------]]\n"
                "[[i="
@@ -82,7 +99,7 @@ int main() {
             << "]]\n"
                "[[-----------------------------------------------------------"
                "-------------------]]\n";
-  auto r = CylinderPlasma{nu_avg, d_nu}.Solve();
+  auto r = CylinderPlasma{params}.Solve();
 
   Float total_plasma = 0;
   std::cout << "TOTAL ABSORBED PLASMA:\n";

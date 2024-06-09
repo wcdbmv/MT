@@ -7,7 +7,26 @@
 #include "base/fast_pimpl.h"
 
 struct CylinderPlasma {
-  CylinderPlasma(Float nu, Float d_nu);
+  struct Params {
+    Float r = 0.35_F;
+    std::size_t n_plasma = 40;
+
+    Float t0 = 10000.0_F;
+    Float tw = 2000.0_F;
+    int m = 4;
+
+    Float rho = 0.95_F;
+
+    Float nu = 1e+15_F;
+    Float d_nu = 1e+15_F;
+
+    std::size_t n_meridian = 100;
+    std::size_t n_latitude = 100;
+
+    std::size_t n_threads = 4;
+  };
+
+  explicit CylinderPlasma(const Params& params);
   ~CylinderPlasma();
 
   struct Result {
@@ -20,7 +39,7 @@ struct CylinderPlasma {
 
  private:
   class Impl;
-  static constexpr std::size_t kSize = 184;
+  static constexpr std::size_t kSize = 280;
   static constexpr std::size_t kAlignment = 8;
   FastPimpl<Impl, kSize, kAlignment> pimpl_;
 };
