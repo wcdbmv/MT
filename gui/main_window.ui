@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>972</width>
     <height>600</height>
    </rect>
   </property>
@@ -1518,6 +1518,107 @@
            <attribute name="title">
             <string>Данные</string>
            </attribute>
+           <layout class="QHBoxLayout" name="horizontalLayout_12">
+            <item>
+             <widget class="QGroupBox" name="xeDataI2GroupBox">
+              <property name="title">
+               <string>I [Вт/см^2]</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_5">
+               <item row="0" column="0">
+                <widget class="QTextEdit" name="xeDataI2TextEdit">
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="xeDataI3GroupBox">
+              <property name="title">
+               <string>I [Вт/см^3]</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_6">
+               <item row="0" column="0">
+                <widget class="QTextEdit" name="xeDataI3TextEdit">
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QWidget" name="xeDataTotalWidget" native="true">
+              <layout class="QVBoxLayout" name="verticalLayout">
+               <item>
+                <widget class="QGroupBox" name="xeDataTotalIntensityGroupBox">
+                 <property name="title">
+                  <string>Излучено [Вт/см^2]</string>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_2">
+                  <item row="0" column="0">
+                   <widget class="QLineEdit" name="xeDataTotalIntensityLineEdit">
+                    <property name="readOnly">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QGroupBox" name="xeDataTotalAbsorbedPlasmaGroupBox">
+                 <property name="title">
+                  <string>Поглощено плазмой [Вт/см^2]</string>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_3">
+                  <item row="0" column="0">
+                   <widget class="QLineEdit" name="xeDataTotalAbsorbedPlasmaLineEdit">
+                    <property name="readOnly">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QGroupBox" name="xeDataTotalAbsorbedMirrorGroupBox">
+                 <property name="title">
+                  <string>Поглощено отражателем [Вт/см^2]</string>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_4">
+                  <item row="0" column="0">
+                   <widget class="QLineEdit" name="xeDataTotalAbsorbedMirrorLineEdit">
+                    <property name="readOnly">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <spacer name="verticalSpacer">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </widget>
         </item>
@@ -1549,7 +1650,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>972</width>
      <height>37</height>
     </rect>
    </property>

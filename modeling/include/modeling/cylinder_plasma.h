@@ -31,6 +31,7 @@ struct CylinderPlasma {
 
   struct Result {
     std::vector<Float> absorbed_plasma;
+    std::vector<Float> absorbed_plasma3;
     Float absorbed_mirror{};
     Float intensity_all{};
   };

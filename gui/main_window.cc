@@ -5,12 +5,17 @@
 #include <cassert>
 #include <cmath>
 #include <cstddef>
+#include <vector>
 
 #include <QComboBox>
 #include <QDoubleSpinBox>
+#include <QLineEdit>
+#include <QTextEdit>
+
 #include <QPushButton>
 #include <QSlider>
 #include <QSpinBox>
+#include <QString>
 
 #include "xe_paint_widget.h"
 
@@ -145,7 +150,29 @@ MainWindow::MainWindow(QWidget* parent)
     xe_res = CylinderPlasma{params}.Solve();
 
     ui->xePaintWidget->update();
-    Q_EMIT XeSolved();
+
+    auto total_plasma = kZero;
+    QString strI2;
+    for (auto i2 : xe_res->absorbed_plasma) {
+      total_plasma += i2;
+      strI2 += QString::number(i2);
+      strI2 += '\n';
+    }
+    ui->xeDataI2TextEdit->setText(strI2);
+
+    QString strI3;
+    for (auto i3 : xe_res->absorbed_plasma3) {
+      strI3 += QString::number(i3);
+      strI3 += '\n';
+    }
+    ui->xeDataI3TextEdit->setText(strI3);
+
+    ui->xeDataTotalIntensityLineEdit->setText(
+        QString::number(xe_res->intensity_all));
+    ui->xeDataTotalAbsorbedPlasmaLineEdit->setText(
+        QString::number(total_plasma));
+    ui->xeDataTotalAbsorbedMirrorLineEdit->setText(
+        QString::number(xe_res->absorbed_mirror));
   });
 }
 

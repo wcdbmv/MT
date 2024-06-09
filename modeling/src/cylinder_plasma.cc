@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "base/erase_remove_if.h"
+#include "math/consts/pi.h"
 #include "math/fast_pow.h"
 #include "math/linalg/vector.h"
 #include "modeling/fibonacci_sphere.h"
@@ -89,8 +90,10 @@ class CylinderPlasma::Impl {
   }
 
   Result Solve() {
-    Result r;
-    r.absorbed_plasma = std::vector<Float>(params_.n_plasma);
+    Result r{
+        .absorbed_plasma = std::vector<Float>(params_.n_plasma),
+        .absorbed_plasma3 = std::vector<Float>(params_.n_plasma),
+    };
 
     const auto initial_pos = Vec3{params_.r, 0, 0};
 
@@ -135,6 +138,12 @@ class CylinderPlasma::Impl {
       }
 
       ++jj;
+    }
+
+    const auto step = params_.r / static_cast<Float>(params_.n_plasma);
+    for (std::size_t i = 0; i < params_.n_plasma; ++i) {
+      const auto r_avg = step * (static_cast<Float>(i) + 0.5_F);
+      r.absorbed_plasma3[i] = 2 * consts::kPi * r.absorbed_plasma[i] / r_avg;
     }
 
     return r;
