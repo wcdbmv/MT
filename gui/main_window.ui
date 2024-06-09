@@ -100,7 +100,7 @@
            <item row="1" column="0">
             <widget class="QLabel" name="xeNLabel">
              <property name="text">
-              <string>N =</string>
+              <string>N&lt;sub&gt;разбиений&lt;/sub&gt; =</string>
              </property>
             </widget>
            </item>
@@ -1288,14 +1288,14 @@
              </item>
             </widget>
            </item>
-           <item row="8" column="0">
+           <item row="10" column="0">
             <widget class="QLabel" name="xeNThreadsLabel">
              <property name="text">
-              <string>N&lt;sub&gt;поток&lt;/sub&gt; =</string>
+              <string>N&lt;sub&gt;потоков&lt;/sub&gt; =</string>
              </property>
             </widget>
            </item>
-           <item row="8" column="1">
+           <item row="10" column="1">
             <widget class="QWidget" name="xeNThreadsWidget" native="true">
              <layout class="QHBoxLayout" name="horizontalLayout_8">
               <property name="topMargin">
@@ -1381,11 +1381,145 @@
              </layout>
             </widget>
            </item>
+           <item row="11" column="0" colspan="2">
+            <widget class="QPushButton" name="xeCalculatePushButton">
+             <property name="text">
+              <string>Рассчитать поглощённую мощность</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="0">
+            <widget class="QLabel" name="xeLatitudeLabel">
+             <property name="text">
+              <string>N&lt;sub&gt;широт&lt;/sub&gt; =</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="1">
+            <widget class="QWidget" name="xeNLatitudeWidget" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_11">
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QSpinBox" name="xeNLatitudeSpinBox">
+                <property name="minimum">
+                 <number>10</number>
+                </property>
+                <property name="maximum">
+                 <number>200</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
+                </property>
+                <property name="value">
+                 <number>100</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="xeNLatitudeHorizontalSlider">
+                <property name="minimum">
+                 <number>10</number>
+                </property>
+                <property name="maximum">
+                 <number>200</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
+                </property>
+                <property name="value">
+                 <number>100</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="8" column="0">
+            <widget class="QLabel" name="xeNMeridianLabel">
+             <property name="text">
+              <string>N&lt;sub&gt;меридианов&lt;/sub&gt; =</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <widget class="QWidget" name="xeNMeridianWidget" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_10">
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QSpinBox" name="xeNMeridianSpinBox">
+                <property name="minimum">
+                 <number>10</number>
+                </property>
+                <property name="maximum">
+                 <number>200</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
+                </property>
+                <property name="value">
+                 <number>100</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="xeNMeridianHorizontalSlider">
+                <property name="minimum">
+                 <number>10</number>
+                </property>
+                <property name="maximum">
+                 <number>200</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
+                </property>
+                <property name="value">
+                 <number>100</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>
         <item>
-         <widget class="XePlotWidget" name="xePlotWidget" native="true"/>
+         <widget class="QTabWidget" name="xeTabWidget">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="XePaintWidget" name="xePaintWidget">
+           <attribute name="title">
+            <string>Модель</string>
+           </attribute>
+          </widget>
+          <widget class="QWidget" name="xePlotWidget">
+           <attribute name="title">
+            <string>График</string>
+           </attribute>
+          </widget>
+          <widget class="QWidget" name="xeDataWidget">
+           <attribute name="title">
+            <string>Данные</string>
+           </attribute>
+          </widget>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -1424,9 +1558,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>XePlotWidget</class>
+   <class>XePaintWidget</class>
    <extends>QWidget</extends>
-   <header>xe_plot_widget.h</header>
+   <header>xe_paint_widget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -76,13 +76,13 @@ MainWindow::MainWindow(QWidget* parent)
   ui->setupUi(this);
 
   ConnectDoubleSpinBoxAndSlider(ui->xeRDoubleSpinBox, ui->xeRHorizontalSlider);
-  connect(ui->xeRDoubleSpinBox, &QDoubleSpinBox::valueChanged, ui->xePlotWidget, [this](double) {
-    ui->xePlotWidget->update();
+  connect(ui->xeRDoubleSpinBox, &QDoubleSpinBox::valueChanged, ui->xePaintWidget, [this](double) {
+    ui->xePaintWidget->update();
   });
 
   ConnectSpinBoxAndSlider(ui->xeNSpinBox, ui->xeNHorizontalSlider);
-  connect(ui->xeNSpinBox, &QSpinBox::valueChanged, ui->xePlotWidget, [this](int) {
-    ui->xePlotWidget->update();
+  connect(ui->xeNSpinBox, &QSpinBox::valueChanged, ui->xePaintWidget, [this](int) {
+    ui->xePaintWidget->update();
   });
 
   ConnectSpinBoxAndSlider(ui->xeT0SpinBox, ui->xeT0HorizontalSlider);
@@ -91,6 +91,8 @@ MainWindow::MainWindow(QWidget* parent)
 
   ConnectDoubleSpinBoxAndSlider(ui->xeRhoDoubleSpinBox, ui->xeRhoHorizontalSlider);
 
+  ConnectSpinBoxAndSlider(ui->xeNMeridianSpinBox, ui->xeNMeridianHorizontalSlider);
+  ConnectSpinBoxAndSlider(ui->xeNLatitudeSpinBox, ui->xeNLatitudeHorizontalSlider);
   ConnectSpinBoxAndSlider(ui->xeNThreadsSpinBox, ui->xeNThreadsHorizontalSlider);
 }
 

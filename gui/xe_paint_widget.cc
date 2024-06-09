@@ -1,13 +1,13 @@
-#include "xe_plot_widget.h"
+#include "xe_paint_widget.h"
 
 #include <QPainter>
 
 #include "main_window.h"
 #include "./ui_main_window.h"
 
-XePlotWidget::XePlotWidget(QWidget* parent) : QWidget{parent} {}
+XePaintWidget::XePaintWidget(QWidget* parent) : QWidget{parent} {}
 
-void XePlotWidget::paintEvent(QPaintEvent* event) {
+void XePaintWidget::paintEvent(QPaintEvent* event) {
   QPainter painter{this};
 
   painter.fillRect(rect(), QBrush{Qt::white});
