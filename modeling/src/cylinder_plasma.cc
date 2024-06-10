@@ -84,7 +84,7 @@ class CylinderPlasma::Impl {
             },
             [this](Float t) { return func::I(params_.nu, params_.d_nu, t); },
             [this](Float t) {
-              return params::plasma::AbsortionCoefficient(params_.nu, t);
+              return params::plasma::AbsorptionCoefficient(params_.nu, t);
             }} {
     InitDirs();
   }

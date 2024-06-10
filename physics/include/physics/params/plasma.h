@@ -8,8 +8,8 @@ namespace params::plasma {
 inline constexpr auto kEta = 1.0_F;
 
 /// Коэффициент поглощения плазмы.
-[[nodiscard]] Float AbsortionCoefficient(Float nu, Float t) noexcept;
+[[nodiscard]] Float AbsorptionCoefficient(Float nu, Float t) noexcept;
 
-[[nodiscard]] Float AbsortionCoefficientFromTable(Float nu, Float t) noexcept;
+[[nodiscard]] Float AbsorptionCoefficientFromTable(Float nu, Float t) noexcept;
 
 }  // namespace params::plasma

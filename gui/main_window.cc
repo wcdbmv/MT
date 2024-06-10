@@ -21,6 +21,7 @@
 #include "xe_plot_widget.h"
 
 #include "base/config/float.h"
+#include "base/ignore_unused.h"
 #include "physics/params/xenon_absorption_coefficient.h"
 
 namespace {
@@ -42,6 +43,8 @@ void ConnectDoubleSpinBoxAndSlider(QDoubleSpinBox* spin_box, QSlider* slider) {
   const auto slider_count = (slider_maximum - slider_minimum) / slider_step;
 
   assert(spin_box_count == slider_count);
+  IgnoreUnused(spin_box_count);
+  IgnoreUnused(slider_count);
 
   QObject::connect(
       spin_box, &QDoubleSpinBox::valueChanged, slider, [=](double value) {
@@ -75,6 +78,8 @@ void ConnectSpinBoxAndSlider(QSpinBox* spin_box, QSlider* slider) {
   const auto slider_count = (slider_maximum - slider_minimum) / slider_step;
 
   assert(spin_box_count == slider_count);
+  IgnoreUnused(spin_box_count);
+  IgnoreUnused(slider_count);
 
   QObject::connect(spin_box, &QSpinBox::valueChanged, slider, [=](int value) {
     const auto count = (value - spin_box_minimum) / spin_box_step;
@@ -222,7 +227,12 @@ void MainWindow::InitXeSiO2Tab() {
   ConnectSpinBoxAndSlider(ui->xeSiO2T0SpinBox, ui->xeSiO2T0HorizontalSlider);
   ConnectSpinBoxAndSlider(ui->xeSiO2TwSpinBox, ui->xeSiO2TwHorizontalSlider);
   ConnectSpinBoxAndSlider(ui->xeSiO2MSpinBox, ui->xeSiO2MHorizontalSlider);
+  ConnectSpinBoxAndSlider(ui->xeSiO2T1SpinBox, ui->xeSiO2T1HorizontalSlider);
 
+  ConnectDoubleSpinBoxAndSlider(ui->xeSiO2EtaPlasmaDoubleSpinBox,
+                                ui->xeSiO2EtaPlasmaHorizontalSlider);
+  ConnectDoubleSpinBoxAndSlider(ui->xeSiO2EtaQuartzDoubleSpinBox,
+                                ui->xeSiO2EtaQuartzHorizontalSlider);
   ConnectDoubleSpinBoxAndSlider(ui->xeSiO2RhoDoubleSpinBox,
                                 ui->xeSiO2RhoHorizontalSlider);
 
@@ -235,6 +245,73 @@ void MainWindow::InitXeSiO2Tab() {
 
   ui->xeSiO2I2PlotWidget->setAxisY("I [Вт/см^2]");
   ui->xeSiO2I3PlotWidget->setAxisY("I [Вт/см^3]");
+
+  connect(ui->xeSiO2CalculatePushButton, &QPushButton::clicked, [this] {
+    const auto nu_idx =
+        static_cast<std::size_t>(ui->xeSiO2DeltaNuComboBox->currentIndex());
+    const auto nu_min = kXenonFrequency[nu_idx];
+    const auto nu_max = kXenonFrequency[nu_idx + 1];
+    const auto d_nu = nu_max - nu_min;
+    const auto nu_avg = nu_min + d_nu / 2;
+
+    const CylinderPlasmaQuartz::Params params{
+        .r = ui->xeSiO2RDoubleSpinBox->value(),
+        .n_plasma = static_cast<std::size_t>(ui->xeSiO2NPlasmaSpinBox->value()),
+
+        .delta = ui->xeSiO2DeltaDoubleSpinBox->value(),
+        .n_quartz = static_cast<std::size_t>(ui->xeSiO2NQuartzSpinBox->value()),
+
+        .t0 = static_cast<Float>(ui->xeSiO2T0SpinBox->value()),
+        .tw = static_cast<Float>(ui->xeSiO2TwSpinBox->value()),
+        .m = ui->xeSiO2MSpinBox->value(),
+        .t1 = static_cast<Float>(ui->xeSiO2T1SpinBox->value()),
+
+        .eta_plasma = ui->xeSiO2EtaPlasmaDoubleSpinBox->value(),
+        .eta_quartz = ui->xeSiO2EtaQuartzDoubleSpinBox->value(),
+        .rho = ui->xeSiO2RhoDoubleSpinBox->value(),
+
+        .nu = nu_avg,
+        .d_nu = d_nu,
+
+        .n_meridian =
+            static_cast<std::size_t>(ui->xeSiO2NMeridianSpinBox->value()),
+        .n_latitude =
+            static_cast<std::size_t>(ui->xeSiO2NLatitudeSpinBox->value()),
+
+        .n_threads =
+            static_cast<std::size_t>(ui->xeSiO2NThreadsSpinBox->value()),
+    };
+
+    xe_sio2_res = CylinderPlasmaQuartz{params}.Solve();
+
+    ui->xeSiO2PaintWidget->update();
+
+//    ui->xeSiO2I2PlotWidget->setData(xe_res->absorbed_plasma);
+//    ui->xeSiO2I3PlotWidget->setData(xe_res->absorbed_plasma3);
+//
+//    auto total_plasma = kZero;
+//    QString strI2;
+//    for (auto i2 : xe_res->absorbed_plasma) {
+//      total_plasma += i2;
+//      strI2 += QString::number(i2);
+//      strI2 += '\n';
+//    }
+//    ui->xeSiO2DataI2TextEdit->setText(strI2);
+//
+//    QString strI3;
+//    for (auto i3 : xe_res->absorbed_plasma3) {
+//      strI3 += QString::number(i3);
+//      strI3 += '\n';
+//    }
+//    ui->xeSiO2DataI3TextEdit->setText(strI3);
+//
+//    ui->xeSiO2DataTotalIntensityLineEdit->setText(
+//        QString::number(xe_res->intensity_all));
+//    ui->xeSiO2DataTotalAbsorbedPlasmaLineEdit->setText(
+//        QString::number(total_plasma));
+//    ui->xeSiO2DataTotalAbsorbedMirrorLineEdit->setText(
+//        QString::number(xe_res->absorbed_mirror));
+  });
 }
 
 MainWindow::~MainWindow() {

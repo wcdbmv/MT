@@ -41,7 +41,7 @@ int main() {
       const auto z = r / kR;
 
       const auto t = T(z);
-      const auto k = params::plasma::AbsortionCoefficientFromTable(nu, t);
+      const auto k = params::plasma::AbsorptionCoefficientFromTable(nu, t);
 
       tau += k * kStep;
     }

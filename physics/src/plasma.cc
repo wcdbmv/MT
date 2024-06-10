@@ -20,7 +20,7 @@ namespace {
 
 MT_IGNORE_UNUSED_BEGIN
 
-[[nodiscard]] constexpr Float AbsortionCoefficientFromConstant(
+[[nodiscard]] constexpr Float AbsorptionCoefficientFromConstant(
     Float nu,
     Float t) noexcept {
   IgnoreUnused(nu);
@@ -28,7 +28,7 @@ MT_IGNORE_UNUSED_BEGIN
   return 10000.0_F;
 }
 
-[[nodiscard]] constexpr Float AbsortionCoefficientFromDefault(
+[[nodiscard]] constexpr Float AbsorptionCoefficientFromDefault(
     Float nu,
     Float t) noexcept {
   IgnoreUnused(nu);
@@ -41,7 +41,7 @@ MT_IGNORE_UNUSED_END
 
 namespace params::plasma {
 
-Float AbsortionCoefficientFromTable(Float nu, Float t) noexcept {
+Float AbsorptionCoefficientFromTable(Float nu, Float t) noexcept {
   static_assert(kXenonTemperature.size() == 13);
   assert(IsEqual(kXenonTemperature[0], 2000.0_F));
   assert(IsEqual(kXenonTemperature[1], 3000.0_F));
@@ -83,13 +83,13 @@ Float AbsortionCoefficientFromTable(Float nu, Float t) noexcept {
   return f;
 }
 
-Float AbsortionCoefficient(Float nu, Float t) noexcept {
+Float AbsorptionCoefficient(Float nu, Float t) noexcept {
 #if defined(CONSTANT_TEMPERATURE)
-  return AbsortionCoefficientFromConstant(nu, t);
+  return AbsorptionCoefficientFromConstant(nu, t);
 #elif defined(XENON_TABLE_COEFFICIENT)
-  return AbsortionCoefficientFromTable(nu, t);
+  return AbsorptionCoefficientFromTable(nu, t);
 #else
-  return AbsortionCoefficientFromDefault(nu, t);
+  return AbsorptionCoefficientFromDefault(nu, t);
 #endif
 }
 

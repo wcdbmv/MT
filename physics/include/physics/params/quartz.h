@@ -9,7 +9,7 @@ namespace params::quartz {
 inline constexpr auto kEta = 1.4585_F;
 
 /// Коэффициент поглощения кварца.
-[[nodiscard]] constexpr Float AbsortionCoefficient(Float nu, Float t) noexcept {
+[[nodiscard]] constexpr Float AbsorptionCoefficient(Float nu, Float t) noexcept {
 #ifdef CONSTANT_TEMPERATURE
   IgnoreUnused(nu);
   IgnoreUnused(t);

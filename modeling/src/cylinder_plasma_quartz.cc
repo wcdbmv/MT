@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "base/erase_remove_if.h"
+#include "math/consts/pi.h"
 #include "math/fast_pow.h"
 #include "math/linalg/vector.h"
 #include "modeling/fibonacci_sphere.h"
@@ -15,7 +16,6 @@
 #include "modeling/solid_cylinder.h"
 #include "modeling/worker.h"
 #include "physics/params/air.h"
-#include "physics/params/mirror.h"
 #include "physics/params/plasma.h"
 #include "physics/params/quartz.h"
 #include "physics/plancks_law.h"
@@ -60,52 +60,7 @@ DummyOut& operator<<(DummyOut& dummy_out, T&&) noexcept {  // NOLINT
 #define GEOGEBRA_OUT_2D gDummyOut
 #endif
 
-namespace {
-
-inline constexpr auto kT0 = 10'000.0_F;  // К.
-inline constexpr auto kTW = 2'000.0_F;   // К.
-inline constexpr auto kM = 4;            // 4-8
-
-inline constexpr auto kR = 0.35_F;        // см.
-inline constexpr auto kDelta = 0.1_F;     // см.
-inline constexpr auto kR1 = kR + kDelta;  // см.
-inline constexpr auto kH = 1.0_F;         // см.
-
-/// Температура.
-[[nodiscard]] constexpr Float T(Float z) noexcept {
-  assert(0 <= z);
-#ifndef CONSTANT_TEMPERATURE
-  if (z <= 1) {
-    return kT0 + (kTW - kT0) * FastPow<kM>(z);
-  }
-  assert(z <= kR1 / kR);
-  constexpr auto kA = 78848.21035368084688136380896708527_F;
-  constexpr auto kB = 3.674377435745371909154547914447763_F;
-  return kA * std::exp(-kB * z);
-#else
-  IgnoreUnused(z);
-  return kT0;
-#endif
-}
-
-}  // namespace
-
-constexpr auto kStep = 0.025_F;
-
-[[nodiscard]] std::size_t NPlasma() noexcept {
-  return static_cast<size_t>(std::round(kR / kStep));
-}
-
-[[nodiscard]] std::size_t NQuartz() noexcept {
-  return static_cast<size_t>(std::round((kR1 - kR) / kStep));
-}
-
-constexpr auto kMirrorR = kZero;
-constexpr auto kMirrorR1 = params::mirror::kRho;
-
 // TODO(a.kerimov): Выяснить, что происходит при 400000+ и CONSTANT_TEMPERATURE
-constexpr auto kSpherePoints = 1000;
-
 // TODO(a.kerimov): Написать тесты.
 
 constexpr auto kOrigin = Vec3{};
@@ -114,50 +69,66 @@ constexpr auto kOrigin = Vec3{};
 
 class CylinderPlasmaQuartz::Impl {
  public:
-  Impl(Float nu, Float d_nu)
-      : plasma_{{.center = kOrigin,
-                 .radius = kR,
-                 .steps = NPlasma(),
-                 .refractive_index = params::plasma::kEta,
-                 .refractive_index_external = params::quartz::kEta,
-                 .mirror = kMirrorR},
-                T,
-                [nu, d_nu](Float t) { return func::I(nu, d_nu, t); },
-                [nu](Float t) {
-                  return params::plasma::AbsortionCoefficient(nu, t);
-                }},
-        quartz_{{.center = kOrigin,
-                 .radius_min = kR,
-                 .radius_max = kR1,
-                 .steps = NQuartz(),
-                 .refractive_index = params::quartz::kEta,
-                 .refractive_index_internal = params::plasma::kEta,
-                 .refractive_index_external = params::air::kEta,
-                 .mirror_internal = kMirrorR,
-                 .mirror_external = kMirrorR1},
-                T,
-                [nu, d_nu](Float t) { return func::I(nu, d_nu, t); },
-                [nu](Float t) {
-                  return params::quartz::AbsortionCoefficient(nu, t);
-                }} {
+  Impl(const Params& params)
+      : params_{params},
+        b_{params.r / params.delta * std::log(params.tw / params.t1)},
+        a_{params.tw * std::exp(b_)},
+        sphere_points_{params_.n_meridian * params_.n_latitude / 10},
+        plasma_{
+            {.center = kOrigin,
+             .radius = params.r,
+             .steps = params.n_plasma,
+             .refractive_index = params.eta_plasma,
+             .refractive_index_external = params.eta_quartz,
+             .mirror = kZero},
+            [this](Float z) {
+              assert(0 <= z && z <= 1);
+              return params_.t0 +
+                     (params_.tw - params_.t0) * FastPow(z, params_.m);
+            },
+            [this](Float t) { return func::I(params_.nu, params_.d_nu, t); },
+            [this](Float t) {
+              return params::plasma::AbsorptionCoefficient(params_.nu, t);
+            }},
+        quartz_{
+            {.center = kOrigin,
+             .radius_min = params.r,
+             .radius_max = params.r + params.delta,
+             .steps = params.n_quartz,
+             .refractive_index = params.eta_quartz,
+             .refractive_index_internal = params.eta_plasma,
+             .refractive_index_external = params::air::kEta,
+             .mirror_internal = kZero,
+             .mirror_external = params.rho},
+            [this](Float z) {
+              assert(1 <= z && z <= 1 + params.delta / params.r);
+              return a_ * std::exp(-b_ * z);
+            },
+            [this](Float t) { return func::I(params_.nu, params_.d_nu, t); },
+            [this](Float t) {
+              return params::quartz::AbsorptionCoefficient(params_.nu, t);
+            }} {
     InitDirs();
   }
 
   Result Solve() {
-    Result r;
-    r.absorbed_plasma = std::vector<Float>(NPlasma());
-    r.absorbed_quartz = std::vector<Float>(NQuartz() + 1);
+    Result r{
+        .absorbed_plasma = std::vector<Float>(params_.n_plasma),
+        .absorbed_plasma3 = std::vector<Float>(params_.n_plasma),
+        .absorbed_quartz = std::vector<Float>(params_.n_quartz + 1),
+        .absorbed_quartz3 = std::vector<Float>(params_.n_quartz + 1),
+    };
     std::vector<WorkerParams> wait_plasma;
     std::vector<WorkerParams> wait_quartz;
 
-    constexpr auto kInitialPos = Vec3{kR, 0, kH / 2};
+    const auto initial_pos = Vec3{params_.r, 0, 0};
 
     std::vector<Float> is;
     is.reserve(dirs_.size());
     Float max_intensity{};
     for (const auto dir : dirs_) {
       const auto i =
-          plasma_.CalculateIntensity(kInitialPos, dir, kSpherePoints);
+          plasma_.CalculateIntensity(initial_pos, dir, sphere_points_);
       is.push_back(i);
       r.intensity_all += i;
       max_intensity = std::max(i, max_intensity);
@@ -166,7 +137,7 @@ class CylinderPlasmaQuartz::Impl {
     std::size_t jj = 0;
     for (const auto dir : dirs_) {
       auto res = quartz_.SolveDir(
-          {kInitialPos, dir, is[jj], 0.000001 * max_intensity});
+          {initial_pos, dir, is[jj], 0.000001 * max_intensity});
       r.absorbed_mirror += res.absorbed_at_the_border;
       static_assert(std::is_trivially_copyable_v<WorkerParams>);
       for (auto released : res.released_rays) {
@@ -232,6 +203,24 @@ class CylinderPlasmaQuartz::Impl {
       }
     }
 
+    const auto step_plasma = params_.r / static_cast<Float>(params_.n_plasma);
+    Float r_avg = kZero;
+    for (std::size_t i = 0; i < params_.n_plasma; ++i) {
+      r_avg = step_plasma * (static_cast<Float>(i) + 0.5_F);
+      r.absorbed_plasma3[i] = 2 * consts::kPi * r.absorbed_plasma[i] / r_avg;
+    }
+
+    r.absorbed_quartz3.front() =
+        2 * consts::kPi * r.absorbed_plasma.front() / r_avg;
+
+    const auto step_quartz =
+        (params_.delta - params_.r) / static_cast<Float>(params_.n_plasma);
+    for (std::size_t i = 0; i < params_.n_quartz; ++i) {
+      r_avg = params_.r + step_quartz * (static_cast<Float>(i) + 0.5_F);
+      r.absorbed_quartz3[i + 1] =
+          2 * consts::kPi * r.absorbed_quartz[i] / r_avg;
+    }
+
 #ifndef XENON_TABLE_COEFFICIENT
     Float total_plasma = 0;
     std::cout << "TOTAL ABSORBED PLASMA:\n";
@@ -258,7 +247,7 @@ class CylinderPlasmaQuartz::Impl {
 
  private:
   void InitDirs() {
-    dirs_ = FibonacciSphere(kSpherePoints);
+    dirs_ = FibonacciSphere(sphere_points_);
     EraseRemoveIf(dirs_, [](Vec3 dir) { return dir.x() <= 0; });
     for (const auto dir : dirs_) {
       DEBUG_OUT << dir << '\n';
@@ -270,13 +259,18 @@ class CylinderPlasmaQuartz::Impl {
     }
   }
 
+  Params params_;
+  Float b_;
+  Float a_;
+  std::size_t sphere_points_;
+
   SolidCylinder plasma_;
   HollowCylinder quartz_;
   std::vector<Vec3> dirs_;
 };
 
-CylinderPlasmaQuartz::CylinderPlasmaQuartz(Float nu, Float d_nu)
-    : pimpl_{nu, d_nu} {}
+CylinderPlasmaQuartz::CylinderPlasmaQuartz(const Params& params)
+    : pimpl_{params} {}
 
 CylinderPlasmaQuartz::~CylinderPlasmaQuartz() = default;
 
