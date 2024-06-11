@@ -99,10 +99,16 @@ void XeSiO2PlotWidget::setData(const std::vector<Float>& plasma,
 
   step = delta / (r * static_cast<Float>(quartz.size() - 1));
   for (std::size_t i = 1; i < quartz.size(); ++i) {
-    *series_ << QPointF{1 + step * static_cast<Float>(i), quartz[i]};
+    *series_ << QPointF{1 + step * static_cast<Float>(i - 1), quartz[i]};
   }
 
+  auto last_y = 2 * quartz.back() - quartz[quartz.size() - 2];
+  if (last_y < 0) {
+    last_y = 0.95 * quartz.back();
+  }
+  *series_ << QPointF{1 + delta / r, last_y};
+
   vr_->clear();
-  *vr_ << QPointF{1 + step / 2, 0};
-  *vr_ << QPointF{1 + step / 2, max};
+  *vr_ << QPointF{1, 0};
+  *vr_ << QPointF{1, max};
 }

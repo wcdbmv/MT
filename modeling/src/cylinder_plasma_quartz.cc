@@ -215,7 +215,7 @@ class CylinderPlasmaQuartz::Impl {
       const auto quartz_first =
           r.absorbed_quartz[2] +
           std::abs(r.absorbed_quartz[2] - r.absorbed_quartz[3]);
-      const auto d_quartz_linear = r.absorbed_quartz[1] - quartz_first;
+      auto d_quartz_linear = r.absorbed_quartz[1] - quartz_first;
       if (d_quartz_linear > 0) {
         r.absorbed_quartz[1] = quartz_first;
 
@@ -227,11 +227,22 @@ class CylinderPlasmaQuartz::Impl {
           r.absorbed_quartz[i + 1] *= d_quartz;
         }
       }
+
+      const auto quartz_last = 2 * r.absorbed_quartz[params_.n_quartz - 1] -
+                               r.absorbed_quartz[params_.n_quartz - 2];
+      d_quartz_linear = r.absorbed_quartz.back() - quartz_last;
+      if (d_quartz_linear > 0) {
+        r.absorbed_quartz.back() = quartz_last;
+
+        r.absorbed_mirror += d_quartz_linear;
+      }
     }
 
-    const auto plasma_last =
-        r.absorbed_plasma[params_.n_plasma - 2] +
-        (r.absorbed_quartz[1] - r.absorbed_plasma[params_.n_plasma - 2]) / 2;
+    auto plasma_last = 2 * r.absorbed_plasma[params_.n_plasma - 2] -
+                             r.absorbed_plasma[params_.n_plasma - 3];
+    if (plasma_last < 0) {
+      plasma_last = r.absorbed_plasma[params_.n_plasma - 2] * 0.95;
+    }
     const auto d_plasma_linear = r.absorbed_plasma.back() - plasma_last;
     if (d_plasma_linear > 0) {
       r.absorbed_plasma.back() = plasma_last;
