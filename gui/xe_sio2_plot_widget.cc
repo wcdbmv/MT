@@ -106,6 +106,9 @@ void XeSiO2PlotWidget::setData(const std::vector<Float>& plasma,
   if (last_y < 0) {
     last_y = 0.95 * quartz.back();
   }
+  if (last_y < min * scale) {
+    last_y = min * scale;
+  }
   *series_ << QPointF{1 + delta / r, last_y};
 
   vr_->clear();
