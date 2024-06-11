@@ -17,14 +17,17 @@ XeSiO2PlotWidget::XeSiO2PlotWidget(QWidget* parent)
     : QChartView{parent},
       chart_{new QChart},
       axis_x_{new QValueAxis},
-      series_{new QLineSeries} {
+      series_{new QLineSeries},
+      vr_{new QLineSeries} {
   chart_->addSeries(series_);
+  chart_->addSeries(vr_);
   chart_->legend()->hide();
 
   axis_x_->setTitleText("z = r/R");
   axis_x_->setLabelFormat("%g");
   chart_->addAxis(axis_x_, Qt::AlignBottom);
   series_->attachAxis(axis_x_);
+  vr_->attachAxis(axis_x_);
 
   setChart(chart_);
 }
@@ -37,9 +40,13 @@ void XeSiO2PlotWidget::setAxisY(const QString& title) {
   axis_y_->setLabelFormat("%g");
   chart_->addAxis(axis_y_, Qt::AlignLeft);
   series_->attachAxis(axis_y_);
+  vr_->attachAxis(axis_y_);
 }
 
-void XeSiO2PlotWidget::setData(const std::vector<Float>& y) {
+void XeSiO2PlotWidget::setData(const std::vector<Float>& plasma,
+                               const std::vector<Float>& quartz,
+                               Float r,
+                               Float delta) {
   assert(axis_y_);
 
   const auto xt = width() / 100;
@@ -47,21 +54,28 @@ void XeSiO2PlotWidget::setData(const std::vector<Float>& y) {
   axis_x_->setTickCount(xt + xt & 1);
   axis_y_->setTickCount(yt + yt & 1);
 
-  const auto [min_it, max_it] = std::minmax_element(y.begin(), y.end());
+  axis_x_->setMax(std::ceil((1 + delta / r) * 120) / 100);
 
-  auto min = *min_it;
+  const auto [min_it_plasma, max_it_plasma] =
+      std::minmax_element(plasma.begin(), plasma.end());
+  auto min = *min_it_plasma;
+  auto max = *max_it_plasma * 1.01_F;
+  const auto [min_it_quartz, max_it_quartz] =
+      std::minmax_element(quartz.begin() + 1, quartz.end());
+  min = std::min(*min_it_quartz, min);
+  max = std::max(*max_it_quartz * 1.01_F, max);
+
   auto scale = kOne;
   while (min >= 10) {
     min /= 10;
     scale *= 10;
   }
-  while (min <= 0) {
+  while (min < 0) {
     min *= 10;
     scale /= 10;
   }
   axis_y_->setMin(std::floor(min * 100) / 100 * scale);
 
-  auto max = *max_it * 1.01_F;
   scale = kOne;
   while (max >= 10) {
     max /= 10;
@@ -75,9 +89,17 @@ void XeSiO2PlotWidget::setData(const std::vector<Float>& y) {
 
   series_->clear();
 
-  const auto step = kOne / static_cast<Float>(y.size());
-
-  for (std::size_t i = 0; i < y.size(); ++i) {
-    *series_ << QPointF{step * static_cast<Float>(i + 1), y[i]};
+  auto step = kOne / static_cast<Float>(plasma.size());
+  for (std::size_t i = 0; i < plasma.size(); ++i) {
+    *series_ << QPointF{step * static_cast<Float>(i + 1), plasma[i]};
   }
+
+  step = kOne / static_cast<Float>(quartz.size() - 1);
+  for (std::size_t i = 1; i < quartz.size(); ++i) {
+    *series_ << QPointF{1 + step * static_cast<Float>(i), quartz[i]};
+  }
+
+  vr_->clear();
+  *vr_ << QPointF{1 + step / 2, 0};
+  *vr_ << QPointF{1 + step / 2, max};
 }

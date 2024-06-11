@@ -19,11 +19,15 @@ class XeSiO2PlotWidget : public QChartView {
   explicit XeSiO2PlotWidget(QWidget* parent = nullptr);
 
   void setAxisY(const QString& title);
-  void setData(const std::vector<Float>& y);
+  void setData(const std::vector<Float>& plasma,
+               const std::vector<Float>& quartz,
+               Float r,
+               Float delta);
 
  private:
   QChart* chart_;
   QValueAxis* axis_x_;
   QValueAxis* axis_y_;
   QLineSeries* series_;
+  QLineSeries* vr_;
 };

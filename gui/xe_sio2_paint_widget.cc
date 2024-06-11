@@ -48,7 +48,8 @@ void XeSiO2PaintWidget::paintEvent(QPaintEvent* /* event */) {
         min = std::min(i3, min);
         max = std::max(i3, max);
       }
-      for (auto i3 : win->xe_sio2_res->absorbed_quartz3) {
+      for (std::size_t i = 1; i < win->xe_sio2_res->absorbed_quartz3.size(); ++i) {
+        const auto i3 = win->xe_sio2_res->absorbed_quartz3[i];
         min = std::min(i3, min);
         max = std::max(i3, max);
       }
@@ -73,7 +74,7 @@ void XeSiO2PaintWidget::paintEvent(QPaintEvent* /* event */) {
           brush = QBrush{QColor{
               255,
               static_cast<int>(
-                  255 * (1.0 - ((win->xe_sio2_res->absorbed_quartz3[i] - min) /
+                  255 * (1.0 - ((win->xe_sio2_res->absorbed_quartz3[i + 1] - min) /
                                 (max - min)))),
               0}};
         }

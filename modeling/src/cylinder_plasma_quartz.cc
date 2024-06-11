@@ -137,7 +137,7 @@ class CylinderPlasmaQuartz::Impl {
     std::size_t jj = 0;
     for (const auto dir : dirs_) {
       auto res = quartz_.SolveDir(
-          {initial_pos, dir, is[jj], 0.000001 * max_intensity});
+          {initial_pos, dir, is[jj], params_.i_crit * max_intensity});
       r.absorbed_mirror += res.absorbed_at_the_border;
       static_assert(std::is_trivially_copyable_v<WorkerParams>);
       for (auto released : res.released_rays) {
@@ -203,6 +203,11 @@ class CylinderPlasmaQuartz::Impl {
       }
     }
 
+    // !!!!!!!!!!!!!!
+    r.absorbed_plasma.back() += r.absorbed_quartz.front();
+    // r.absorbed_quartz.front() = 0;
+    // !!!!!!!!!!!!!!
+
     const auto step_plasma = params_.r / static_cast<Float>(params_.n_plasma);
     Float r_avg = kZero;
     for (std::size_t i = 0; i < params_.n_plasma; ++i) {
@@ -210,15 +215,15 @@ class CylinderPlasmaQuartz::Impl {
       r.absorbed_plasma3[i] = 2 * consts::kPi * r.absorbed_plasma[i] / r_avg;
     }
 
-    r.absorbed_quartz3.front() =
-        2 * consts::kPi * r.absorbed_plasma.front() / r_avg;
+//    r.absorbed_quartz3.front() =
+//        2 * consts::kPi * r.absorbed_plasma.front() / r_avg;
 
     const auto step_quartz =
         (params_.delta - params_.r) / static_cast<Float>(params_.n_plasma);
     for (std::size_t i = 0; i < params_.n_quartz; ++i) {
       r_avg = params_.r + step_quartz * (static_cast<Float>(i) + 0.5_F);
       r.absorbed_quartz3[i + 1] =
-          2 * consts::kPi * r.absorbed_quartz[i] / r_avg;
+          2 * consts::kPi * r.absorbed_quartz[i + 1] / r_avg;
     }
 
 #ifndef XENON_TABLE_COEFFICIENT

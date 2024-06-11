@@ -33,6 +33,7 @@ struct CylinderPlasmaQuartz {
     std::size_t n_latitude = 100;
 
     std::size_t n_threads = 4;
+    Float i_crit = 0.000001_F;
   };
 
   CylinderPlasmaQuartz(const Params& params);
@@ -51,7 +52,7 @@ struct CylinderPlasmaQuartz {
 
  private:
   class Impl;
-  static constexpr std::size_t kSize = 520;
+  static constexpr std::size_t kSize = 528;
   static constexpr std::size_t kAlignment = 8;
   FastPimpl<Impl, kSize, kAlignment> pimpl_;
 };

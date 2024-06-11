@@ -280,37 +280,60 @@ void MainWindow::InitXeSiO2Tab() {
 
         .n_threads =
             static_cast<std::size_t>(ui->xeSiO2NThreadsSpinBox->value()),
+        .i_crit = ui->xeSiO2ICritLineEdit->text().toDouble(),
     };
 
     xe_sio2_res = CylinderPlasmaQuartz{params}.Solve();
 
     ui->xeSiO2PaintWidget->update();
 
-//    ui->xeSiO2I2PlotWidget->setData(xe_res->absorbed_plasma);
-//    ui->xeSiO2I3PlotWidget->setData(xe_res->absorbed_plasma3);
-//
-//    auto total_plasma = kZero;
-//    QString strI2;
-//    for (auto i2 : xe_res->absorbed_plasma) {
-//      total_plasma += i2;
-//      strI2 += QString::number(i2);
-//      strI2 += '\n';
-//    }
-//    ui->xeSiO2DataI2TextEdit->setText(strI2);
-//
-//    QString strI3;
-//    for (auto i3 : xe_res->absorbed_plasma3) {
-//      strI3 += QString::number(i3);
-//      strI3 += '\n';
-//    }
-//    ui->xeSiO2DataI3TextEdit->setText(strI3);
-//
-//    ui->xeSiO2DataTotalIntensityLineEdit->setText(
-//        QString::number(xe_res->intensity_all));
-//    ui->xeSiO2DataTotalAbsorbedPlasmaLineEdit->setText(
-//        QString::number(total_plasma));
-//    ui->xeSiO2DataTotalAbsorbedMirrorLineEdit->setText(
-//        QString::number(xe_res->absorbed_mirror));
+    ui->xeSiO2I2PlotWidget->setData(xe_sio2_res->absorbed_plasma,
+                                    xe_sio2_res->absorbed_quartz, params.r,
+                                    params.delta);
+    ui->xeSiO2I3PlotWidget->setData(xe_sio2_res->absorbed_plasma3,
+                                    xe_sio2_res->absorbed_quartz3, params.r,
+                                    params.delta);
+
+    auto total_plasma = kZero;
+    auto total_quartz = kZero;
+    QString strI2;
+    for (auto i2 : xe_sio2_res->absorbed_plasma) {
+      total_plasma += i2;
+      strI2 += QString::number(i2);
+      strI2 += '\n';
+    }
+    strI2 += "    ";
+    strI2 += QString::number(xe_sio2_res->absorbed_quartz[0]);
+    strI2 += '\n';
+    for (std::size_t i = 1; i < xe_sio2_res->absorbed_quartz.size(); ++i) {
+      auto i2 = xe_sio2_res->absorbed_quartz[i];
+      total_quartz += i2;
+      strI2 += QString::number(i2);
+      strI2 += '\n';
+    }
+    ui->xeSiO2DataI2TextEdit->setText(strI2);
+
+    QString strI3;
+    for (auto i3 : xe_sio2_res->absorbed_plasma3) {
+      strI3 += QString::number(i3);
+      strI3 += '\n';
+    }
+    strI3 += "————————\n";
+    for (std::size_t i = 1; i < xe_sio2_res->absorbed_quartz3.size(); ++i) {
+      auto i3 = xe_sio2_res->absorbed_quartz3[i];
+      strI3 += QString::number(i3);
+      strI3 += '\n';
+    }
+    ui->xeSiO2DataI3TextEdit->setText(strI3);
+
+    ui->xeSiO2DataTotalIntensityLineEdit->setText(
+        QString::number(xe_sio2_res->intensity_all));
+    ui->xeSiO2DataTotalAbsorbedPlasmaLineEdit->setText(
+        QString::number(total_plasma));
+    ui->xeSiO2DataTotalAbsorbedQuartzLineEdit->setText(
+        QString::number(total_quartz));
+    ui->xeSiO2DataTotalAbsorbedMirrorLineEdit->setText(
+        QString::number(xe_sio2_res->absorbed_mirror));
   });
 }
 
