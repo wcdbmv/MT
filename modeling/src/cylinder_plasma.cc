@@ -121,7 +121,7 @@ class CylinderPlasma::Impl {
           intensity_before_reflection - intensity_after_reflection;
 
       auto res = plasma_.SolveDir({initial_pos, dir, intensity_after_reflection,
-                                   0.000001 * max_intensity});
+                                   params_.i_crit * max_intensity});
       r.absorbed_mirror += res.absorbed_at_the_border;
 
       static_assert(std::is_trivially_copyable_v<WorkerParams>);

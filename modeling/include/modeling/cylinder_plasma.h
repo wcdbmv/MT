@@ -24,6 +24,7 @@ struct CylinderPlasma {
     std::size_t n_latitude = 100;
 
     std::size_t n_threads = 4;
+    Float i_crit = 0.000001_F;
   };
 
   explicit CylinderPlasma(const Params& params);
@@ -40,7 +41,7 @@ struct CylinderPlasma {
 
  private:
   class Impl;
-  static constexpr std::size_t kSize = 280;
+  static constexpr std::size_t kSize = 288;
   static constexpr std::size_t kAlignment = 8;
   FastPimpl<Impl, kSize, kAlignment> pimpl_;
 };

@@ -98,6 +98,16 @@ void ConnectSpinBoxAndSlider(QSpinBox* spin_box, QSlider* slider) {
   });
 }
 
+template <typename Params>
+bool OnlyNThreadsDiffers(const Params& a, Params b) {
+  if (a.n_threads == b.n_threads) {
+    return false;
+  }
+
+  b.n_threads = a.n_threads;
+  return memcmp(&a, &b, sizeof a) == 0;
+}
+
 }  // namespace
 
 MainWindow::MainWindow(QWidget* parent)
@@ -142,7 +152,7 @@ void MainWindow::InitXeTab() {
     const auto d_nu = nu_max - nu_min;
     const auto nu_avg = nu_min + d_nu / 2;
 
-    const CylinderPlasma::Params params{
+    CylinderPlasma::Params params{
         .r = ui->xeRDoubleSpinBox->value(),
         .n_plasma = static_cast<std::size_t>(ui->xeNSpinBox->value()),
 
@@ -161,7 +171,17 @@ void MainWindow::InitXeTab() {
         .n_threads = static_cast<std::size_t>(ui->xeNThreadsSpinBox->value()),
     };
 
-    xe_res = CylinderPlasma{params}.Solve();
+    auto ignore_result = false;
+    if (xe_params.has_value()) {
+      ignore_result = OnlyNThreadsDiffers(*xe_params, params);
+    }
+    xe_params = params;
+    params.i_crit *= static_cast<Float>(params.n_threads);
+
+    auto res = CylinderPlasma{params}.Solve();
+    if (!ignore_result) {
+      xe_res = std::move(res);
+    }
 
     ui->xePaintWidget->update();
 
@@ -254,7 +274,7 @@ void MainWindow::InitXeSiO2Tab() {
     const auto d_nu = nu_max - nu_min;
     const auto nu_avg = nu_min + d_nu / 2;
 
-    const CylinderPlasmaQuartz::Params params{
+    CylinderPlasmaQuartz::Params params{
         .r = ui->xeSiO2RDoubleSpinBox->value(),
         .n_plasma = static_cast<std::size_t>(ui->xeSiO2NPlasmaSpinBox->value()),
 
@@ -283,7 +303,17 @@ void MainWindow::InitXeSiO2Tab() {
         .i_crit = ui->xeSiO2ICritLineEdit->text().toDouble(),
     };
 
-    xe_sio2_res = CylinderPlasmaQuartz{params}.Solve();
+    auto ignore_result = false;
+    if (xe_sio2_params.has_value()) {
+      ignore_result = OnlyNThreadsDiffers(*xe_sio2_params, params);
+    }
+    xe_sio2_params = params;
+    params.i_crit *= static_cast<Float>(params.n_threads) / 4;
+
+    auto res = CylinderPlasmaQuartz{params}.Solve();
+    if (!ignore_result) {
+      xe_sio2_res = std::move(res);
+    }
 
     ui->xeSiO2PaintWidget->update();
 

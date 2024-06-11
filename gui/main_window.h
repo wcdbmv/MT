@@ -26,6 +26,8 @@ class MainWindow : public QMainWindow {
 
  public:
   Ui::MainWindow* ui;
+  std::optional<CylinderPlasma::Params> xe_params;
+  std::optional<CylinderPlasmaQuartz::Params> xe_sio2_params;
   std::optional<CylinderPlasma::Result> xe_res;
   std::optional<CylinderPlasmaQuartz::Result> xe_sio2_res;
 
