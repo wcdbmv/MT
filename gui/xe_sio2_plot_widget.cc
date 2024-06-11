@@ -73,20 +73,19 @@ void XeSiO2PlotWidget::setData(const std::vector<Float>& plasma,
     min /= 10;
     scale *= 10;
   }
-  while (min < 0) {
-    min *= 10;
-    scale /= 10;
-  }
   axis_y_->setMin(std::floor(min * 100) / 100 * scale);
+  min *= scale;
 
   scale = kOne;
   while (max >= 10) {
     max /= 10;
     scale *= 10;
   }
-  while (max < 1) {
-    max *= 10;
-    scale /= 10;
+  if (max > 0) {
+    while (max < 1) {
+      max *= 10;
+      scale /= 10;
+    }
   }
   axis_y_->setMax(std::ceil(max * 100) / 100 * scale);
 
@@ -106,8 +105,8 @@ void XeSiO2PlotWidget::setData(const std::vector<Float>& plasma,
   if (last_y < 0) {
     last_y = 0.95 * quartz.back();
   }
-  if (last_y < min * scale) {
-    last_y = min * scale;
+  if (last_y < min) {
+    last_y = min;
   }
   *series_ << QPointF{1 + delta / r, last_y};
 

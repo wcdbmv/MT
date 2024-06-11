@@ -48,28 +48,29 @@ void XePlotWidget::setData(const std::vector<Float>& y) {
   axis_y_->setTickCount(yt + yt & 1);
 
   const auto [min_it, max_it] = std::minmax_element(y.begin(), y.end());
-
   auto min = *min_it;
+  auto max = *max_it * 1.01_F;
+
+  assert(min >= 0);
+  assert(max >= 0);
+
   auto scale = kOne;
   while (min >= 10) {
     min /= 10;
     scale *= 10;
   }
-  while (min <= 0) {
-    min *= 10;
-    scale /= 10;
-  }
   axis_y_->setMin(std::floor(min * 100) / 100 * scale);
 
-  auto max = *max_it * 1.01_F;
   scale = kOne;
   while (max >= 10) {
     max /= 10;
     scale *= 10;
   }
-  while (max < 1) {
-    max *= 10;
-    scale /= 10;
+  if (max > 0) {
+    while (max < 1) {
+      max *= 10;
+      scale /= 10;
+    }
   }
   axis_y_->setMax(std::ceil(max * 100) / 100 * scale);
 

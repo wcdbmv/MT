@@ -3,8 +3,10 @@
 
 #include <array>
 #include <cassert>
+#include <chrono>
 #include <cmath>
 #include <cstddef>
+#include <format>
 #include <vector>
 
 #include <QComboBox>
@@ -175,13 +177,22 @@ void MainWindow::InitXeTab() {
     if (xe_params.has_value()) {
       ignore_result = OnlyNThreadsDiffers(*xe_params, params);
     }
-    xe_params = params;
     params.i_crit *= static_cast<Float>(params.n_threads);
 
+    const auto start_ts = std::chrono::high_resolution_clock::now();
     auto res = CylinderPlasma{params}.Solve();
+    const auto time = std::chrono::high_resolution_clock::now() - start_ts;
+
     if (!ignore_result) {
+      xe_params = params;
       xe_res = std::move(res);
     }
+
+    const auto message = std::format(
+        "Время моделирования: {}{}",
+        std::chrono::duration_cast<std::chrono::seconds>(time),
+        std::chrono::duration_cast<std::chrono::milliseconds>(time) % 1000);
+    ui->statusBar->showMessage(QString::fromStdString(message));
 
     ui->xePaintWidget->update();
 
@@ -307,13 +318,22 @@ void MainWindow::InitXeSiO2Tab() {
     if (xe_sio2_params.has_value()) {
       ignore_result = OnlyNThreadsDiffers(*xe_sio2_params, params);
     }
-    xe_sio2_params = params;
     params.i_crit *= static_cast<Float>(params.n_threads) / 4;
 
+    const auto start_ts = std::chrono::high_resolution_clock::now();
     auto res = CylinderPlasmaQuartz{params}.Solve();
+    const auto time = std::chrono::high_resolution_clock::now() - start_ts;
+
     if (!ignore_result) {
+      xe_sio2_params = params;
       xe_sio2_res = std::move(res);
     }
+
+    const auto message = std::format(
+        "Время моделирования: {}{}",
+        std::chrono::duration_cast<std::chrono::seconds>(time),
+        std::chrono::duration_cast<std::chrono::milliseconds>(time) % 1000);
+    ui->statusBar->showMessage(QString::fromStdString(message));
 
     ui->xeSiO2PaintWidget->update();
 
