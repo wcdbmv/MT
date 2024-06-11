@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="xeTab">
        <attribute name="title">
@@ -3403,7 +3403,7 @@
         <item>
          <widget class="QTabWidget" name="xeSiO2TabWidget">
           <property name="currentIndex">
-           <number>2</number>
+           <number>0</number>
           </property>
           <widget class="XeSiO2PaintWidget" name="xeSiO2PaintWidget">
            <attribute name="title">

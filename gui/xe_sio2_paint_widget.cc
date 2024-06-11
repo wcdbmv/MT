@@ -74,7 +74,7 @@ void XeSiO2PaintWidget::paintEvent(QPaintEvent* /* event */) {
           brush = QBrush{QColor{
               255,
               static_cast<int>(
-                  255 * (1.0 - ((win->xe_sio2_res->absorbed_quartz3[i + 1] - min) /
+                  255 * (1.0 - ((win->xe_sio2_res->absorbed_quartz3[i] - min) /
                                 (max - min)))),
               0}};
         }

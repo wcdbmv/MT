@@ -54,7 +54,7 @@ void XeSiO2PlotWidget::setData(const std::vector<Float>& plasma,
   axis_x_->setTickCount(xt + xt & 1);
   axis_y_->setTickCount(yt + yt & 1);
 
-  axis_x_->setMax(std::ceil((1 + delta / r) * 120) / 100);
+  axis_x_->setMax(std::ceil((1 + delta / r) * 100) / 100);
 
   const auto [min_it_plasma, max_it_plasma] =
       std::minmax_element(plasma.begin(), plasma.end());
@@ -97,7 +97,7 @@ void XeSiO2PlotWidget::setData(const std::vector<Float>& plasma,
     *series_ << QPointF{step * static_cast<Float>(i + 1), plasma[i]};
   }
 
-  step = kOne / static_cast<Float>(quartz.size() - 1);
+  step = delta / (r * static_cast<Float>(quartz.size() - 1));
   for (std::size_t i = 1; i < quartz.size(); ++i) {
     *series_ << QPointF{1 + step * static_cast<Float>(i), quartz[i]};
   }
