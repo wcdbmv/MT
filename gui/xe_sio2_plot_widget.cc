@@ -65,6 +65,9 @@ void XeSiO2PlotWidget::setData(const std::vector<Float>& plasma,
   min = std::min(*min_it_quartz, min);
   max = std::max(*max_it_quartz * 1.01_F, max);
 
+  assert(min >= 0);
+  assert(max >= 0);
+
   auto scale = kOne;
   while (min >= 10) {
     min /= 10;

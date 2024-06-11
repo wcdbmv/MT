@@ -4,6 +4,7 @@
 #include <cassert>
 #include <cmath>
 #include <cstddef>
+#include <numeric>
 #include <type_traits>
 #include <vector>
 
@@ -101,7 +102,10 @@ class CylinderPlasmaQuartz::Impl {
              .mirror_internal = kZero,
              .mirror_external = params.rho},
             [this](Float z) {
-              assert(1 <= z && z <= 1 + params.delta / params.r);
+              if (z <= 1) {
+                return params_.tw;
+              }
+              assert(z <= 1 + params_.delta / params_.r);
               return a_ * std::exp(-b_ * z);
             },
             [this](Float t) { return func::I(params_.nu, params_.d_nu, t); },
@@ -205,7 +209,41 @@ class CylinderPlasmaQuartz::Impl {
 
     // !!!!!!!!!!!!!!
     r.absorbed_plasma.back() += r.absorbed_quartz.front();
-    // r.absorbed_quartz.front() = 0;
+    r.absorbed_quartz.front() = 0;
+
+    if (params_.n_quartz > 2) {
+      const auto quartz_first =
+          r.absorbed_quartz[2] +
+          std::abs(r.absorbed_quartz[2] - r.absorbed_quartz[3]);
+      const auto d_quartz_linear = r.absorbed_quartz[1] - quartz_first;
+      if (d_quartz_linear > 0) {
+        r.absorbed_quartz[1] = quartz_first;
+
+        const auto quartz_sum = std::accumulate(r.absorbed_quartz.begin() + 1,
+                                                r.absorbed_quartz.end(), kZero);
+        const auto d_quartz = d_quartz_linear / quartz_sum + 1;
+
+        for (std::size_t i = 0; i < params_.n_quartz; ++i) {
+          r.absorbed_quartz[i + 1] *= d_quartz;
+        }
+      }
+    }
+
+    const auto plasma_last =
+        r.absorbed_plasma[params_.n_plasma - 2] +
+        (r.absorbed_quartz[1] - r.absorbed_plasma[params_.n_plasma - 2]) / 2;
+    const auto d_plasma_linear = r.absorbed_plasma.back() - plasma_last;
+    if (d_plasma_linear > 0) {
+      r.absorbed_plasma.back() = plasma_last;
+
+      const auto plasma_sum = std::accumulate(r.absorbed_plasma.begin(),
+                                              r.absorbed_plasma.end(), kZero);
+      const auto d_plasma = d_plasma_linear / plasma_sum + 1;
+
+      for (auto& ap : r.absorbed_plasma) {
+        ap *= d_plasma;
+      }
+    }
     // !!!!!!!!!!!!!!
 
     const auto step_plasma = params_.r / static_cast<Float>(params_.n_plasma);
@@ -215,11 +253,11 @@ class CylinderPlasmaQuartz::Impl {
       r.absorbed_plasma3[i] = 2 * consts::kPi * r.absorbed_plasma[i] / r_avg;
     }
 
-//    r.absorbed_quartz3.front() =
-//        2 * consts::kPi * r.absorbed_plasma.front() / r_avg;
+    //    r.absorbed_quartz3.front() =
+    //        2 * consts::kPi * r.absorbed_plasma.front() / r_avg;
 
     const auto step_quartz =
-        (params_.delta - params_.r) / static_cast<Float>(params_.n_plasma);
+        params_.delta / static_cast<Float>(params_.n_plasma);
     for (std::size_t i = 0; i < params_.n_quartz; ++i) {
       r_avg = params_.r + step_quartz * (static_cast<Float>(i) + 0.5_F);
       r.absorbed_quartz3[i + 1] =
