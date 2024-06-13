@@ -118,6 +118,7 @@ MainWindow::MainWindow(QWidget* parent)
 
   InitXeTab();
   InitXeSiO2Tab();
+  InitXeXeSiO2Tab();
 }
 
 void MainWindow::InitXeTab() {
@@ -393,6 +394,7 @@ void MainWindow::InitXeXeSiO2Tab() {
   connect(ui->xexeSiO2RDoubleSpinBox, &QDoubleSpinBox::valueChanged,
           ui->xexeSiO2PaintWidget, [this](double) {
             xe_xe_sio2_res.reset();
+            ui->xexeSiO2PaintWidget->image = QImage{};
             ui->xexeSiO2PaintWidget->update();
           });
   ConnectSpinBoxAndSlider(ui->xexeSiO2NPlasmaSpinBox,
@@ -400,6 +402,7 @@ void MainWindow::InitXeXeSiO2Tab() {
   connect(ui->xexeSiO2NPlasmaSpinBox, &QSpinBox::valueChanged,
           ui->xexeSiO2PaintWidget, [this](int) {
             xe_xe_sio2_res.reset();
+            ui->xexeSiO2PaintWidget->image = QImage{};
             ui->xexeSiO2PaintWidget->update();
           });
 
@@ -408,6 +411,7 @@ void MainWindow::InitXeXeSiO2Tab() {
   connect(ui->xexeSiO2DeltaDoubleSpinBox, &QDoubleSpinBox::valueChanged,
           ui->xexeSiO2PaintWidget, [this](double) {
             xe_xe_sio2_res.reset();
+            ui->xexeSiO2PaintWidget->image = QImage{};
             ui->xexeSiO2PaintWidget->update();
           });
   ConnectDoubleSpinBoxAndSlider(ui->xexeSiO2ADoubleSpinBox,
@@ -415,6 +419,7 @@ void MainWindow::InitXeXeSiO2Tab() {
   connect(ui->xexeSiO2ADoubleSpinBox, &QDoubleSpinBox::valueChanged,
           ui->xexeSiO2PaintWidget, [this](double) {
             xe_xe_sio2_res.reset();
+            ui->xexeSiO2PaintWidget->image = QImage{};
             ui->xexeSiO2PaintWidget->update();
           });
   ConnectDoubleSpinBoxAndSlider(ui->xexeSiO2BDoubleSpinBox,
@@ -422,6 +427,7 @@ void MainWindow::InitXeXeSiO2Tab() {
   connect(ui->xexeSiO2BDoubleSpinBox, &QDoubleSpinBox::valueChanged,
           ui->xexeSiO2PaintWidget, [this](double) {
             xe_xe_sio2_res.reset();
+            ui->xexeSiO2PaintWidget->image = QImage{};
             ui->xexeSiO2PaintWidget->update();
           });
   ConnectSpinBoxAndSlider(ui->xexeSiO2NQuartzSpinBox,
@@ -429,13 +435,17 @@ void MainWindow::InitXeXeSiO2Tab() {
   connect(ui->xexeSiO2NQuartzSpinBox, &QSpinBox::valueChanged,
           ui->xexeSiO2PaintWidget, [this](int) {
             xe_xe_sio2_res.reset();
+            ui->xexeSiO2PaintWidget->image = QImage{};
             ui->xexeSiO2PaintWidget->update();
           });
 
-  ConnectSpinBoxAndSlider(ui->xexeSiO2T0SpinBox, ui->xexeSiO2T0HorizontalSlider);
-  ConnectSpinBoxAndSlider(ui->xexeSiO2TwSpinBox, ui->xexeSiO2TwHorizontalSlider);
+  ConnectSpinBoxAndSlider(ui->xexeSiO2T0SpinBox,
+                          ui->xexeSiO2T0HorizontalSlider);
+  ConnectSpinBoxAndSlider(ui->xexeSiO2TwSpinBox,
+                          ui->xexeSiO2TwHorizontalSlider);
   ConnectSpinBoxAndSlider(ui->xexeSiO2MSpinBox, ui->xexeSiO2MHorizontalSlider);
-  ConnectSpinBoxAndSlider(ui->xexeSiO2T1SpinBox, ui->xexeSiO2T1HorizontalSlider);
+  ConnectSpinBoxAndSlider(ui->xexeSiO2T1SpinBox,
+                          ui->xexeSiO2T1HorizontalSlider);
 
   ConnectDoubleSpinBoxAndSlider(ui->xexeSiO2EtaPlasmaDoubleSpinBox,
                                 ui->xexeSiO2EtaPlasmaHorizontalSlider);
@@ -451,117 +461,164 @@ void MainWindow::InitXeXeSiO2Tab() {
   ConnectSpinBoxAndSlider(ui->xexeSiO2NThreadsSpinBox,
                           ui->xexeSiO2NThreadsHorizontalSlider);
 
-//  ui->xexeSiO2I2PlotWidget->setAxisY("I [Вт/см^2]");
-//  ui->xexeSiO2I3PlotWidget->setAxisY("I [Вт/см^3]");
+  //  ui->xexeSiO2I2PlotWidget->setAxisY("I [Вт/см^2]");
+  //  ui->xexeSiO2I3PlotWidget->setAxisY("I [Вт/см^3]");
 
-//  connect(ui->xexeSiO2CalculatePushButton, &QPushButton::clicked, [this] {
-//    const auto nu_idx =
-//        static_cast<std::size_t>(ui->xexeSiO2DeltaNuComboBox->currentIndex());
-//    const auto nu_min = kXenonFrequency[nu_idx];
-//    const auto nu_max = kXenonFrequency[nu_idx + 1];
-//    const auto d_nu = nu_max - nu_min;
-//    const auto nu_avg = nu_min + d_nu / 2;
-//
-//    CylinderPlasmaQuartz::Params params{
-//        .r = ui->xexeSiO2RDoubleSpinBox->value(),
-//        .n_plasma = static_cast<std::size_t>(ui->xexeSiO2NPlasmaSpinBox->value()),
-//
-//        .delta = ui->xexeSiO2DeltaDoubleSpinBox->value(),
-//        .n_quartz = static_cast<std::size_t>(ui->xexeSiO2NQuartzSpinBox->value()),
-//
-//        .t0 = static_cast<Float>(ui->xexeSiO2T0SpinBox->value()),
-//        .tw = static_cast<Float>(ui->xexeSiO2TwSpinBox->value()),
-//        .m = ui->xexeSiO2MSpinBox->value(),
-//        .t1 = static_cast<Float>(ui->xexeSiO2T1SpinBox->value()),
-//
-//        .eta_plasma = ui->xexeSiO2EtaPlasmaDoubleSpinBox->value(),
-//        .eta_quartz = ui->xexeSiO2EtaQuartzDoubleSpinBox->value(),
-//        .rho = ui->xexeSiO2RhoDoubleSpinBox->value(),
-//
-//        .nu = nu_avg,
-//        .d_nu = d_nu,
-//
-//        .n_meridian =
-//            static_cast<std::size_t>(ui->xexeSiO2NMeridianSpinBox->value()),
-//        .n_latitude =
-//            static_cast<std::size_t>(ui->xexeSiO2NLatitudeSpinBox->value()),
-//
-//        .n_threads =
-//            static_cast<std::size_t>(ui->xexeSiO2NThreadsSpinBox->value()),
-//        .i_crit = ui->xexeSiO2ICritLineEdit->text().toDouble(),
-//    };
-//
-//    auto ignore_result = false;
-//    if (xe_xe_sio2_params.has_value()) {
-//      ignore_result = OnlyNThreadsDiffers(*xe_xe_sio2_params, params);
-//    }
-//    params.i_crit *= static_cast<Float>(params.n_threads) / 4;
-//
-//    const auto start_ts = std::chrono::high_resolution_clock::now();
-//    auto res = CylinderPlasmaQuartz{params}.Solve();
-//    const auto time = std::chrono::high_resolution_clock::now() - start_ts;
-//
-//    if (!ignore_result) {
-//      xe_xe_sio2_params = params;
-//      xe_xe_sio2_res = std::move(res);
-//    }
-//
-//    const auto message = std::format(
-//        "Время моделирования: {}{}",
-//        std::chrono::duration_cast<std::chrono::seconds>(time),
-//        std::chrono::duration_cast<std::chrono::milliseconds>(time) % 1000);
-//    ui->statusBar->showMessage(QString::fromStdString(message));
-//
-//    ui->xexeSiO2PaintWidget->update();
-//
-//    ui->xexeSiO2I2PlotWidget->setData(xe_xe_sio2_res->absorbed_plasma,
-//                                    xe_xe_sio2_res->absorbed_quartz, params.r,
-//                                    params.delta);
-//    ui->xexeSiO2I3PlotWidget->setData(xe_xe_sio2_res->absorbed_plasma3,
-//                                    xe_xe_sio2_res->absorbed_quartz3, params.r,
-//                                    params.delta);
-//
-//    auto total_plasma = kZero;
-//    auto total_quartz = kZero;
-//    QString strI2;
-//    for (auto i2 : xe_xe_sio2_res->absorbed_plasma) {
-//      total_plasma += i2;
-//      strI2 += QString::number(i2);
-//      strI2 += '\n';
-//    }
-//    strI2 += "    ";
-//    strI2 += QString::number(xe_xe_sio2_res->absorbed_quartz[0]);
-//    strI2 += '\n';
-//    for (std::size_t i = 1; i < xe_xe_sio2_res->absorbed_quartz.size(); ++i) {
-//      auto i2 = xe_xe_sio2_res->absorbed_quartz[i];
-//      total_quartz += i2;
-//      strI2 += QString::number(i2);
-//      strI2 += '\n';
-//    }
-//    ui->xexeSiO2DataI2TextEdit->setText(strI2);
-//
-//    QString strI3;
-//    for (auto i3 : xe_xe_sio2_res->absorbed_plasma3) {
-//      strI3 += QString::number(i3);
-//      strI3 += '\n';
-//    }
-//    strI3 += "————————\n";
-//    for (std::size_t i = 1; i < xe_xe_sio2_res->absorbed_quartz3.size(); ++i) {
-//      auto i3 = xe_xe_sio2_res->absorbed_quartz3[i];
-//      strI3 += QString::number(i3);
-//      strI3 += '\n';
-//    }
-//    ui->xexeSiO2DataI3TextEdit->setText(strI3);
-//
-//    ui->xexeSiO2DataTotalIntensityLineEdit->setText(
-//        QString::number(xe_xe_sio2_res->intensity_all));
-//    ui->xexeSiO2DataTotalAbsorbedPlasmaLineEdit->setText(
-//        QString::number(total_plasma));
-//    ui->xexeSiO2DataTotalAbsorbedQuartzLineEdit->setText(
-//        QString::number(total_quartz));
-//    ui->xexeSiO2DataTotalAbsorbedMirrorLineEdit->setText(
-//        QString::number(xe_xe_sio2_res->absorbed_mirror));
-//  });
+  connect(ui->xexeSiO2CalculatePushButton, &QPushButton::clicked, [this] {
+    const auto nu_idx =
+        static_cast<std::size_t>(ui->xexeSiO2DeltaNuComboBox->currentIndex());
+    const auto nu_min = kXenonFrequency[nu_idx];
+    const auto nu_max = kXenonFrequency[nu_idx + 1];
+    const auto d_nu = nu_max - nu_min;
+    const auto nu_avg = nu_min + d_nu / 2;
+
+    const auto a = ui->xexeSiO2ADoubleSpinBox->value();
+    const auto b = ui->xexeSiO2BDoubleSpinBox->value();
+
+    CylinderPlasmaQuartz::Params params{
+        .r = ui->xexeSiO2RDoubleSpinBox->value(),
+        .n_plasma =
+            static_cast<std::size_t>(ui->xexeSiO2NPlasmaSpinBox->value()),
+
+        .delta = std::sqrt(a * b),
+        .n_quartz =
+            static_cast<std::size_t>(ui->xexeSiO2NQuartzSpinBox->value()),
+
+        .t0 = static_cast<Float>(ui->xexeSiO2T0SpinBox->value()),
+        .tw = static_cast<Float>(ui->xexeSiO2TwSpinBox->value()),
+        .m = ui->xexeSiO2MSpinBox->value(),
+        .t1 = static_cast<Float>(ui->xexeSiO2T1SpinBox->value()),
+
+        .eta_plasma = ui->xexeSiO2EtaPlasmaDoubleSpinBox->value(),
+        .eta_quartz = ui->xexeSiO2EtaQuartzDoubleSpinBox->value(),
+        .rho = ui->xexeSiO2RhoDoubleSpinBox->value(),
+
+        .nu = nu_avg,
+        .d_nu = d_nu,
+
+        .n_meridian =
+            static_cast<std::size_t>(ui->xexeSiO2NMeridianSpinBox->value()),
+        .n_latitude =
+            static_cast<std::size_t>(ui->xexeSiO2NLatitudeSpinBox->value()),
+
+        .n_threads =
+            static_cast<std::size_t>(ui->xexeSiO2NThreadsSpinBox->value()),
+        .i_crit = ui->xexeSiO2ICritLineEdit->text().toDouble(),
+    };
+
+    {
+      const auto w = ui->xexeSiO2PaintWidget->width();
+      const auto h = ui->xexeSiO2PaintWidget->height();
+
+      QPixmap pixmap{w, h};
+      QPainter painter{&pixmap};
+      painter.fillRect(rect(), QBrush{Qt::white});
+
+      const auto scale = std::min(w / a, h / b) / 1.01;
+      const auto side_a = static_cast<int>(scale * a);
+      const auto side_b = static_cast<int>(scale * b);
+
+      const auto delta = ui->xexeSiO2DeltaDoubleSpinBox->value();
+      const auto side_plasma = static_cast<int>(scale * params.r);
+      const auto delta_scale = static_cast<int>(scale * delta);
+
+      painter.setPen(QPen{Qt::red, 1});
+      painter.setBrush(QBrush{Qt::red});
+      painter.drawEllipse((w - delta_scale) / 2 - side_plasma,
+                          (h - side_plasma) / 2, side_plasma, side_plasma);
+      painter.drawEllipse((w + delta_scale) / 2, (h - side_plasma) / 2,
+                          side_plasma, side_plasma);
+
+      painter.setPen(QPen{Qt::black, 1});
+      painter.setBrush(QBrush{Qt::white});
+      painter.drawEllipse((w - side_a) / 2, (h - side_b) / 2, side_a, side_b);
+
+      const auto image = pixmap.toImage();
+      for (int i = 0; i < w; ++i) {
+        for (int j = 0; j < h; ++j) {
+          if (image.pixelColor(i, j) == Qt::red) {
+            ui->statusBar->showMessage("Неправильная геометрия системы");
+            ui->xexeSiO2PaintWidget->image = std::move(image);
+            ui->xexeSiO2PaintWidget->update();
+            return;
+          }
+        }
+      }
+    }
+
+    auto ignore_result = false;
+    if (xe_xe_sio2_params.has_value()) {
+      ignore_result = OnlyNThreadsDiffers(*xe_xe_sio2_params, params);
+    }
+    params.i_crit *= static_cast<Float>(params.n_threads) / 4;
+
+    const auto start_ts = std::chrono::high_resolution_clock::now();
+    auto res = CylinderPlasmaQuartz{params}.Solve();
+    const auto time = std::chrono::high_resolution_clock::now() - start_ts;
+
+    if (!ignore_result) {
+      xe_xe_sio2_params = params;
+      xe_xe_sio2_res = std::move(res);
+    }
+
+    const auto message = std::format(
+        "Время моделирования: {}{}",
+        std::chrono::duration_cast<std::chrono::seconds>(time),
+        std::chrono::duration_cast<std::chrono::milliseconds>(time) % 1000);
+    ui->statusBar->showMessage(QString::fromStdString(message));
+
+    ui->xexeSiO2PaintWidget->update();
+    //
+    //    ui->xexeSiO2I2PlotWidget->setData(xe_xe_sio2_res->absorbed_plasma,
+    //                                    xe_xe_sio2_res->absorbed_quartz,
+    //                                    params.r, params.delta);
+    //    ui->xexeSiO2I3PlotWidget->setData(xe_xe_sio2_res->absorbed_plasma3,
+    //                                    xe_xe_sio2_res->absorbed_quartz3,
+    //                                    params.r, params.delta);
+    //
+    //    auto total_plasma = kZero;
+    //    auto total_quartz = kZero;
+    //    QString strI2;
+    //    for (auto i2 : xe_xe_sio2_res->absorbed_plasma) {
+    //      total_plasma += i2;
+    //      strI2 += QString::number(i2);
+    //      strI2 += '\n';
+    //    }
+    //    strI2 += "    ";
+    //    strI2 += QString::number(xe_xe_sio2_res->absorbed_quartz[0]);
+    //    strI2 += '\n';
+    //    for (std::size_t i = 1; i < xe_xe_sio2_res->absorbed_quartz.size();
+    //    ++i) {
+    //      auto i2 = xe_xe_sio2_res->absorbed_quartz[i];
+    //      total_quartz += i2;
+    //      strI2 += QString::number(i2);
+    //      strI2 += '\n';
+    //    }
+    //    ui->xexeSiO2DataI2TextEdit->setText(strI2);
+    //
+    //    QString strI3;
+    //    for (auto i3 : xe_xe_sio2_res->absorbed_plasma3) {
+    //      strI3 += QString::number(i3);
+    //      strI3 += '\n';
+    //    }
+    //    strI3 += "————————\n";
+    //    for (std::size_t i = 1; i < xe_xe_sio2_res->absorbed_quartz3.size();
+    //    ++i) {
+    //      auto i3 = xe_xe_sio2_res->absorbed_quartz3[i];
+    //      strI3 += QString::number(i3);
+    //      strI3 += '\n';
+    //    }
+    //    ui->xexeSiO2DataI3TextEdit->setText(strI3);
+    //
+    //    ui->xexeSiO2DataTotalIntensityLineEdit->setText(
+    //        QString::number(xe_xe_sio2_res->intensity_all));
+    //    ui->xexeSiO2DataTotalAbsorbedPlasmaLineEdit->setText(
+    //        QString::number(total_plasma));
+    //    ui->xexeSiO2DataTotalAbsorbedQuartzLineEdit->setText(
+    //        QString::number(total_quartz));
+    //    ui->xexeSiO2DataTotalAbsorbedMirrorLineEdit->setText(
+    //        QString::number(xe_xe_sio2_res->absorbed_mirror));
+  });
 }
 
 MainWindow::~MainWindow() {

@@ -17,6 +17,8 @@ class EllipticCylinderZInfinite final : public Shape {
   [[nodiscard]] Float IntersectCurr(Vec3 pos, Vec3 dir) const noexcept;
 
   [[nodiscard]] constexpr Vec3 center() const noexcept { return center_; }
+  [[nodiscard]] constexpr Float a2() const noexcept { return a2_; }
+  [[nodiscard]] constexpr Float b2() const noexcept { return b2_; }
 
  private:
   Vec3 center_;

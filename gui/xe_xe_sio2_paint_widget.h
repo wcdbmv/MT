@@ -10,6 +10,8 @@ class XeXeSiO2PaintWidget : public QWidget {
  public:
   explicit XeXeSiO2PaintWidget(QWidget* parent = nullptr);
 
+  QImage image;
+
  protected:
   void paintEvent(QPaintEvent* event) override;
 };
