@@ -24,6 +24,8 @@
 
 #include "base/config/float.h"
 #include "base/ignore_unused.h"
+#include "math/consts/pi.h"
+#include "math/fast_pow.h"
 #include "physics/params/xenon_absorption_coefficient.h"
 
 namespace {
@@ -319,7 +321,7 @@ void MainWindow::InitXeSiO2Tab() {
     if (xe_sio2_params.has_value()) {
       ignore_result = OnlyNThreadsDiffers(*xe_sio2_params, params);
     }
-    params.i_crit *= static_cast<Float>(params.n_threads) / 4;
+    params.i_crit *= static_cast<Float>(params.n_threads);
 
     const auto start_ts = std::chrono::high_resolution_clock::now();
     auto res = CylinderPlasmaQuartz{params}.Solve();
@@ -546,7 +548,7 @@ void MainWindow::InitXeXeSiO2Tab() {
     if (xe_xe_sio2_params.has_value()) {
       ignore_result = OnlyNThreadsDiffers(*xe_xe_sio2_params, params);
     }
-    params.i_crit *= static_cast<Float>(params.n_threads) / 4;
+    params.i_crit *= static_cast<Float>(params.n_threads);
 
     const auto start_ts = std::chrono::high_resolution_clock::now();
     auto res = CylinderPlasmaQuartz{params}.Solve();
@@ -562,6 +564,114 @@ void MainWindow::InitXeXeSiO2Tab() {
         std::chrono::duration_cast<std::chrono::seconds>(time),
         std::chrono::duration_cast<std::chrono::milliseconds>(time) % 1000);
     ui->statusBar->showMessage(QString::fromStdString(message));
+
+    {
+      const auto w = ui->xexeSiO2PaintWidget->width() / 4;
+      const auto h = ui->xexeSiO2PaintWidget->height() / 4;
+
+      const auto scale = std::min(w / a, h / b) / 1.01;
+
+      const auto delta = ui->xexeSiO2DeltaDoubleSpinBox->value();
+      const auto side_plasma = static_cast<int>(scale * params.r);
+      const auto delta_scale = static_cast<int>(scale * delta);
+
+      std::vector<std::size_t> without_plasma(params.n_quartz);
+      std::vector<std::size_t> with_plasma(params.n_quartz);
+      for (std::size_t k = 0; k < params.n_quartz; ++k) {
+        QPixmap pixmap{w, h};
+        QPainter painter{&pixmap};
+        painter.fillRect(rect(), QBrush{Qt::white});
+
+        for (std::size_t i = params.n_quartz; i > 0; --i) {
+          if (i == k + 1) {
+            painter.setPen(QPen{Qt::red, 1});
+            painter.setBrush(QBrush{Qt::red});
+          } else {
+            painter.setPen(QPen{Qt::black, 1});
+            painter.setBrush(QBrush{Qt::white});
+          }
+          const auto side_ai =
+              static_cast<int>(scale * a * static_cast<Float>(i) /
+                               static_cast<Float>(params.n_quartz));
+          const auto side_bi =
+              static_cast<int>(scale * b * static_cast<Float>(i) /
+                               static_cast<Float>(params.n_quartz));
+          painter.drawEllipse((w - side_ai) / 2, (h - side_bi) / 2, side_ai,
+                              side_bi);
+        }
+
+        auto image = pixmap.toImage();
+        for (int i = 0; i < w; ++i) {
+          for (int j = 0; j < h; ++j) {
+            if (image.pixelColor(i, j) == Qt::red) {
+              without_plasma[k] += 1;
+            }
+          }
+        }
+
+        painter.setPen(QPen{Qt::black, 1});
+        painter.setBrush(QBrush{Qt::white});
+        painter.drawEllipse((w - delta_scale) / 2 - side_plasma,
+                            (h - side_plasma) / 2, side_plasma, side_plasma);
+        painter.drawEllipse((w + delta_scale) / 2, (h - side_plasma) / 2,
+                            side_plasma, side_plasma);
+
+        image = pixmap.toImage();
+        //        if (k == params.n_quartz / 2) {
+        //          ui->xexeSiO2PaintWidget->image = image;
+        //          ui->xexeSiO2PaintWidget->update();
+        //        }
+
+        for (int i = 0; i < w; ++i) {
+          for (int j = 0; j < h; ++j) {
+            if (image.pixelColor(i, j) == Qt::red) {
+              with_plasma[k] += 1;
+            }
+          }
+        }
+      }
+
+      auto min_ratio = kOne;
+      std::size_t min_ratio_index = 0;
+      for (std::size_t k = 0; k < params.n_quartz; ++k) {
+        const auto ratio = static_cast<Float>(with_plasma[k]) /
+                           static_cast<Float>(without_plasma[k]);
+        if (ratio < min_ratio) {
+          min_ratio = ratio;
+          min_ratio_index = k;
+        }
+        qWarning() << without_plasma[k] << ' ' << with_plasma[k];
+      }
+      for (std::size_t k = 0; k < min_ratio_index; ++k) {
+        with_plasma[k] = static_cast<std::size_t>(
+            static_cast<Float>(without_plasma[k]) * min_ratio);
+      }
+
+      auto minus = kZero;
+      const auto step_quartz =
+          params.delta / static_cast<Float>(params.n_quartz);
+      const auto kLeft = 7;
+      const auto kRight = 3;
+      for (std::size_t i = 0; i < params.n_quartz; ++i) {
+        const auto r_avg = step_quartz * (static_cast<Float>(i) + 0.5_F);
+        const auto i2 = xe_xe_sio2_res->absorbed_quartz[i + 1] *
+                        (2 - Sqr(static_cast<Float>(with_plasma[i]) /
+                                 static_cast<Float>(without_plasma[i]))) *
+                        r_avg *
+                        (kLeft - (kLeft - kRight) * static_cast<Float>(i) /
+                                     static_cast<Float>(params.n_quartz - 1));
+        minus += xe_xe_sio2_res->absorbed_quartz[i + 1] - i2;
+        xe_xe_sio2_res->absorbed_quartz[i + 1] = i2;
+      }
+
+      xe_xe_sio2_res->intensity_all -= minus;
+
+      for (std::size_t i = 0; i < params.n_quartz; ++i) {
+        const auto r_avg = step_quartz * (static_cast<Float>(i) + 0.5_F);
+        xe_xe_sio2_res->absorbed_quartz3[i + 1] =
+            2 * consts::kPi * xe_xe_sio2_res->absorbed_quartz[i + 1] / r_avg;
+      }
+    }
 
     ui->xexeSiO2PaintWidget->update();
 
@@ -580,9 +690,7 @@ void MainWindow::InitXeXeSiO2Tab() {
       strI2 += QString::number(i2);
       strI2 += '\n';
     }
-    strI2 += "    ";
     strI2 += "————————\n";
-    strI2 += '\n';
     for (std::size_t i = 1; i < xe_xe_sio2_res->absorbed_quartz.size(); ++i) {
       auto i2 = xe_xe_sio2_res->absorbed_quartz[i];
       total_quartz += i2;

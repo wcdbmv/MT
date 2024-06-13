@@ -77,4 +77,4 @@ set_source_files_properties(main.cc PROPERTIES
 )
 
 target_link_libraries(${PROJECT_NAME}
-  PRIVATE base modeling physics)
+  PRIVATE base math modeling physics)

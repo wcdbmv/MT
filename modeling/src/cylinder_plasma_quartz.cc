@@ -268,7 +268,7 @@ class CylinderPlasmaQuartz::Impl {
     //        2 * consts::kPi * r.absorbed_plasma.front() / r_avg;
 
     const auto step_quartz =
-        params_.delta / static_cast<Float>(params_.n_plasma);
+        params_.delta / static_cast<Float>(params_.n_quartz);
     for (std::size_t i = 0; i < params_.n_quartz; ++i) {
       r_avg = params_.r + step_quartz * (static_cast<Float>(i) + 0.5_F);
       r.absorbed_quartz3[i + 1] =
