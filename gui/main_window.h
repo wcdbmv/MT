@@ -28,10 +28,13 @@ class MainWindow : public QMainWindow {
   Ui::MainWindow* ui;
   std::optional<CylinderPlasma::Params> xe_params;
   std::optional<CylinderPlasmaQuartz::Params> xe_sio2_params;
+  std::optional<CylinderPlasmaQuartz::Params> xe_xe_sio2_params;
   std::optional<CylinderPlasma::Result> xe_res;
   std::optional<CylinderPlasmaQuartz::Result> xe_sio2_res;
+  std::optional<CylinderPlasmaQuartz::Result> xe_xe_sio2_res;
 
  private:
   void InitXeTab();
   void InitXeSiO2Tab();
+  void InitXeXeSiO2Tab();
 };
