@@ -353,9 +353,7 @@ void MainWindow::InitXeSiO2Tab() {
       strI2 += QString::number(i2);
       strI2 += '\n';
     }
-    strI2 += "    ";
-    strI2 += QString::number(xe_sio2_res->absorbed_quartz[0]);
-    strI2 += '\n';
+    strI2 += "————————\n";
     for (std::size_t i = 1; i < xe_sio2_res->absorbed_quartz.size(); ++i) {
       auto i2 = xe_sio2_res->absorbed_quartz[i];
       total_quartz += i2;
@@ -444,8 +442,6 @@ void MainWindow::InitXeXeSiO2Tab() {
   ConnectSpinBoxAndSlider(ui->xexeSiO2TwSpinBox,
                           ui->xexeSiO2TwHorizontalSlider);
   ConnectSpinBoxAndSlider(ui->xexeSiO2MSpinBox, ui->xexeSiO2MHorizontalSlider);
-  ConnectSpinBoxAndSlider(ui->xexeSiO2T1SpinBox,
-                          ui->xexeSiO2T1HorizontalSlider);
 
   ConnectDoubleSpinBoxAndSlider(ui->xexeSiO2EtaPlasmaDoubleSpinBox,
                                 ui->xexeSiO2EtaPlasmaHorizontalSlider);
@@ -461,8 +457,8 @@ void MainWindow::InitXeXeSiO2Tab() {
   ConnectSpinBoxAndSlider(ui->xexeSiO2NThreadsSpinBox,
                           ui->xexeSiO2NThreadsHorizontalSlider);
 
-  //  ui->xexeSiO2I2PlotWidget->setAxisY("I [Вт/см^2]");
-  //  ui->xexeSiO2I3PlotWidget->setAxisY("I [Вт/см^3]");
+  ui->xexeSiO2I2PlotWidget->setAxisY("I [Вт/см^2]");
+  ui->xexeSiO2I3PlotWidget->setAxisY("I [Вт/см^3]");
 
   connect(ui->xexeSiO2CalculatePushButton, &QPushButton::clicked, [this] {
     const auto nu_idx =
@@ -487,7 +483,7 @@ void MainWindow::InitXeXeSiO2Tab() {
         .t0 = static_cast<Float>(ui->xexeSiO2T0SpinBox->value()),
         .tw = static_cast<Float>(ui->xexeSiO2TwSpinBox->value()),
         .m = ui->xexeSiO2MSpinBox->value(),
-        .t1 = static_cast<Float>(ui->xexeSiO2T1SpinBox->value()),
+        .t1 = static_cast<Float>(ui->xexeSiO2TwSpinBox->value()),
 
         .eta_plasma = ui->xexeSiO2EtaPlasmaDoubleSpinBox->value(),
         .eta_quartz = ui->xexeSiO2EtaQuartzDoubleSpinBox->value(),
@@ -568,56 +564,54 @@ void MainWindow::InitXeXeSiO2Tab() {
     ui->statusBar->showMessage(QString::fromStdString(message));
 
     ui->xexeSiO2PaintWidget->update();
-    //
-    //    ui->xexeSiO2I2PlotWidget->setData(xe_xe_sio2_res->absorbed_plasma,
-    //                                    xe_xe_sio2_res->absorbed_quartz,
-    //                                    params.r, params.delta);
-    //    ui->xexeSiO2I3PlotWidget->setData(xe_xe_sio2_res->absorbed_plasma3,
-    //                                    xe_xe_sio2_res->absorbed_quartz3,
-    //                                    params.r, params.delta);
-    //
-    //    auto total_plasma = kZero;
-    //    auto total_quartz = kZero;
-    //    QString strI2;
-    //    for (auto i2 : xe_xe_sio2_res->absorbed_plasma) {
-    //      total_plasma += i2;
-    //      strI2 += QString::number(i2);
-    //      strI2 += '\n';
-    //    }
-    //    strI2 += "    ";
-    //    strI2 += QString::number(xe_xe_sio2_res->absorbed_quartz[0]);
-    //    strI2 += '\n';
-    //    for (std::size_t i = 1; i < xe_xe_sio2_res->absorbed_quartz.size();
-    //    ++i) {
-    //      auto i2 = xe_xe_sio2_res->absorbed_quartz[i];
-    //      total_quartz += i2;
-    //      strI2 += QString::number(i2);
-    //      strI2 += '\n';
-    //    }
-    //    ui->xexeSiO2DataI2TextEdit->setText(strI2);
-    //
-    //    QString strI3;
-    //    for (auto i3 : xe_xe_sio2_res->absorbed_plasma3) {
-    //      strI3 += QString::number(i3);
-    //      strI3 += '\n';
-    //    }
-    //    strI3 += "————————\n";
-    //    for (std::size_t i = 1; i < xe_xe_sio2_res->absorbed_quartz3.size();
-    //    ++i) {
-    //      auto i3 = xe_xe_sio2_res->absorbed_quartz3[i];
-    //      strI3 += QString::number(i3);
-    //      strI3 += '\n';
-    //    }
-    //    ui->xexeSiO2DataI3TextEdit->setText(strI3);
-    //
-    //    ui->xexeSiO2DataTotalIntensityLineEdit->setText(
-    //        QString::number(xe_xe_sio2_res->intensity_all));
-    //    ui->xexeSiO2DataTotalAbsorbedPlasmaLineEdit->setText(
-    //        QString::number(total_plasma));
-    //    ui->xexeSiO2DataTotalAbsorbedQuartzLineEdit->setText(
-    //        QString::number(total_quartz));
-    //    ui->xexeSiO2DataTotalAbsorbedMirrorLineEdit->setText(
-    //        QString::number(xe_xe_sio2_res->absorbed_mirror));
+
+    ui->xexeSiO2I2PlotWidget->setData(xe_xe_sio2_res->absorbed_plasma,
+                                      xe_xe_sio2_res->absorbed_quartz, params.r,
+                                      params.delta);
+    ui->xexeSiO2I3PlotWidget->setData(xe_xe_sio2_res->absorbed_plasma3,
+                                      xe_xe_sio2_res->absorbed_quartz3,
+                                      params.r, params.delta);
+
+    auto total_plasma = kZero;
+    auto total_quartz = kZero;
+    QString strI2;
+    for (auto i2 : xe_xe_sio2_res->absorbed_plasma) {
+      total_plasma += i2;
+      strI2 += QString::number(i2);
+      strI2 += '\n';
+    }
+    strI2 += "    ";
+    strI2 += "————————\n";
+    strI2 += '\n';
+    for (std::size_t i = 1; i < xe_xe_sio2_res->absorbed_quartz.size(); ++i) {
+      auto i2 = xe_xe_sio2_res->absorbed_quartz[i];
+      total_quartz += i2;
+      strI2 += QString::number(i2);
+      strI2 += '\n';
+    }
+    ui->xexeSiO2DataI2TextEdit->setText(strI2);
+
+    QString strI3;
+    for (auto i3 : xe_xe_sio2_res->absorbed_plasma3) {
+      strI3 += QString::number(i3);
+      strI3 += '\n';
+    }
+    strI3 += "————————\n";
+    for (std::size_t i = 1; i < xe_xe_sio2_res->absorbed_quartz3.size(); ++i) {
+      auto i3 = xe_xe_sio2_res->absorbed_quartz3[i];
+      strI3 += QString::number(i3);
+      strI3 += '\n';
+    }
+    ui->xexeSiO2DataI3TextEdit->setText(strI3);
+
+    ui->xexeSiO2DataTotalIntensityLineEdit->setText(
+        QString::number(xe_xe_sio2_res->intensity_all));
+    ui->xexeSiO2DataTotalAbsorbedPlasmaLineEdit->setText(
+        QString::number(total_plasma));
+    ui->xexeSiO2DataTotalAbsorbedQuartzLineEdit->setText(
+        QString::number(total_quartz));
+    ui->xexeSiO2DataTotalAbsorbedMirrorLineEdit->setText(
+        QString::number(xe_xe_sio2_res->absorbed_mirror));
   });
 }
 

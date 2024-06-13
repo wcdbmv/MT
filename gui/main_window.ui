@@ -3725,6 +3725,114 @@
              </layout>
             </widget>
            </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="xexeSiO2ALabel">
+             <property name="text">
+              <string>a =</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QWidget" name="xexeSiO2AWidget" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_45">
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QDoubleSpinBox" name="xexeSiO2ADoubleSpinBox">
+                <property name="minimum">
+                 <double>0.500000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>2.000000000000000</double>
+                </property>
+                <property name="singleStep">
+                 <double>0.050000000000000</double>
+                </property>
+                <property name="value">
+                 <double>1.200000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="xexeSiO2AHorizontalSlider">
+                <property name="minimum">
+                 <number>50</number>
+                </property>
+                <property name="maximum">
+                 <number>200</number>
+                </property>
+                <property name="singleStep">
+                 <number>5</number>
+                </property>
+                <property name="value">
+                 <number>120</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="xexeSiO2BLabel">
+             <property name="text">
+              <string>b =</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QWidget" name="xexeSiO2BWidget" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_44">
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QDoubleSpinBox" name="xexeSiO2BDoubleSpinBox">
+                <property name="minimum">
+                 <double>0.500000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>2.000000000000000</double>
+                </property>
+                <property name="singleStep">
+                 <double>0.050000000000000</double>
+                </property>
+                <property name="value">
+                 <double>1.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="xexeSiO2BHorizontalSlider">
+                <property name="minimum">
+                 <number>50</number>
+                </property>
+                <property name="maximum">
+                 <number>200</number>
+                </property>
+                <property name="singleStep">
+                 <number>5</number>
+                </property>
+                <property name="value">
+                 <number>100</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
            <item row="5" column="0">
             <widget class="QLabel" name="xexeSiO2NQuartzLabel">
              <property name="text">
@@ -3938,81 +4046,13 @@
             </widget>
            </item>
            <item row="10" column="0">
-            <widget class="QLabel" name="xexeSiO2TqLabel1">
-             <property name="text">
-              <string>T(z) =</string>
-             </property>
-            </widget>
-           </item>
-           <item row="10" column="1">
-            <widget class="QLabel" name="xexeSiO2TqLabel2">
-             <property name="text">
-              <string>a * exp(-b * z);      T(1 + δ/R) = T&lt;sub&gt;1&lt;/sub&gt;</string>
-             </property>
-            </widget>
-           </item>
-           <item row="11" column="0">
-            <widget class="QLabel" name="xexeSiO2T1Label">
-             <property name="text">
-              <string>T&lt;sub&gt;1&lt;/sub&gt; =</string>
-             </property>
-            </widget>
-           </item>
-           <item row="11" column="1">
-            <widget class="QWidget" name="xexeSiO2T1Widget" native="true">
-             <layout class="QHBoxLayout" name="horizontalLayout_40">
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QSpinBox" name="xexeSiO2T1SpinBox">
-                <property name="minimum">
-                 <number>100</number>
-                </property>
-                <property name="maximum">
-                 <number>2000</number>
-                </property>
-                <property name="singleStep">
-                 <number>100</number>
-                </property>
-                <property name="value">
-                 <number>700</number>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QSlider" name="xexeSiO2T1HorizontalSlider">
-                <property name="minimum">
-                 <number>100</number>
-                </property>
-                <property name="maximum">
-                 <number>2000</number>
-                </property>
-                <property name="singleStep">
-                 <number>100</number>
-                </property>
-                <property name="value">
-                 <number>700</number>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item row="12" column="0">
             <widget class="QLabel" name="xexeSiO2EtaPlasmaLabel">
              <property name="text">
               <string>η&lt;sub&gt;Xe&lt;/sub&gt; =</string>
              </property>
             </widget>
            </item>
-           <item row="12" column="1">
+           <item row="10" column="1">
             <widget class="QWidget" name="xexeSiO2EtaPlasmaWidget" native="true">
              <layout class="QHBoxLayout" name="horizontalLayout_41">
               <property name="topMargin">
@@ -4056,14 +4096,14 @@
              </layout>
             </widget>
            </item>
-           <item row="13" column="0">
+           <item row="11" column="0">
             <widget class="QLabel" name="xexeSiO2EtaQuatzLabel">
              <property name="text">
               <string>η&lt;sub&gt;SiO2&lt;/sub&gt; =</string>
              </property>
             </widget>
            </item>
-           <item row="13" column="1">
+           <item row="11" column="1">
             <widget class="QWidget" name="xexeSiO2EtaQuartzWidget" native="true">
              <layout class="QHBoxLayout" name="horizontalLayout_42">
               <property name="topMargin">
@@ -4113,14 +4153,14 @@
              </layout>
             </widget>
            </item>
-           <item row="15" column="0">
+           <item row="13" column="0">
             <widget class="QLabel" name="xexeSiO2RhoLabel">
              <property name="text">
               <string>ρ =</string>
              </property>
             </widget>
            </item>
-           <item row="15" column="1">
+           <item row="13" column="1">
             <widget class="QWidget" name="xexeSiO2RhoWidget" native="true">
              <layout class="QHBoxLayout" name="horizontalLayout_27">
               <property name="topMargin">
@@ -4158,14 +4198,14 @@
              </layout>
             </widget>
            </item>
-           <item row="16" column="0">
+           <item row="14" column="0">
             <widget class="QLabel" name="xexeSiO2DeltaNuLabel">
              <property name="text">
               <string>Δν* =</string>
              </property>
             </widget>
            </item>
-           <item row="16" column="1">
+           <item row="14" column="1">
             <widget class="QComboBox" name="xexeSiO2DeltaNuComboBox">
              <property name="currentIndex">
               <number>80</number>
@@ -5137,14 +5177,14 @@
              </item>
             </widget>
            </item>
-           <item row="17" column="0">
+           <item row="15" column="0">
             <widget class="QLabel" name="xexeSiO2NMeridianLabel">
              <property name="text">
               <string>N&lt;sub&gt;меридианов&lt;/sub&gt; =</string>
              </property>
             </widget>
            </item>
-           <item row="17" column="1">
+           <item row="15" column="1">
             <widget class="QWidget" name="xexeSiO2NMeridianWidget" native="true">
              <layout class="QHBoxLayout" name="horizontalLayout_28">
               <property name="topMargin">
@@ -5191,14 +5231,14 @@
              </layout>
             </widget>
            </item>
-           <item row="18" column="0">
+           <item row="16" column="0">
             <widget class="QLabel" name="xexeSiO2LatitudeLabel">
              <property name="text">
               <string>N&lt;sub&gt;широт&lt;/sub&gt; =</string>
              </property>
             </widget>
            </item>
-           <item row="18" column="1">
+           <item row="16" column="1">
             <widget class="QWidget" name="xexeSiO2NLatitudeWidget" native="true">
              <layout class="QHBoxLayout" name="horizontalLayout_29">
               <property name="topMargin">
@@ -5245,14 +5285,14 @@
              </layout>
             </widget>
            </item>
-           <item row="19" column="0">
+           <item row="17" column="0">
             <widget class="QLabel" name="xexeSiO2NThreadsLabel">
              <property name="text">
               <string>N&lt;sub&gt;потоков&lt;/sub&gt; =</string>
              </property>
             </widget>
            </item>
-           <item row="19" column="1">
+           <item row="17" column="1">
             <widget class="QWidget" name="xexeSiO2NThreadsWidget" native="true">
              <layout class="QHBoxLayout" name="horizontalLayout_30">
               <property name="topMargin">
@@ -5293,133 +5333,25 @@
              </layout>
             </widget>
            </item>
-           <item row="20" column="0">
+           <item row="18" column="0">
             <widget class="QLabel" name="xexeSiO2ICritLabel">
              <property name="text">
               <string>I&lt;sub&gt;крит&lt;/sub&gt; =</string>
              </property>
             </widget>
            </item>
-           <item row="21" column="0" colspan="2">
-            <widget class="QPushButton" name="xexeSiO2CalculatePushButton">
-             <property name="text">
-              <string>Рассчитать поглощённую мощность</string>
-             </property>
-            </widget>
-           </item>
-           <item row="20" column="1">
+           <item row="18" column="1">
             <widget class="QLineEdit" name="xexeSiO2ICritLineEdit">
              <property name="text">
               <string>0.0001</string>
              </property>
             </widget>
            </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="xexeSiO2ALabel">
+           <item row="19" column="0" colspan="2">
+            <widget class="QPushButton" name="xexeSiO2CalculatePushButton">
              <property name="text">
-              <string>a =</string>
+              <string>Рассчитать поглощённую мощность</string>
              </property>
-            </widget>
-           </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="xexeSiO2BLabel">
-             <property name="text">
-              <string>b =</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QWidget" name="xexeSiO2AWidget" native="true">
-             <layout class="QHBoxLayout" name="horizontalLayout_45">
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QDoubleSpinBox" name="xexeSiO2ADoubleSpinBox">
-                <property name="minimum">
-                 <double>0.500000000000000</double>
-                </property>
-                <property name="maximum">
-                 <double>2.000000000000000</double>
-                </property>
-                <property name="singleStep">
-                 <double>0.050000000000000</double>
-                </property>
-                <property name="value">
-                 <double>1.200000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QSlider" name="xexeSiO2AHorizontalSlider">
-                <property name="minimum">
-                 <number>50</number>
-                </property>
-                <property name="maximum">
-                 <number>200</number>
-                </property>
-                <property name="singleStep">
-                 <number>5</number>
-                </property>
-                <property name="value">
-                 <number>120</number>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QWidget" name="xexeSiO2BWidget" native="true">
-             <layout class="QHBoxLayout" name="horizontalLayout_44">
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QDoubleSpinBox" name="xexeSiO2BDoubleSpinBox">
-                <property name="minimum">
-                 <double>0.500000000000000</double>
-                </property>
-                <property name="maximum">
-                 <double>2.000000000000000</double>
-                </property>
-                <property name="singleStep">
-                 <double>0.050000000000000</double>
-                </property>
-                <property name="value">
-                 <double>1.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QSlider" name="xexeSiO2BHorizontalSlider">
-                <property name="minimum">
-                 <number>50</number>
-                </property>
-                <property name="maximum">
-                 <number>200</number>
-                </property>
-                <property name="singleStep">
-                 <number>5</number>
-                </property>
-                <property name="value">
-                 <number>100</number>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
-              </item>
-             </layout>
             </widget>
            </item>
           </layout>
