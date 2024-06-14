@@ -112,6 +112,17 @@ bool OnlyNThreadsDiffers(const Params& a, Params b) {
   return memcmp(&a, &b, sizeof a) == 0;
 }
 
+template <typename Params>
+void AdjustICrit(Params& params) {
+  constexpr std::array<Float, 8> kAddendum{1.00_F, 0.99_F, 0.98_F, 0.96_F,
+                                           0.93_F, 0.88_F, 0.80_F};
+  auto sum = kAddendum[0];
+  for (std::size_t i = 2; i <= params.n_threads; ++i) {
+    sum += kAddendum[i - 1];
+  }
+  params.i_crit *= sum;
+}
+
 }  // namespace
 
 MainWindow::MainWindow(QWidget* parent)
@@ -180,7 +191,7 @@ void MainWindow::InitXeTab() {
     if (xe_params.has_value()) {
       ignore_result = OnlyNThreadsDiffers(*xe_params, params);
     }
-    params.i_crit *= static_cast<Float>(params.n_threads);
+    AdjustICrit(params);
 
     const auto start_ts = std::chrono::high_resolution_clock::now();
     auto res = CylinderPlasma{params}.Solve();
@@ -321,7 +332,7 @@ void MainWindow::InitXeSiO2Tab() {
     if (xe_sio2_params.has_value()) {
       ignore_result = OnlyNThreadsDiffers(*xe_sio2_params, params);
     }
-    params.i_crit *= static_cast<Float>(params.n_threads);
+    AdjustICrit(params);
 
     const auto start_ts = std::chrono::high_resolution_clock::now();
     auto res = CylinderPlasmaQuartz{params}.Solve();
@@ -548,7 +559,7 @@ void MainWindow::InitXeXeSiO2Tab() {
     if (xe_xe_sio2_params.has_value()) {
       ignore_result = OnlyNThreadsDiffers(*xe_xe_sio2_params, params);
     }
-    params.i_crit *= static_cast<Float>(params.n_threads);
+    AdjustICrit(params);
 
     const auto start_ts = std::chrono::high_resolution_clock::now();
     auto res = CylinderPlasmaQuartz{params}.Solve();
@@ -565,7 +576,7 @@ void MainWindow::InitXeXeSiO2Tab() {
         std::chrono::duration_cast<std::chrono::milliseconds>(time) % 1000);
     ui->statusBar->showMessage(QString::fromStdString(message));
 
-    {
+    if (!ignore_result) {
       const auto w = ui->xexeSiO2PaintWidget->width() / 4;
       const auto h = ui->xexeSiO2PaintWidget->height() / 4;
 
