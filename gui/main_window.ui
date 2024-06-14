@@ -5360,7 +5360,7 @@
         <item>
          <widget class="QTabWidget" name="xexeSiO2TabWidget">
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="XeXeSiO2PaintWidget" name="xexeSiO2PaintWidget">
            <attribute name="title">
@@ -5373,10 +5373,10 @@
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_5">
             <item>
-             <widget class="XeSiO2PlotWidget" name="xexeSiO2I2PlotWidget"/>
+             <widget class="XeXeSiO2PlotWidget" name="xexeSiO2I2PlotWidget"/>
             </item>
             <item>
-             <widget class="XeSiO2PlotWidget" name="xexeSiO2I3PlotWidget"/>
+             <widget class="XeXeSiO2PlotWidget" name="xexeSiO2I3PlotWidget"/>
             </item>
            </layout>
           </widget>
@@ -5550,6 +5550,11 @@
    <extends>QWidget</extends>
    <header>xe_xe_sio2_paint_widget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>XeXeSiO2PlotWidget</class>
+   <extends>QGraphicsView</extends>
+   <header>xe_xe_sio2_plot_widget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -676,11 +676,9 @@ void MainWindow::InitXeXeSiO2Tab() {
     ui->xexeSiO2PaintWidget->update();
 
     ui->xexeSiO2I2PlotWidget->setData(xe_xe_sio2_res->absorbed_plasma,
-                                      xe_xe_sio2_res->absorbed_quartz, params.r,
-                                      params.delta);
+                                      xe_xe_sio2_res->absorbed_quartz);
     ui->xexeSiO2I3PlotWidget->setData(xe_xe_sio2_res->absorbed_plasma3,
-                                      xe_xe_sio2_res->absorbed_quartz3,
-                                      params.r, params.delta);
+                                      xe_xe_sio2_res->absorbed_quartz3);
 
     auto total_plasma = kZero;
     auto total_quartz = kZero;

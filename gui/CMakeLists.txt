@@ -23,6 +23,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         xe_sio2_paint_widget.h xe_sio2_paint_widget.cc
         xe_sio2_plot_widget.h xe_sio2_plot_widget.cc
         xe_xe_sio2_paint_widget.h xe_xe_sio2_paint_widget.cc
+        xe_xe_sio2_plot_widget.h xe_xe_sio2_plot_widget.cc
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET gui APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
