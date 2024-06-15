@@ -466,6 +466,14 @@
 \algrenewtext{EndBlock}{\textbf{Конец блока}}
 \algrenewtext{ElsIf}{\textbf{иначе если }}
 %%
+\newenvironment{Algorithm}[2]
+	{\begin{center}
+		\captionof{lstlisting}{#1}
+		\label{alg:#2}
+		\vspace{-0.8\baselineskip}\hrulefill}
+	{\vspace{-0.8\baselineskip}\hrulefill
+	\end{center}}
+%%
 \usepackage{listings}
 \usepackage{listingsutf8}
 \usepackage{xcolor}
