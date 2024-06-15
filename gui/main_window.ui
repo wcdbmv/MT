@@ -1546,7 +1546,7 @@
             <item>
              <widget class="QGroupBox" name="xeDataI3GroupBox">
               <property name="title">
-               <string>I [Вт/см^3]</string>
+               <string>I* [Вт/см^3]</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_6">
                <item row="0" column="0">
@@ -3447,7 +3447,7 @@
             <item>
              <widget class="QGroupBox" name="xeSiO2DataI3GroupBox">
               <property name="title">
-               <string>I [Вт/см^3]</string>
+               <string>I* [Вт/см^3]</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_8">
                <item row="0" column="0">
@@ -3728,7 +3728,7 @@
            <item row="3" column="0">
             <widget class="QLabel" name="xexeSiO2ALabel">
              <property name="text">
-              <string>a =</string>
+              <string>a [см] =</string>
              </property>
             </widget>
            </item>
@@ -3782,7 +3782,7 @@
            <item row="4" column="0">
             <widget class="QLabel" name="xexeSiO2BLabel">
              <property name="text">
-              <string>b =</string>
+              <string>b [см] =</string>
              </property>
             </widget>
            </item>
@@ -5360,7 +5360,7 @@
         <item>
          <widget class="QTabWidget" name="xexeSiO2TabWidget">
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="XeXeSiO2PaintWidget" name="xexeSiO2PaintWidget">
            <attribute name="title">
@@ -5404,7 +5404,7 @@
             <item>
              <widget class="QGroupBox" name="xexeSiO2DataI3GroupBox">
               <property name="title">
-               <string>I [Вт/см^3]</string>
+               <string>I* [Вт/см^3]</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_14">
                <item row="0" column="0">

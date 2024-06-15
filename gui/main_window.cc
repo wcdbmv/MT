@@ -158,7 +158,7 @@ void MainWindow::InitXeTab() {
                           ui->xeNThreadsHorizontalSlider);
 
   ui->xeI2PlotWidget->setAxisY("I [Вт/см^2]");
-  ui->xeI3PlotWidget->setAxisY("I [Вт/см^3]");
+  ui->xeI3PlotWidget->setAxisY("I* [Вт/см^3]");
 
   connect(ui->xeCalculatePushButton, &QPushButton::clicked, [this] {
     const auto nu_idx =
@@ -289,7 +289,7 @@ void MainWindow::InitXeSiO2Tab() {
                           ui->xeSiO2NThreadsHorizontalSlider);
 
   ui->xeSiO2I2PlotWidget->setAxisY("I [Вт/см^2]");
-  ui->xeSiO2I3PlotWidget->setAxisY("I [Вт/см^3]");
+  ui->xeSiO2I3PlotWidget->setAxisY("I* [Вт/см^3]");
 
   connect(ui->xeSiO2CalculatePushButton, &QPushButton::clicked, [this] {
     const auto nu_idx =
@@ -471,7 +471,7 @@ void MainWindow::InitXeXeSiO2Tab() {
                           ui->xexeSiO2NThreadsHorizontalSlider);
 
   ui->xexeSiO2I2PlotWidget->setAxisY("I [Вт/см^2]");
-  ui->xexeSiO2I3PlotWidget->setAxisY("I [Вт/см^3]");
+  ui->xexeSiO2I3PlotWidget->setAxisY("I* [Вт/см^3]");
 
   connect(ui->xexeSiO2CalculatePushButton, &QPushButton::clicked, [this] {
     const auto nu_idx =
