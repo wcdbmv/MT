@@ -31,13 +31,13 @@
 
 \begin{itemize}
 	\item CLion 2024.1 \cite{clion} — кроссплатформенная интегрированная среда разработки для языков C и C++, разрабатываемая компанией JetBrains, позволяющая быстро и просто создавать современные и безопасные приложения.
-	\item CMake 3.29.4 \cite{cmake} — многофункцианальная кроссплатформенная система сборки ПО, фактически являющаяся стандартом для сборки C++ кода.
-	\item Clang 18.1.7 \cite{clang} — современный комплиятор для языков семейства C (C, C++, Objective C/C++, OpenCL, CUDA и RenderScript) на базе инфрастуктуры LLVM.
-	\item Clang-Format 18.1.7 \cite{clang-format} — широко-используемый инструмент, предназначенный для автоматического переформатирования исходных файлов C++ в соответствии с настраиваемыми руководствами по стилю.
+	\item CMake 3.29.4 \cite{cmake} — многофункциональная кроссплатформенная система сборки ПО, фактически являющаяся стандартом для сборки C++ кода.
+	\item Clang 18.1.7 \cite{clang} — современный компилятор для языков семейства C (C, C++, Objective C/C++, OpenCL, CUDA и RenderScript) на базе инфрастуктуры LLVM.
+	\item Clang-Format 18.1.7 \cite{clang-format} — широко используемый инструмент, предназначенный для автоматического переформатирования исходных файлов C++ в соответствии с настраиваемыми руководствами по стилю.
 	\item Clang-Tidy 18.1.7 \cite{clang-tidy} — статический анализатор C++ кода, обнаруживающий и исправляющий места в коде, подверженные ошибкам, проблемам с производительностью, переносимостью и удобностью поддержки.
 	\item IPO/LTO (Interprocedural optimization / Link time optimization) \cite{ipo-lto}~— оптимизация времени компоновки, отличаемая от других оптимизаций компилятора тем, что анализирует всю программу, а не отдельную функцию или блок кода.
 	\item IWYU (Include What You Use) 0.22 \cite{iwyu} — инструмент для обнаружения и оптимизации зависимостей заголовков в C++ коде.
-	\item Qt 6.7.0 \cite{qt} — кроссплатформенная библиотека и набор инструментов для создаиня современных графических прриложений на языке C++;
+	\item Qt 6.7.0 \cite{qt} — кроссплатформенная библиотека и набор инструментов для создания современных графических приложений на языке C++;
 	\item GoogleTest 1.14.0 \cite{googletest} — фреймворк для тестирования C++ кода, разрабатываемый компанией Google.
 \end{itemize}
 
@@ -73,7 +73,7 @@
 		\includegraphics[width=\linewidth]{inc/img/tab-xe-sio2}
 	}
 	\captionsetup{justification=centering}
-	\caption{Cистемы плазма~— отражатель и плазма~— оболочка~— отражатель}
+	\caption{Системы плазма~— отражатель и плазма~— оболочка~— отражатель}
 	\label{img:xe-and-xe-sio2}
 \end{figure}
 
@@ -141,7 +141,7 @@
 % Компилятор должен поддерживать определённые ключевые особенности из стандарта C++ 20.
 % Узнать, какие версии компиляторов поддерживают последний стандарт можно ознакомившись с информацией из источника \cite{cpp-compiler-support}.
 
-\begin{lstlisting}[gobble=8, language=bash, caption={Сборка\label{lst:cmake}}]
+\begin{lstlisting}[gobble=8, caption={Сборка\label{lst:cmake}}]
 	mkdir build
 	cd build
 	cmake [options...] ..
@@ -153,7 +153,7 @@
 
 В листингах \ref{lst:cpp-unit-test-equation}—\ref{lst:cpp-unit-tests-intersection} представлены примеры модульных тестов основных функций моделирования траектории движения луча в световой системе на базе фреймворка GoogleTest.
 
-\begin{lstlisting}[gobble=8, language=C++23, caption={Юнит-тест функции решения квадратных уравнений\label{lst:cpp-unit-test-equation}}]
+\begin{lstlisting}[gobble=8, caption={Юнит-тест функции решения квадратных уравнений\label{lst:cpp-unit-test-equation}}]
 	TEST(EquationTest, QuadraticEquationTwoRealSolutions) {
 	  auto x0 = kZero;
 	  auto x1 = kZero;
@@ -166,7 +166,7 @@
 	}
 \end{lstlisting}
 
-\begin{lstlisting}[gobble=8, language=C++23, caption={Юнит-тест функции отражения\label{lst:cpp-unit-test-reflection}}]
+\begin{lstlisting}[gobble=8, caption={Юнит-тест функции отражения\label{lst:cpp-unit-test-reflection}}]
 	TEST(ReflectTest, ReflectRay45Degree) {
 	  const auto incident = Vec3{1, -1, 0}.Normalized();
 	  const auto normal = Vec3{0, -1, 0}.Normalized();
@@ -177,7 +177,7 @@
 	}
 \end{lstlisting}
 
-\begin{lstlisting}[gobble=8, language=C++23, caption={Юнит-тест функции преломления\label{lst:cpp-unit-test-refraction}}]
+\begin{lstlisting}[gobble=8, caption={Юнит-тест функции преломления\label{lst:cpp-unit-test-refraction}}]
 	TEST(RefractTest, AirToGlass) {
 	  const auto incident = Vec3{1, 1, -1}.Normalized();
 	  const auto normal = Vec3{0, 0, -1}.Normalized();
@@ -192,7 +192,7 @@
 	}
 \end{lstlisting}
 
-\begin{lstlisting}[gobble=8, language=C++23, caption={Юнит-тест метода пересечения луча с поверхностью цилиндра\label{lst:cpp-unit-tests-intersection}}]
+\begin{lstlisting}[gobble=8, caption={Юнит-тест метода пересечения луча с поверхностью цилиндра\label{lst:cpp-unit-tests-intersection}}]
 	TEST(CylinderZInfinite, IntersectX) {
 	  const CylinderZInfinite cylinder{{}, 2};
 	  constexpr Vec3 kPos{-10, 0, 0};

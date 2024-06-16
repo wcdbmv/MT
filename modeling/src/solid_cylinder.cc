@@ -159,7 +159,7 @@ class SolidCylinderWorker {
     // const auto cos_theta = dir.z();
     // const auto sin_phi = std::sqrt(Sqr(dir.x()) + Sqr(dir.y()));
 
-    std::cout << "INTENSITY BEFORE COSINE: " << intensity << "\n";
+    // std::cout << "INTENSITY BEFORE COSINE: " << intensity << "\n";
 
     intensity *=
         2 * 2 * consts::kPi / static_cast<int>(sphere_points) * dir.x();
