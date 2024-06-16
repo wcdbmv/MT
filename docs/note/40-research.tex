@@ -11,7 +11,7 @@
 
 \chapter{Исследовательский раздел}
 
-\section{Анализ спектральной оптической плотности плазмы}
+\section{Спектральная оптическая плотность плазмы}
 
 \begin{figure}[ht]
 	\noindent\begin{tikzpicture}
@@ -61,13 +61,80 @@
 	\tau = \int\displaylimits_0^R k_{\text{погл}} \,\mathrm dr.
 \end{equation}
 
-Диапазоны частот, соответствующие критически малым значениям оптической плотности, являющиеся по сути прозрачными для светового излучения, не представляют интереса для анализа физико-оптических свойств разрядной плазмы так же, как и не представляют интерес диапазоны частот, соответствующие большим значениям оптической плотности, в которых плазма выступает в качестве чёрного газа. В дальнейшем расчёты поглощённой мощности по объёму будут осущевлятся в диапазонах $[0,36232\cdot10^{15}, 0,36240\cdot10^{15}]$ c $\tau_{81} = 0,691569$ и $[2,38460\cdot10^{15}, 2,38960\cdot10^{15}]$ с $\tau_{170} = 2,507276$.
+\begin{figure}[ht]
+	\noindent\begin{tikzpicture}
+		\begin{axis}[
+			xlabel = {$z$},
+			ylabel = {$I \;\; [\text{Вт}/\text{см}^2]$},
+			xmin = 0, xmax = 1.025,
+			yticklabel style={/pgf/number format/.cd,fixed,precision=2},
+			grid = both,
+			width = 0.965\linewidth,
+			height = 0.5\linewidth,
+		]
+			%\addplot table [x=zmax, y=I2tau57]{inc/data/Xe_R=0.35_d_nu.dat};
+			%\addlegendentry{$\tau_{57} = 0,389$}
+			%\addplot table [x=zmax, y=I2tau58]{inc/data/Xe_R=0.35_d_nu.dat};
+			%\addlegendentry{$\tau_{58} = 0,393$}
+			%\addplot table [x=zmax, y=I2tau59]{inc/data/Xe_R=0.35_d_nu.dat};
+			%\addlegendentry{$\tau_{59} = 0,395$}
+			%\addplot table [x=zmax, y=I2tau60]{inc/data/Xe_R=0.35_d_nu.dat};
+			%\addlegendentry{$\tau_{60} = 0,356$}
+			%\addplot table [x=zmax, y=I2tau61]{inc/data/Xe_R=0.35_d_nu.dat};
+			%\addlegendentry{$\tau_{61} = 0,379$}
+			%\addplot table [x=zmax, y=I2tau79]{inc/data/Xe_R=0.35_d_nu.dat};
+			%\addlegendentry{$\tau_{79} = 0,66$}
+			\addplot table [x=zmax, y=I2tau80]{inc/data/Xe_R=0.35_d_nu.dat};
+			\addlegendentry{$\tau_{80} = 0,68$}
+			\addplot table [x=zmax, y=I2tau81]{inc/data/Xe_R=0.35_d_nu.dat};
+			\addlegendentry{$\tau_{81} = 0,69$}
+			\addplot table [x=zmax, y=I2tau82]{inc/data/Xe_R=0.35_d_nu.dat};
+			\addlegendentry{$\tau_{82} = 0,75$}
+		\end{axis}
+	\end{tikzpicture}
 
-На рисунке \ref{plt:rho} представлена зависимость распределения поглощённой мощности по объёму разрядной плазмы при переменном коэффициенте $\rho$ зеркального отражения на поверхности.
+	\noindent\begin{tikzpicture}
+		\begin{axis}[
+			xlabel = {$z$},
+			ylabel = {$I^* \;\; [\text{Вт}/\text{см}^3]$},
+			xmin = 0, xmax = 1.025,
+			grid = both,
+			width = 0.98\linewidth,
+			height = 0.5\linewidth,
+		]
+			%\addplot table [x=zmax, y=I3tau57]{inc/data/Xe_R=0.35_d_nu.dat};
+			%\addlegendentry{$\tau_{57} = 0,389$}
+			%\addplot table [x=zmax, y=I3tau58]{inc/data/Xe_R=0.35_d_nu.dat};
+			%\addlegendentry{$\tau_{58} = 0,393$}
+			%\addplot table [x=zmax, y=I3tau59]{inc/data/Xe_R=0.35_d_nu.dat};
+			%\addlegendentry{$\tau_{59} = 0,395$}
+			%\addplot table [x=zmax, y=I3tau60]{inc/data/Xe_R=0.35_d_nu.dat};
+			%\addlegendentry{$\tau_{60} = 0,356$}
+			%\addplot table [x=zmax, y=I3tau61]{inc/data/Xe_R=0.35_d_nu.dat};
+			%\addlegendentry{$\tau_{61} = 0,379$}
+			%\addplot table [x=zmax, y=I3tau79]{inc/data/Xe_R=0.35_d_nu.dat};
+			%\addlegendentry{$\tau_{79} = 0,66$}
+			\addplot table [x=zmax, y=I3tau80]{inc/data/Xe_R=0.35_d_nu.dat};
+			\addlegendentry{$\tau_{80} = 0,68$}
+			\addplot table [x=zmax, y=I3tau81]{inc/data/Xe_R=0.35_d_nu.dat};
+			\addlegendentry{$\tau_{81} = 0,69$}
+			\addplot table [x=zmax, y=I3tau82]{inc/data/Xe_R=0.35_d_nu.dat};
+			\addlegendentry{$\tau_{82} = 0,75$}
+		\end{axis}
+	\end{tikzpicture}
+	\captionsetup{justification=centering}
+	\caption{Поглощённая мощность плазмы, $R = 0,35$ см, $T_0 = 10000$ К, $T_w = 2000$ К, $m = 4$, $\rho = 0,95$}
+	\label{plt:d_nu}
+\end{figure}
 
-На рисунке \ref{plt:m} представлена зависимость распределения поглощённой мощности по объёму разрядной плазмы при переменном показателе степени $m$ убывания абсолютной температуры.
+На рисунке \ref{plt:d_nu} представлена зависимость распределения поглощённой мощности по объёму разрядной плазмы при различных диапазонах частот.
 
-На рисунке \ref{plt:t} представлена зависимость распределения поглощённой мощности по объёму разрядной плазмы при переменном значении осевой абсолютной температуры $T_0$.
+Диапазоны частот, соответствующие критически малым значениям оптической плотности, являются по сути прозрачными для светового излучения, а в диапазонах частот, соответствующих большим значениям оптической плотности, плазма выступает в качестве чёрного газа.
+% В дальнейшем расчёты поглощённой мощности по объёму будут осущевлятся в диапазонах $[0,36232\cdot10^{15}, 0,36240\cdot10^{15}]$ c $\tau_{81} = 0,691569$ и $[2,38460\cdot10^{15}, 2,38960\cdot10^{15}]$ с $\tau_{170} = 2,507276$.
+
+% TODO(a.kerimov): Приложение
+
+\section{Влияние коэффициента отражения}
 
 \begin{figure}[ht]
 	\noindent\begin{tikzpicture}
@@ -79,36 +146,93 @@
 			width = \linewidth,
 			height = 0.5\linewidth,
 		]
-			\addplot table [x=zmax, y=mmb2]{inc/data/Xe_R=0.35.dat};
-			\addlegendentry{$\rho = 0.90$}
-			\addplot table [x=zmax, y=mmm2]{inc/data/Xe_R=0.35.dat};
-			\addlegendentry{$\rho = 0.95$}
-			\addplot table [x=zmax, y=mmt2]{inc/data/Xe_R=0.35.dat};
-			\addlegendentry{$\rho = 0.98$}
+			\addplot table [x=zmax, y=I2T10m4r55]{inc/data/Xe_R=0.35_rho.dat};
+			\addlegendentry{$\rho = 0,55$}
+			\addplot table [x=zmax, y=I2T10m4r70]{inc/data/Xe_R=0.35_rho.dat};
+			\addlegendentry{$\rho = 0,70$}
+			\addplot table [x=zmax, y=I2T10m4r80]{inc/data/Xe_R=0.35_rho.dat};
+			\addlegendentry{$\rho = 0,80$}
+			\addplot table [x=zmax, y=I2T10m4r90]{inc/data/Xe_R=0.35_rho.dat};
+			\addlegendentry{$\rho = 0,90$}
+			\addplot table [x=zmax, y=I2T10m4r95]{inc/data/Xe_R=0.35_rho.dat};
+			\addlegendentry{$\rho = 0,95$}
+			\addplot table [x=zmax, y=I2T10m4r98]{inc/data/Xe_R=0.35_rho.dat};
+			\addlegendentry{$\rho = 0,98$}
 		\end{axis}
 	\end{tikzpicture}
 
 	\noindent\begin{tikzpicture}
 		\begin{axis}[
 			xlabel = {$z$},
-			ylabel = {$I \;\; [\text{Вт}/\text{см}^3]$},
+			ylabel = {$I^* \;\; [\text{Вт}/\text{см}^3]$},
 			xmin = 0, xmax = 1.025,
 			grid = both,
 			width = 0.98\linewidth,
 			height = 0.5\linewidth,
 		]
-			\addplot table [x=zmax, y=mmb3]{inc/data/Xe_R=0.35.dat};
-			\addlegendentry{$\rho = 0.90$}
-			\addplot table [x=zmax, y=mmm3]{inc/data/Xe_R=0.35.dat};
-			\addlegendentry{$\rho = 0.95$}
-			\addplot table [x=zmax, y=mmt3]{inc/data/Xe_R=0.35.dat};
-			\addlegendentry{$\rho = 0.98$}
+			\addplot table [x=zmax, y=I3T10m4r70]{inc/data/Xe_R=0.35_rho.dat};
+			\addlegendentry{$\rho = 0,70$}
+			\addplot table [x=zmax, y=I3T10m4r80]{inc/data/Xe_R=0.35_rho.dat};
+			\addlegendentry{$\rho = 0,80$}
+			\addplot table [x=zmax, y=I3T10m4r90]{inc/data/Xe_R=0.35_rho.dat};
+			\addlegendentry{$\rho = 0,90$}
+			\addplot table [x=zmax, y=I3T10m4r95]{inc/data/Xe_R=0.35_rho.dat};
+			\addlegendentry{$\rho = 0,95$}
+			\addplot table [x=zmax, y=I3T10m4r98]{inc/data/Xe_R=0.35_rho.dat};
+			\addlegendentry{$\rho = 0,98$}
 		\end{axis}
 	\end{tikzpicture}
 	\captionsetup{justification=centering}
-	\caption{Поглощённая мощность плазмы, $\Delta\nu = [0,36232\cdot10^{15}, 0,36240\cdot10^{15}]$ $R = 0,35$ см, $T_0 = 10000$ К, $T_w = 2000$ К, $m = 4$}
+	\caption{Поглощённая мощность плазмы, $\Delta\nu_{81} = [0,36232\cdot10^{15}, 0,36240\cdot10^{15}]$ $R = 0,35$ см, $T_0 = 10000$ К, $T_w = 2000$ К, $m = 4$}
 	\label{plt:rho}
 \end{figure}
+
+На рисунке \ref{plt:rho} представлена зависимость распределения поглощённой мощности по объёму разрядной плазмы при переменном коэффициенте $\rho$ зеркального отражения на поверхности.
+
+При $\rho = 0,55$ доля поглощённой мощности в системе при заданных параметрах упала более, чем в два раза по сравнению со случаем при $\rho = 0,98$.
+Это связано с тем, что плазма не является абсолютно поглощающей средой, и в разряде реализуется режим многократного прохождения излучения через плазму до его полного выхода из системы в процессе отражения от границы.
+
+С увеличением коэффициента отражения количество таких проходов растет, увеличивается доля поглощённой мощности.
+При этом для ксеноновой плазмы с её высокой излучательной способностью вид распределения практически не меняется.
+
+\section{Влияние распределения температуры}
+
+\begin{figure}[H]
+	\noindent\begin{tikzpicture}
+		\begin{axis}[
+			xlabel = {$z$},
+			ylabel = {$T \;\; [\text{К}]$},
+			xmin = 0, xmax = 1.0,
+			domain=0:1,
+			grid = both,
+			width = 0.965\linewidth,
+			height = 0.5\linewidth,
+			legend style={at={(0.02,0.02)},anchor=south west},
+		]
+			\addplot {10000 + (2000 - 10000)*x*x};
+			\addlegendentry{$T_0 = 10000, T_w = 2000, m = 2$}
+			\addplot {10000 + (2000 - 10000)*x*x*x*x};
+			\addlegendentry{$T_0 = 10000, T_w = 2000, m = 4$}
+			\addplot {10000 + (2000 - 10000)*x*x*x*x*x*x};
+			\addlegendentry{$T_0 = 10000, T_w = 2000, m = 6$}
+			\addplot {10000 + (2000 - 10000)*x*x*x*x*x*x*x*x};
+			\addlegendentry{$T_0 = 10000, T_w = 2000, m = 8$}
+			\addplot {12000 + (2000 - 12000)*x*x*x*x};
+			\addlegendentry{$T_0 = 12000, T_w = 2000, m = 4$}
+			\addplot {10000 + (4000 - 10000)*x*x*x*x};
+			\addlegendentry{$T_0 = 10000, T_w = 4000, m = 4$}
+		\end{axis}
+	\end{tikzpicture}
+	\captionsetup{justification=centering}
+	\caption{Температурное распределение по модели $T(z) = T_0 + (T_w - T_0)z^m$}
+	\label{plt:temperature}
+\end{figure}
+
+На рисунке \ref{plt:temperature} представлена модель температурного профиля разрядного ксенона. В этой модели распределения коэффициент $m$ отвечает за продолжительность плоского фронта осевой температуры в основной части разряда, отдаляя крутое падение у стенки.
+
+На рисунке \ref{plt:m} представлена зависимость распределения поглощённой мощности по объёму разрядной плазмы при переменном показателе степени $m$ убывания абсолютной температуры.
+Видно, что с ростом коэффициента $m$ максимум распределений $I$, $I^*$ смещается ближе к поверхности ксенона, а суммарная мощность поглощённого распределения возрастает.
+Это связано с тем, что взлёт общей температуры разряда увеличивает излучающую способность материала (см. \eqref{eqn:intensity-plank}) намного сильнее, чем соответствующее уменьшение коэффициента оптического поглощения в сильно нагретой среде.
 
 \begin{figure}[ht]
 	\noindent\begin{tikzpicture}
@@ -121,11 +245,19 @@
 			width = 0.965\linewidth,
 			height = 0.5\linewidth,
 		]
-			\addplot table [x=zmax, y=mbm2]{inc/data/Xe_R=0.35.dat};
+			\addplot table [x=zmax, y=I2T10m2r95]{inc/data/Xe_R=0.35_m.dat};
 			\addlegendentry{$m = 2$}
-			\addplot table [x=zmax, y=mmm2]{inc/data/Xe_R=0.35.dat};
+			\addplot table [x=zmax, y=I2T10m3r95]{inc/data/Xe_R=0.35_m.dat};
+			\addlegendentry{$m = 3$}
+			\addplot table [x=zmax, y=I2T10m4r95]{inc/data/Xe_R=0.35_m.dat};
 			\addlegendentry{$m = 4$}
-			\addplot table [x=zmax, y=mtm2]{inc/data/Xe_R=0.35.dat};
+			\addplot table [x=zmax, y=I2T10m5r95]{inc/data/Xe_R=0.35_m.dat};
+			\addlegendentry{$m = 5$}
+			\addplot table [x=zmax, y=I2T10m6r95]{inc/data/Xe_R=0.35_m.dat};
+			\addlegendentry{$m = 6$}
+			\addplot table [x=zmax, y=I2T10m7r95]{inc/data/Xe_R=0.35_m.dat};
+			\addlegendentry{$m = 7$}
+			\addplot table [x=zmax, y=I2T10m8r95]{inc/data/Xe_R=0.35_m.dat};
 			\addlegendentry{$m = 8$}
 		\end{axis}
 	\end{tikzpicture}
@@ -133,22 +265,30 @@
 	\noindent\begin{tikzpicture}
 		\begin{axis}[
 			xlabel = {$z$},
-			ylabel = {$I \;\; [\text{Вт}/\text{см}^3]$},
+			ylabel = {$I^* \;\; [\text{Вт}/\text{см}^3]$},
 			xmin = 0, xmax = 1.025,
 			grid = both,
 			width = 0.98\linewidth,
 			height = 0.5\linewidth,
 		]
-			\addplot table [x=zmax, y=mbm3]{inc/data/Xe_R=0.35.dat};
+			\addplot table [x=zmax, y=I3T10m2r95]{inc/data/Xe_R=0.35_m.dat};
 			\addlegendentry{$m = 2$}
-			\addplot table [x=zmax, y=mmm3]{inc/data/Xe_R=0.35.dat};
+			\addplot table [x=zmax, y=I3T10m3r95]{inc/data/Xe_R=0.35_m.dat};
+			\addlegendentry{$m = 3$}
+			\addplot table [x=zmax, y=I3T10m4r95]{inc/data/Xe_R=0.35_m.dat};
 			\addlegendentry{$m = 4$}
-			\addplot table [x=zmax, y=mtm3]{inc/data/Xe_R=0.35.dat};
+			\addplot table [x=zmax, y=I3T10m5r95]{inc/data/Xe_R=0.35_m.dat};
+			\addlegendentry{$m = 5$}
+			\addplot table [x=zmax, y=I3T10m6r95]{inc/data/Xe_R=0.35_m.dat};
+			\addlegendentry{$m = 6$}
+			\addplot table [x=zmax, y=I3T10m7r95]{inc/data/Xe_R=0.35_m.dat};
+			\addlegendentry{$m = 7$}
+			\addplot table [x=zmax, y=I3T10m8r95]{inc/data/Xe_R=0.35_m.dat};
 			\addlegendentry{$m = 8$}
 		\end{axis}
 	\end{tikzpicture}
 	\captionsetup{justification=centering}
-	\caption{Поглощённая мощность плазмы, $\Delta\nu = [0,36232\cdot10^{15}, 0,36240\cdot10^{15}]$ $R = 0,35$ см, $T_0 = 10000$ К, $T_w = 2000$ К, $rho = 0,95$}
+	\caption{Поглощённая мощность плазмы, $\Delta\nu_{81} = [0,36232\cdot10^{15}, 0,36240\cdot10^{15}]$ $R = 0,35$ см, $T_0 = 10000$ К, $T_w = 2000$ К, $\rho = 0,95$}
 	\label{plt:m}
 \end{figure}
 
@@ -163,11 +303,15 @@
 			width = 0.965\linewidth,
 			height = 0.5\linewidth,
 		]
-			\addplot table [x=zmax, y=bmm2]{inc/data/Xe_R=0.35.dat};
+			\addplot table [x=zmax, y=I2T8m4r95]{inc/data/Xe_R=0.35_T0.dat};
 			\addlegendentry{$T_0 = 8000 \; \text{К}$}
-			\addplot table [x=zmax, y=mmm2]{inc/data/Xe_R=0.35.dat};
+			\addplot table [x=zmax, y=I2T9m4r95]{inc/data/Xe_R=0.35_T0.dat};
+			\addlegendentry{$T_0 = 9000 \; \text{К}$}
+			\addplot table [x=zmax, y=I2T10m4r95]{inc/data/Xe_R=0.35_T0.dat};
 			\addlegendentry{$T_0 = 10000 \; \text{К}$}
-			\addplot table [x=zmax, y=tmm2]{inc/data/Xe_R=0.35.dat};
+			\addplot table [x=zmax, y=I2T11m4r95]{inc/data/Xe_R=0.35_T0.dat};
+			\addlegendentry{$T_0 = 11000 \; \text{К}$}
+			\addplot table [x=zmax, y=I2T12m4r95]{inc/data/Xe_R=0.35_T0.dat};
 			\addlegendentry{$T_0 = 12000 \; \text{К}$}
 		\end{axis}
 	\end{tikzpicture}
@@ -175,23 +319,268 @@
 	\noindent\begin{tikzpicture}
 		\begin{axis}[
 			xlabel = {$z$},
-			ylabel = {$I \;\; [\text{Вт}/\text{см}^3]$},
+			ylabel = {$I^* \;\; [\text{Вт}/\text{см}^3]$},
 			xmin = 0, xmax = 1.025,
 			grid = both,
 			width = 0.98\linewidth,
 			height = 0.5\linewidth,
 		]
-			\addplot table [x=zmax, y=bmm3]{inc/data/Xe_R=0.35.dat};
+			\addplot table [x=zmax, y=I3T8m4r95]{inc/data/Xe_R=0.35_T0.dat};
 			\addlegendentry{$T_0 = 8000 \; \text{К}$}
-			\addplot table [x=zmax, y=mmm3]{inc/data/Xe_R=0.35.dat};
+			\addplot table [x=zmax, y=I3T9m4r95]{inc/data/Xe_R=0.35_T0.dat};
+			\addlegendentry{$T_0 = 9000 \; \text{К}$}
+			\addplot table [x=zmax, y=I3T10m4r95]{inc/data/Xe_R=0.35_T0.dat};
 			\addlegendentry{$T_0 = 10000 \; \text{К}$}
-			\addplot table [x=zmax, y=tmm3]{inc/data/Xe_R=0.35.dat};
+			\addplot table [x=zmax, y=I3T11m4r95]{inc/data/Xe_R=0.35_T0.dat};
+			\addlegendentry{$T_0 = 11000 \; \text{К}$}
+			\addplot table [x=zmax, y=I3T12m4r95]{inc/data/Xe_R=0.35_T0.dat};
 			\addlegendentry{$T_0 = 12000 \; \text{К}$}
 		\end{axis}
 	\end{tikzpicture}
 	\captionsetup{justification=centering}
-	\caption{Поглощённая мощность плазмы, $\Delta\nu = [0,36232\cdot10^{15}, 0,36240\cdot10^{15}]$ $R = 0,35$ см, $T_w = 2000$ К, $m = 4$, $rho = 0,95$}
-	\label{plt:t}
+	\caption{Поглощённая мощность плазмы, $\Delta\nu_{81} = [0,36232\cdot10^{15}, 0,36240\cdot10^{15}]$ $R = 0,35$ см, $T_w = 2000$ К, $m = 4$, $\rho = 0,95$}
+	\label{plt:t0}
 \end{figure}
 
+На рисунках \ref{plt:t0} и \ref{plt:tw} представлена зависимость распределения поглощённой мощности по объёму разрядной плазмы при переменном значении осевой и радиальной абсолютных температур $T_0$ и $T_w$ соответственно.
+
+Видно, что тенденция изменения $I$ и $I^*$ сохраняется: рост общей температуры разряда влияет на увеличение пика распределения поглощённой мощности и смещает его ближе к поверхности ксенонового излучателя.
+
+\begin{figure}[H]
+	\noindent\begin{tikzpicture}
+		\begin{axis}[
+			xlabel = {$z$},
+			ylabel = {$I \;\; [\text{Вт}/\text{см}^2]$},
+			xmin = 0, xmax = 1.025,
+			yticklabel style={/pgf/number format/.cd,fixed,precision=2},
+			grid = both,
+			width = 0.965\linewidth,
+			height = 0.5\linewidth,
+			legend style={at={(0.02,0.98)},anchor=north west},
+		]
+			\addplot table [x=zmax, y=I2T12w2m4r95]{inc/data/Xe_R=0.35_Tw.dat};
+			\addlegendentry{$T_w = 2000 \; \text{К}$}
+			\addplot table [x=zmax, y=I2T12w3m4r95]{inc/data/Xe_R=0.35_Tw.dat};
+			\addlegendentry{$T_w = 3000 \; \text{К}$}
+			\addplot table [x=zmax, y=I2T12w4m4r95]{inc/data/Xe_R=0.35_Tw.dat};
+			\addlegendentry{$T_w = 4000 \; \text{К}$}
+			\addplot table [x=zmax, y=I2T12w5m4r95]{inc/data/Xe_R=0.35_Tw.dat};
+			\addlegendentry{$T_w = 5000 \; \text{К}$}
+			\addplot table [x=zmax, y=I2T12w6m4r95]{inc/data/Xe_R=0.35_Tw.dat};
+			\addlegendentry{$T_w = 6000 \; \text{К}$}
+			\addplot table [x=zmax, y=I2T12w7m4r95]{inc/data/Xe_R=0.35_Tw.dat};
+			\addlegendentry{$T_w = 7000 \; \text{К}$}
+			\addplot table [x=zmax, y=I2T12w8m4r95]{inc/data/Xe_R=0.35_Tw.dat};
+			\addlegendentry{$T_w = 8000 \; \text{К}$}
+		\end{axis}
+	\end{tikzpicture}
+
+	\noindent\begin{tikzpicture}
+		\begin{axis}[
+			xlabel = {$z$},
+			ylabel = {$I^* \;\; [\text{Вт}/\text{см}^3]$},
+			xmin = 0, xmax = 1.025,
+			grid = both,
+			width = 0.98\linewidth,
+			height = 0.5\linewidth,
+			legend style={at={(0,1)},anchor=north west},
+		]
+			\addplot table [x=zmax, y=I3T12w2m4r95]{inc/data/Xe_R=0.35_Tw.dat};
+			\addlegendentry{$T_w = 2000 \; \text{К}$}
+			\addplot table [x=zmax, y=I3T12w3m4r95]{inc/data/Xe_R=0.35_Tw.dat};
+			\addlegendentry{$T_w = 3000 \; \text{К}$}
+			\addplot table [x=zmax, y=I3T12w4m4r95]{inc/data/Xe_R=0.35_Tw.dat};
+			\addlegendentry{$T_w = 4000 \; \text{К}$}
+			\addplot table [x=zmax, y=I3T12w5m4r95]{inc/data/Xe_R=0.35_Tw.dat};
+			\addlegendentry{$T_w = 5000 \; \text{К}$}
+			\addplot table [x=zmax, y=I3T12w6m4r95]{inc/data/Xe_R=0.35_Tw.dat};
+			\addlegendentry{$T_w = 6000 \; \text{К}$}
+			\addplot table [x=zmax, y=I3T12w7m4r95]{inc/data/Xe_R=0.35_Tw.dat};
+			\addlegendentry{$T_w = 7000 \; \text{К}$}
+			\addplot table [x=zmax, y=I3T12w8m4r95]{inc/data/Xe_R=0.35_Tw.dat};
+			\addlegendentry{$T_w = 8000 \; \text{К}$}
+		\end{axis}
+	\end{tikzpicture}
+	\captionsetup{justification=centering}
+	\caption{Поглощённая мощность плазмы, $\Delta\nu_{81} = [0,36232\cdot10^{15}, 0,36240\cdot10^{15}]$ $R = 0,35$ см, $T_0 = 12000$ К, $m = 4$, $\rho = 0,95$}
+	\label{plt:tw}
+\end{figure}
+
+\section{Влияние количества лучей}
+
+На рисунке \ref{plt:n-points} представлена зависимость распределения поглощённой мощности по объёму разрядной плазмы при переменном количестве лучей $N = N_{\text{меридианов}} \cdot N_{\text{широт}}$.
+
+Даже при $N = 500$ в графике функции $I^*$ наблюдается небольшое, но бросающееся в глаз отклонение во втором квазистационарном слое ($\Delta z = [0,025; 0,05]$) разряда ксенона.
+
+\begin{figure}[H]
+	\noindent\begin{tikzpicture}
+		\begin{axis}[
+			xlabel = {$z$},
+			ylabel = {$I \;\; [\text{Вт}/\text{см}^2]$},
+			xmin = 0, xmax = 1.025,
+			grid = both,
+			width = \linewidth,
+			height = 0.5\linewidth,
+		]
+			\addplot table [x=zmax, y=I2n50]{inc/data/Xe_R=0.35_Npoints.dat};
+			\addlegendentry{$N = 50$}
+			\addplot table [x=zmax, y=I2n100]{inc/data/Xe_R=0.35_Npoints.dat};
+			\addlegendentry{$N = 100$}
+			\addplot table [x=zmax, y=I2n200]{inc/data/Xe_R=0.35_Npoints.dat};
+			\addlegendentry{$N = 200$}
+			\addplot table [x=zmax, y=I2n500]{inc/data/Xe_R=0.35_Npoints.dat};
+			\addlegendentry{$N = 500$}
+			\addplot table [x=zmax, y=I2n4500]{inc/data/Xe_R=0.35_Npoints.dat};
+			\addlegendentry{$N = 4500$}
+		\end{axis}
+	\end{tikzpicture}
+
+	\noindent\begin{tikzpicture}
+		\begin{axis}[
+			xlabel = {$z$},
+			ylabel = {$I^* \;\; [\text{Вт}/\text{см}^3]$},
+			xmin = 0, xmax = 1.025,
+			grid = both,
+			width = 0.98\linewidth,
+			height = 0.5\linewidth,
+		]
+			\addplot table [x=zmax, y=I3n50]{inc/data/Xe_R=0.35_Npoints.dat};
+			\addlegendentry{$N = 50$}
+			\addplot table [x=zmax, y=I3n100]{inc/data/Xe_R=0.35_Npoints.dat};
+			\addlegendentry{$N = 100$}
+			\addplot table [x=zmax, y=I3n200]{inc/data/Xe_R=0.35_Npoints.dat};
+			\addlegendentry{$N = 200$}
+			\addplot table [x=zmax, y=I3n500]{inc/data/Xe_R=0.35_Npoints.dat};
+			\addlegendentry{$N = 500$}
+			\addplot table [x=zmax, y=I3n4500]{inc/data/Xe_R=0.35_Npoints.dat};
+			\addlegendentry{$N = 4500$}
+		\end{axis}
+	\end{tikzpicture}
+	\captionsetup{justification=centering}
+	\caption{Поглощённая мощность плазмы, $\Delta\nu_{81} = [0,36232\cdot10^{15}, 0,36240\cdot10^{15}]$ $R = 0,35$ см, $T_0 = 10000$ К, $T_w = 2000$ К, $m = 4$, переменное количество лучей $N$}
+	\label{plt:n-points}
+\end{figure}
+
+Помимо количества лучей $N$, на гладкость функции распределения поглощённой мощности влияют так же количество разбиений $N_p$ (см. листинг \ref{alg:initialization}) и значение критической интенсивности $I_{\text{крит}}$ (см. рисунок \ref{img:ray-tracing}).
+При заданной конфигурации системы приемлемая гладкость распределения $I^*$ достигается при $N = 4500$.
+
+\pagebreak
+
+\section{Влияние возврата излучения}
+
+Эффект дополнительного подогрева плазмы и, как следствие, изменения её теплофизических и излучательных свойств происходит в результате возврата части излученной мощности обратно в плазменный столб.
+
+Математическая модель строится для азимутально симметричного цилиндрического столба разряда, находящегося в условиях локального термодинамического равновесия, с учётом переноса излучения.
+Соответствующая система уравнений включает уравнение энергии, закон Ома и математическую модель переноса излучения:
+
+\begin{equation}
+	\label{eqn:article-1}
+	\frac1r\frac{\mathrm d}{\mathrm dr} \left( r \lambda(T) \frac{\mathrm dT}{\mathrm dr} \right) + \sigma(T)E^2 - \Div{\vec F = 0},
+\end{equation}
+\begin{equation}
+	\label{eqn:article-2}
+	\begin{gathered}
+		\Div{\vec F} = \int\displaylimits_\nu \Div{\vec F_\nu} \,\mathrm d\nu, \\
+		\Div{\vec F_\nu} = ck_{\nu}(u_{p\nu} - u_{\nu}) = ck_{\nu}u_{p\nu} - q_{s\nu}, \\
+	\end{gathered}
+\end{equation}
+\begin{equation}
+	\label{eqn:article-3}
+	E = \frac{I}{\displaystyle 2\pi\int\displaylimits_0^R \sigma(T) r\,\mathrm dr}.
+\end{equation}
+
+В этих формулах: $T$~— температурное поле в разряде, $\lambda, \sigma, k_\nu$~— коэффициенты электропроводности, теплопроводности и спектральный коэффициент поглощения плазмы, $r, R$~— текущий радиус и внутренний радиус разрядной трубки, $\nu$~— частота излучения, $\vec F, \vec F_\nu, u_{p\nu}, u_{\nu}, q_{s\nu}$~— спектральный и  интегральный потоки излучения, функция Планка, объёмная плотность излучения в плазме, объёмная мощность поглощенного излучения, $I, E$~— электрический ток и напряженность электрического поля.
+Система дополняется соответствующими краевыми условиями \cite{gradov-dissertation}.
+
+После рассчёта радиального распределения поглощённой в плазме мощности $\displaystyle q_{s\nu} = \int\displaylimits_0^R I^* \,\mathrm dr$, фигурирующей в \eqref{eqn:article-2},  идёт определения интеграла по частоте от $q_{s\nu}$, затем выполняется итерация по расчёту температурного поля в разряде из уравнения энергии \eqref{eqn:article-1}.
+Процедура повторяется до выполнения условия сходимости по температуре плазмы \cite{article-5-kalitkin}.
+
+Обработка многочисленных вычислительных экспериментов \cite{gradov-dissertation, article-6-gradov} показала, что при решении частной задачи о влиянии возврата излучения на его теплофизические характеристики сложная процедура расчета прохождения излучения в системе может быть заменена более простой моделью отражении излучения на границе плазмы с некоторым эффективным коэффициентом отражения $\rho$.
+Данный коэффициент рассчитывается на основе сравнения мощности, поглощенной в плазме, вычисленной при этих двух подходах.
+При этом расчет переноса излучения в плазме может быть рассмотрен в рамках более простого диффузионного приближения \cite{gradov-dissertation, article-6-gradov, article-7-zeldovich} с краевым условием при $r = R$
+
+\begin{equation}
+	u_\nu = \frac{A}{k_\nu} \frac{1 + \rho}{1 - \rho} \frac{\mathrm du_\nu}{\mathrm dr},
+\end{equation}
+
+\noindent где $A$ — некоторая константа \cite{gradov-dissertation, article-6-gradov}.
+
+В качестве исходных данных в рассматриваемой модели разряда задаются ток, диаметр разрядной трубки, давление наполнения, эффективный коэффициент отражения на границе, одинаковый для всех частот в интервале 100~нм~— 3~мкм, и все материальные функции плазмы \cite{article-8-gradov, article-9-gradov}.
+
+На рисунке \ref{plt:article-1} продемонстрировано, что наличие отражения на границе плазмы сопровождается ростом общего уровня температур.
+При этом для ксеноновой плазмы с её высокой излучательной способностью вид распределения практически не меняется, оставаясь плоским в основной области разряда с крутым фронтом падения у стенки.
+
+При малых коэффициентах отражения изменения температуры практически не происходит.
+При $\rho = 0,55$ осевая температура $T_0$ меняется всего на 3 \% по сравнению со случаем отсутствия отражения.
+Это связано с тем, что плазма не является абсолютно поглощающей средой, и в разряде реализуется режим многократного прохождения излучения через плазму до его полного выхода из системы в процессе отражения от границы.
+
+\begin{figure}[H]
+	\noindent\begin{tikzpicture}
+		\begin{axis}[
+			xlabel = {$z$},
+			ylabel = {$T \;\; [\text{К}]$},
+			xmin = 0, xmax = 1.0,
+			domain=0:1,
+			samples=60,
+			%samples at={0,0.05,...,0.9,0.91,...,1.05},
+			grid = both,
+			width = 0.965\linewidth,
+			height = 0.5\linewidth,
+			legend style={at={(0.02,0.02)},anchor=south west},
+		]
+			\addplot[thick, mark=none] {10400 + (2000 - 10400)*x^60 + 30*rand};
+			\addlegendentry{$\rho = 0$}
+			\addplot[densely dashed, thick, mark=none] {10700 + (2000 - 10700)*x^65 + 20*rand};
+			\addlegendentry{$\rho = 0,55$}
+			\addplot[loosely dashed, thick, mark=none] {10850 + (2000 - 10850)*x^70 + 20*rand};
+			\addlegendentry{$\rho = 0,7$}
+			\addplot[densely dashdotted, thick, mark=none] {11000 + (2000 - 11000)*x^75 + 20*rand};
+			\addlegendentry{$\rho = 0,8$}
+			\addplot[loosely dashdotted, thick, mark=none] {11500 + (2000 - 11500)*x^80 + 20*rand};
+			\addlegendentry{$\rho = 0,9$}
+			\addplot[dashdotdotted, thick, mark=none] {12500 + (2000 - 12500)*x^90 + 20*rand};
+			\addlegendentry{$\rho = 0,97$}
+		\end{axis}
+	\end{tikzpicture}
+	\captionsetup{justification=centering}
+	\caption{Влияние коэффициента отражения $\rho$ на температурные распределения в разряде. $R=0,35$ см, $p=1,5$ МПа, $I=500$ A}
+	\label{plt:article-1}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{center}
+	\noindent\begin{tikzpicture}
+		\begin{axis}[
+			xlabel = {$\rho$},
+			ylabel = {$T \;\; [\text{К}]$},
+			xmin = 0, xmax = 1.0,
+			domain=0:1,
+			grid = both,
+			width = 0.5\linewidth,
+			height = 0.5\linewidth,
+			legend style={at={(0.02,0.98)},anchor=north west},
+		]
+			\addplot[very thick, blue, mark=none] table [x=z, y=T0]{inc/data/article_2.dat};
+			\addlegendentry{$T_0$}
+			\addplot[very thick, loosely dashed, mark=none] table [x=z, y=T_avg]{inc/data/article_2.dat};
+			\addlegendentry{$\langle T \rangle$}
+		\end{axis}
+	\end{tikzpicture}
+	\end{center}
+	\captionsetup{justification=centering}
+	\caption{Зависимость осевой и средней температур в разряде от
+		коэффициента отражения. Параметры разряда те же, что и на рис. \ref{plt:article-1}}
+	\label{plt:article-2}
+\end{figure}
+
+С увеличением коэффициента отражения количество таких проходов растет, увеличивается доля поглощённой мощности и повышается темп роста температуры по мере возрастания $\rho$.
+Последнее наглядно показывает рисунок \ref{plt:article-2}.
+
+Отметим также, что при повышении температуры растет коэффициент поглощения плазмы \cite{article-8-gradov, article-9-gradov}, что является дополнительным фактором более высокого темпа нарастания температуры при приближении $\rho$ к единице.
+При изменении $\rho$ от 0,55 до 0,80 осевая температура увеличивается на 4,5 \%, а при увеличении $\rho$ от 0,80 до 0,97 рост $T_0$ составляет уже 14 \%.
+
+Отметим, что спектральное распределение лучистых потоков в открытом разряде и в составе осветительной системы отличаются и тем сильнее, чем выше температура, давление плазмы и, соответственно, коэффициент отражения.
+
 \section*{Выводы}
+
+Таким образом, в рамках проведенного исследования на основе математического моделирования получены количественные данные по влиянию возврата излучения на характеристики разряда. Данные такого рода позволяют проводить оптимизацию электрических цепей и оцени-вать изменения, происходящие в спектрах излучения.

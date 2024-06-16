@@ -1,12 +1,17 @@
-#if 0  // NOLINT(readability-avoid-unconditional-preprocessor-if)
+#if 1  // NOLINT(readability-avoid-unconditional-preprocessor-if)
+#ifndef XENON_TABLE_COEFFICIENT
+#error "Define XENON_TABLE_COEFFICIENT"
+#endif
 #include <array>
 #include <cassert>
 #include <cstddef>
 #include <format>
 #include <iostream>
+#include <numeric>
 
 #include "base/config/float.h"
 #include "math/fast_pow.h"
+#include "modeling/cylinder_plasma.h"
 #include "physics/params/plasma.h"
 #include "physics/params/xenon_absorption_coefficient.h"
 
@@ -18,6 +23,8 @@ inline constexpr auto kM = 4;            // 2-8
 inline constexpr auto kR = 0.35_F;  // см.
 inline constexpr auto kN = static_cast<std::size_t>(40);
 
+inline constexpr auto kRho = 0.95_F;  // см.
+
 [[nodiscard]] constexpr Float T(Float z) noexcept {
   assert(0 <= z && z <= 1);
   return kT0 + (kTW - kT0) * FastPow<kM>(z);
@@ -27,7 +34,7 @@ inline constexpr auto kN = static_cast<std::size_t>(40);
 
 int main() {
   // Оптическая плотность tau = integral k * dr.
-  std::cout << "range          tau      nu_min      nu_max          nu\n";
+  std::cout << "range          tau      nu_min      nu_max          nu          I2\n";
   for (std::size_t i = 0; i < kXenonTableRanges; ++i) {
     const auto nu_min = kXenonFrequency[i];
     const auto nu_max = kXenonFrequency[i + 1];
@@ -46,8 +53,30 @@ int main() {
       tau += k * kStep;
     }
 
-    std::cout << std::format("{:5d} {:12.6f} {:11g} {:11g} {:11g}\n", i + 1, tau,
-                             nu_min, nu_max, nu);
+    const auto params = CylinderPlasma::Params{
+        .r = kR,
+        .n_plasma = kN,
+
+        .t0 = kT0,
+        .tw = kTW,
+        .m = kM,
+
+        .rho = kRho,
+
+        .nu = nu,
+        .d_nu = d_nu,
+
+        .n_meridian = 100,
+        .n_latitude = 100,
+
+        .n_threads = 4,
+    };
+    const auto res = CylinderPlasma{params}.Solve();
+    const auto i2 = std::accumulate(res.absorbed_plasma.begin(),
+                                    res.absorbed_plasma.end(), kZero);
+
+    std::cout << std::format("{:5d} {:12.6f} {:11g} {:11g} {:11g} {:11g}\n",
+                             i + 1, tau, nu_min, nu_max, nu, i2);
   }
 }
 #elif 1  // NOLINT(readability-avoid-unconditional-preprocessor-if)
@@ -74,22 +103,22 @@ int main() {
   const auto nu_avg = nu_min + d_nu / 2;
 
   const auto params = CylinderPlasma::Params{
-    .r = 0.35_F,
-    .n_plasma = 40,
+      .r = 0.35_F,
+      .n_plasma = 40,
 
-    .t0 = 10000.0_F,
-    .tw = 2000.0_F,
-    .m = 4,
+      .t0 = 10000.0_F,
+      .tw = 2000.0_F,
+      .m = 4,
 
-    .rho = 0.95_F,
+      .rho = 0.95_F,
 
-    .nu = nu_avg,
-    .d_nu = d_nu,
+      .nu = nu_avg,
+      .d_nu = d_nu,
 
-    .n_meridian = 100,
-    .n_latitude = 100,
+      .n_meridian = 100,
+      .n_latitude = 100,
 
-    .n_threads = 4,
+      .n_threads = 4,
   };
   std::cout << "[[-----------------------------------------------------------"
                "-------------------]]\n"
