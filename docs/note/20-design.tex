@@ -476,8 +476,8 @@
 
 \begin{Algorithm}{Алгоритм расчёта начальной интенсивности}{initial-intensity}
 	\begin{algorithmic}[1]
-		\State \textbf{Вход:} $C$, $J$, $K$ — список цилиндров, равновесных интенсивностей и коэффициентов поглощения, $\vec P$, $\vec D$, $\Delta\Omega$ ~— положение, направление и телесный угол луча на поверхности
-		\State \textbf{Выход:} $I$ — начальная интенсивность луча на поверхности
+		\State \textbf{Вход:} $C$, $J$, $K$, $Q$ — списки цилиндров, равновесных интенсивностей, коэффициентов поглощения и поглощённой мощности, $\vec P$, $\vec D$, $\Delta\Omega$ ~— положение, направление и телесный угол луча на поверхности
+		\State \textbf{Выход:} $I$ — начальная интенсивность луча на поверхности, $Q$
 		\State $I \gets 0$
 		\State Найти точку пересечения $\vec A$ луча $(\vec P, - \vec D)$ с последним цилиндром
 		\While{$\vec A \neq \vec P$}
@@ -485,10 +485,11 @@
 			\State $i \gets$ индекс ближайшего цилиндра
 			\State $dr \gets |\overrightarrow{AB}|$
 			\State $exp \gets e^{-K_i \cdot dr}$
-			\State $I \gets I \cdot exp + J_i \cdot (1 - exp)$
+			\State $I' \gets I \cdot exp \cdot \Delta\Omega \cdot D_x$
+			\State $Q_i \gets Q_i + I - I'$
+			\State $I \gets I' + J_i \cdot (1 - exp) \cdot \Delta\Omega \cdot D_x$
 			\State $\vec A \gets \vec B$
 		\EndWhile
-		\State $I \gets I \cdot \Delta\Omega \cdot D_x$
 	\end{algorithmic}
 \end{Algorithm}
 
@@ -509,7 +510,7 @@
 % TODO(a.kerimov): Fix grammar
 \imgh{width=\linewidth}{ray-tracing}{Схема алгоритма трассировки луча}
 
-\imgh{width=\linewidth}{nearest-surface}{Схема алгоритма поиска ближайшей поверхности пересечения}
+\imgh{width=\linewidth}{nearest-surface}{Схема алгоритма оптимизированного поиска ближайшей поверхности пересечения}
 
 \section*{Выводы}
 
