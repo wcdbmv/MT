@@ -63,7 +63,9 @@
 
 \imgh{width=0.8\linewidth}{modules}{Диаграмма компонентов}
 
+\begin{FixLineStretch}
 \section{Интерфейс приложения}
+\end{FixLineStretch}
 
 На рисунках \ref{img:xe-and-xe-sio2} — \ref{img:tab-xe-xe-sio2} изображены 3 типа систем, представленных в демонстрационной программе.
 
@@ -119,11 +121,13 @@
 
 \imgh{width=\linewidth}{tab-paint}{Визуализация распределения поглощённой мощности по объёму}
 
-\imgp{width=\linewidth}{tab-plot}{Графики распределения поглощённой мощности}
+\imgh{width=\linewidth}{tab-plot}{Графики распределения поглощённой мощности}
 
-\imgp{width=\linewidth}{tab-data}{Численные результаты расчёта распределения поглощённой мощности}
+\imgh{width=\linewidth}{tab-data}{Численные результаты расчёта распределения поглощённой мощности}
 
+\begin{FixLineStretch}
 \section{Сборка ПО}
+\end{FixLineStretch}
 
 Сборка осуществляется системой CMake по сценарию, описанному в листинге \ref{lst:cmake}, где вместо \code{[options...]} можно использовать несколько ключей из следующего списка:
 \begin{enumerate}
@@ -149,7 +153,9 @@
 	cmake --build . --target GUI
 \end{lstlisting}
 
+\begin{FixLineStretch}
 \section{Модульное тестирование}
+\end{FixLineStretch}
 
 В листингах \ref{lst:cpp-unit-test-equation}—\ref{lst:cpp-unit-tests-intersection} представлены примеры модульных тестов основных функций моделирования траектории движения луча в световой системе на базе фреймворка GoogleTest.
 
