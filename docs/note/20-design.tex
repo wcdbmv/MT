@@ -167,7 +167,7 @@
 Доли энергий отражённого и преломлённого лучей соответственно рассчитываются по формулам Френеля:
 
 \begin{equation}
-	R = \frac12 \left(\frac{g-c}{g+c}\right)^2 \left(1 + \left(\frac{c(g + c) - \mu^2}{c(g - c) + \mu^2}\right)^2\right)
+	R = \frac12 \left(\frac{g-c}{g+c}\right)^2 \left(1 + \left(\frac{c(g + c) - \mu^2}{c(g - c) + \mu^2}\right)^2\right),
 \end{equation}
 \begin{equation}
 	\label{eqn:refraction-end}
@@ -335,9 +335,9 @@
 	\item $m$ — показатель степени в диапазоне 2–8.
 \end{itemize}
 
-\imgp{width=\linewidth}{xenon-temperature}{Радиальные температурные распределения в разряде Cs‑Hg‑Xe. p=0.1 МПа}
+\imgp{width=\linewidth}{xenon-temperature}{Радиальные температурные распределения в разряде Cs‑Hg‑Xe. Давление $p=0,1$ МПа. 1,3 — открытый разряд, 2,4 — разряд в составе системы, 1,2 — ток равен 250 А, 3,4 — 60 А}
 
-\imgp{width=\linewidth}{xenon-absorption-coefficient}{Коэффициент оптического поглощения плазмы Cs-Hg-Xe. Давление p=0.1 МПа, температура T=3500 K}
+\imgp{width=\linewidth}{xenon-absorption-coefficient}{Коэффициент оптического поглощения плазмы Cs-Hg-Xe. Давление $p=0,1$ МПа, температура $T=3500$ K}
 
 Как видно из рисунка \ref{img:xenon-temperature}, такое распределение достаточно близко описывает то, что происходит в действительности.
 
@@ -407,16 +407,22 @@
 	\end{algorithmic}
 \end{Algorithm}
 
+\vspace{-5mm}
+
 Интенсивность $I(t)$ рассчитывается по формуле Планка \eqref{eqn:intensity-plank} при фиксированных $\nu$ и $\Delta\nu$.
 Моделью распределения температуры $T(z)$ может выступать формула \eqref{eqn:xenon-temperature} при фиксированных $T_0$, $T_w$, $m$, а моделями распределения коэффициента оптического поглощения, к примеру,~— формулы \eqref{eqn:absorption-coefficient-plasma}~— \eqref{eqn:absorption-coefficient-quartz}.
 
+\pagebreak
+\begin{FixLineStretch}
 \subsection{Моделирование объёмного излучения}
+\end{FixLineStretch}
 
 Так как время генерации объёмного излучения существенно меньше времени расчёта поглощённой мощности и траекторий лучей, то вместо более быстрого алгоритма генерации сферы Фибоначчи предпочтение отдано более точному алгоритму генерации каркасной сферической сетки, псевдокод которого вместе с расчётом телесных углов по каждому направлению представлен в листинге \ref{alg:wire-sphere}.
 
-\vspace{5mm}
-
-\begin{Algorithm}{Алгоритм генерация объёмного излучения}{wire-sphere}
+\begin{center}
+	\captionof{lstlisting}{Алгоритм генерация объёмного излучения}
+	\label{alg:wire-sphere}
+	\vspace{-0.8\baselineskip}\hrulefill
 	\begin{algorithmic}[1]
 		\State \textbf{Вход:} $M$ — количество широт, $N$ — количество меридианов
 		\State \textbf{Выход:} $D$ — список направлений, $\Omega$ — список, $i$-й элемент которого равен телесному углу вектора на $i$-й широте
@@ -431,20 +437,22 @@
 			\State $\phi_{+0,5} \gets \pi y_{+0,5}$
 			\State $h \gets \cos{\phi_{-0,5}} - \cos{\phi_{+0,5}}$
 			\State $S \gets 2\pi h$
-			\State $\Delta\Omega \gets S / 1^2$
-			\State $Push(\Omega, \Delta\Omega))$
+			\State $Push(\Omega, S / 1^2)$
 			\ForAll{$n$ от $0$ до $N - 1$}
 				\State $x \gets n / N$
 				\State $\theta \gets 2 \pi x$
 				\State $\overrightarrow{dir} \gets (\cos\theta \sin\phi, \sin\theta \sin\phi, \cos\phi)$
 				\State $Push(D, \overrightarrow{dir})$
-
 			\EndFor
 		\EndFor
 	\end{algorithmic}
-\end{Algorithm}
+	\vspace{-0.9\baselineskip}\hrulefill
+\end{center}
 
+\pagebreak
+\begin{FixLineStretch}
 \subsection{Расчёт начальной интенсивности лучей}
+\end{FixLineStretch}
 
 Равновесная интенсивность излучения $I_{\text{р}}$ в точке среды определяется по формуле Планка \eqref{eqn:intensity-plank}.
 
@@ -507,6 +515,8 @@
 		\EndWhile
 	\end{algorithmic}
 \end{Algorithm}
+
+\pagebreak
 
 \begin{FixLineStretch}
 \subsection{Параллельная трассировка лучей}

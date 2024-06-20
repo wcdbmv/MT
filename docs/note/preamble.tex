@@ -410,9 +410,11 @@
 \addbibresource{91-references.bib}
 
 % Режим доступа вместо URL в biblatex
-\DeclareFieldFormat{url}{Режим доступа\addcolon\space\url{#1}}
+\DeclareFieldFormat{url}{Режим доступа\addcolon\space URL\addcolon\space\url{#1}}
 % Дата обращения без сокращений в biblatex
 \DeclareFieldFormat{urldate}{(дата обращения\addcolon\space\urldate{#1})}
+
+\renewcommand\multicitedelim{\addcomma\space}
 %%
 %% 6.9.1 В отчете о НИР рекомендуется приводить ссылки на использованные источники.
 %% При нумерации ссылок на документы, использованные при составлении отчета, приводится сплошная нумерация для всего текста отчета в целом или для отдельных разделов.
