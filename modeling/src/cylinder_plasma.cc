@@ -69,7 +69,7 @@ class CylinderPlasma::Impl {
  public:
   explicit Impl(const Params& params)
       : params_{params},
-        sphere_points_{params_.n_meridian * params_.n_latitude / 10},
+        sphere_points_{params_.n_meridian * params_.n_latitude},
         plasma_{
             {.center = kOrigin,
              .radius = params.r,

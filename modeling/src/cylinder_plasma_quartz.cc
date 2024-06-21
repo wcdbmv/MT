@@ -74,7 +74,7 @@ class CylinderPlasmaQuartz::Impl {
       : params_{params},
         b_{params.r / params.delta * std::log(params.tw / params.t1)},
         a_{params.tw * std::exp(b_)},
-        sphere_points_{params_.n_meridian * params_.n_latitude / 10},
+        sphere_points_{params_.n_meridian * params_.n_latitude},
         plasma_{
             {.center = kOrigin,
              .radius = params.r,
